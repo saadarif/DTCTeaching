@@ -1,0 +1,77 @@
+---
+title: "Introduction to Statistical Data Analysis <br/> <br/>"
+author: <small>Saad Arif <br/>  Dept. of BMS & Centre for Functional Genomics, Oxford
+  Brookes University</small>
+date: "<small>Nov 2019</small>"
+output:
+  ioslides_presentation:
+    incremental: yes
+  incremental: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Course Organization 
+
+
+
+## Course Organization 
+
+
+
+## Four Aspects of a Statistical Analysis <br /> <br /> 
+
+
+1. Experimental Design
+2. Exploratory Data Analysis (EDA)
+3. Inference
+4. Visualisation
+
+
+## Experimental Design {.build}
+
+- This is the part of statistics that happens before your experiment.
+
+- The main aim of experimental design is to help establish a causal connection 
+between the **independent** and **dependent** variable(s).
+
+- A major goal of experimental design is to:
+      + avoid  bias
+      + minimize sampling error
+  
+- **Independent variable**: These are the **factors**/variables you control in your experiment. Sometimes also known as the predictor variables. **Dependent variable**: This is the response variable you are interested in.
+
+
+## What is Bias?
+
+- Most of the time will be working with a *sample* from a larger *population* (we can't measure the entire population for various reasons)
+
+- We need a representative/*random* sample from the population to make valid inferences (almost all statistical tests you will ever use implicitly assume random sampling)
+
+- **Sources of Bias**: convenience sampling, voluntary response, lack of blinding
+
+## Avoiding Bias
+
+- Use of control groups
+
+- Randomization 
+
+- Blinding
+
+
+
+## Slide with R Output
+
+```{r cars, echo = TRUE}
+summary(cars)
+```
+
+## Slide with Plot
+
+```{r pressure}
+plot(pressure)
+```
+
