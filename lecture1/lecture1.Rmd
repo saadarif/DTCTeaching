@@ -1,12 +1,13 @@
 ---
 title: "Introduction to Statistical Data Analysis <br/> <br/>"
-author: <small>Saad Arif <br/>  Dept. of BMS & Centre for Functional Genomics, Oxford
-  Brookes University</small>
+author: Saad Arif <br/>  Dept. of BMS & Centre for Functional Genomics <br/> Oxford
+  Brookes University <br/>
 date: "<small>Nov 2019</small>"
 output:
-  ioslides_presentation:
+  slidy_presentation:
     incremental: yes
-  incremental: default
+    highlighter : prettify      # {highlight.js, prettify, highlight}
+    hitheme     : tomorrow      # 
 ---
 
 ```{r setup, include=FALSE}
@@ -26,9 +27,11 @@ knitr::opts_chunk$set(echo = FALSE)
 
 
 1. Experimental Design
-2. Exploratory Data Analysis (EDA)
-3. Inference
+2. **Exploratory Data Analysis (EDA)**
+3. **Inference**
 4. Visualisation
+
+#Experimental Design {data-background=#ff2222}
 
 
 ## Experimental Design {.build}
@@ -61,9 +64,26 @@ between the **independent** and **dependent** variable(s).
 
 - Blinding
 
-## Sampling and Sampling Error
+## Sampling and Sampling Error {.build}
 
-## Slide with R Output
+- We almost always sample from a population (randomly I hope)
+
+- Differences between sample values (e.g. $\bar{X}$, *s* ) and population values ($\mu$, $\sigma$) are the sampling error
+
+-  As long as we sample from a population some sampling error is unavoidable, but we can minimize it <center> ![](../images/Outline Application For Nigel Groome Studentship Competition_SA.png) </center>
+
+- **Blocking** is another way we minimize sampling error. This only works if we know some other variable (the block variable) adds uninteresting variability to our measurements
+
+## Sampling and Sampling Distribution
+
+## Confidence Intervals and  Quantifying Uncertainty in our Estimates
+
+
+# Exploratory Data Analysis
+
+## Exploratory Data Analysis (or EDA)
+
+- You've got some data, what do you do next?
 
 ```{r cars, echo = TRUE}
 summary(cars)
