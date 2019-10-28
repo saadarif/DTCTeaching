@@ -61,7 +61,7 @@ between the **independent** and **dependent** variable(s).
 
 - Blinding
 
-
+## Sampling and Sampling Error
 
 ## Slide with R Output
 
