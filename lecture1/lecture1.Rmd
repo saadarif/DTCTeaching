@@ -1,6 +1,6 @@
 ---
 title: "Introduction to Statistical Data Analysis <br/> <br/>"
-author: Saad Arif <br/>  Dept. of BMS & Centre for Functional Genomics <br/> Oxford
+author: Saad Arif <br/>  Dept. of Biological and Medical Sciences & Centre for Functional Genomics <br/> Oxford
   Brookes University <br/>
 date: "<small>Nov 2019</small>"
 output:
@@ -8,6 +8,7 @@ output:
     incremental: yes
     highlighter : prettify      # {highlight.js, prettify, highlight}
     hitheme     : tomorrow      # 
+    widescreen: true
 ---
 
 ```{r setup, include=FALSE}
@@ -27,12 +28,11 @@ knitr::opts_chunk$set(echo = FALSE)
 
 
 1. Experimental Design
-2. **Exploratory Data Analysis (EDA)**
-3. **Inference**
+2. Exploratory Data Analysis (EDA)
+3. Inference
 4. Visualisation
 
-#Experimental Design {data-background=#ff2222}
-
+We will discusss these steps of statistical analysis in order. But we might take some detours along the way where an important concept needs to be highlighted. 
 
 ## Experimental Design {.build}
 
@@ -40,6 +40,10 @@ knitr::opts_chunk$set(echo = FALSE)
 
 - The main aim of experimental design is to help establish a causal connection 
 between the **independent** and **dependent** variable(s).
+
+- Usually we measure something and then take an average (or some other *statistic*),
+  
+    estimated value = expected/real value + error + bias
 
 - A major goal of experimental design is to:
       + avoid  bias
@@ -74,20 +78,115 @@ between the **independent** and **dependent** variable(s).
 
 - **Blocking** is another way we minimize sampling error. This only works if we know some other variable (the block variable) adds uninteresting variability to our measurements
 
-## Sampling and Sampling Distribution
+## Sampling and Sampling Distribution {.build}
 
-## Confidence Intervals and  Quantifying Uncertainty in our Estimates
+- $\bar{X}$ = sample mean,  $\mu$ = population mean (usually unknown),
+ 
+- s = sample standard deviation ,  $\sigma$ = population standard deviation (usually unknown)
 
+- <iframe src="index.html", frameborder=0, width=1000, height=800></iframe>
 
-# Exploratory Data Analysis
+## Central Limit Theorem (CLT) and Sampling Distributions
+
+The CLT says that if you take many repeated samples from a population, and calculate the averages or sum of each one, the collection of those averages will be normally distributed...and it doesn’t matter what the shape of the source distribution is!
+
+If you are measuring something and taking the average, then the average will be normally distributed or nearly normally distributed
+
+## Central Limit Theorem (CLT) and Sampling Distributions: Die example
+
+- What is the underlying probability distrbution of a fair six sided die?
+  - a uniform distribution with six equal possibilites
+
+- What is the expected value or average of rolling a die many time?
+  - 3.5
+  
+- What happens if we throw a single die 10000 times?
+```{r, fig.height=4, echo =F}
+DieOutcome <- sample(1:6,10000, replace= TRUE)
+hist(DieOutcome, col ="light blue")
+abline(v=3.5, col = "red",lty=1)
+```
+
+## Central Limit Theorem (CLT) and Sampling Distributions: Die example
+
+- Lets take sample sizes of n=10 from the previous simulation experiment (10000 rolls of a single die) take the mean of those 10 samples, repeat it 10000 times and plot a histogram of the means
+```{r, echo =F}
+x10 <- c()
+k =10000
+ for ( i in 1:k) {
+ x10[i] = mean(sample(1:6,10, replace = TRUE))}
+ hist(x10, col ="pink", main="Sample size =10",xlab ="Outcome of die roll")
+ abline(v = mean(x10), col = "Red")
+ abline(v = 3.5, col = "blue")
+```
+
+## Central Limit Theorem (CLT) and Sampling Distributions: Die example
+
+-  What if i increase my sample size?
+```{r, echo =F}
+ x30 <- c()
+ x100 <- c()
+ x1000 <- c()
+ k =10000
+ for ( i in 1:k){
+ x30[i] = mean(sample(1:6,30, replace = TRUE))
+ x100[i] = mean(sample(1:6,100, replace = TRUE))
+ x1000[i] = mean(sample(1:6,1000, replace = TRUE))
+ }
+ par(mfrow=c(1,3))
+ hist(x30, col ="green",main="n=30",xlab ="die roll")
+ abline(v = mean(x30), col = "blue")
+
+ hist(x100, col ="light blue", main="n=100",xlab ="die roll")
+ abline(v = mean(x100), col = "red")
+
+ hist(x1000, col ="orange",main="n=1000",xlab ="die roll")
+ abline(v = mean(x1000), col = "red")
+```
+
+## Central Limit Theorem (CLT) and Sampling Distributions
+
+- Because of the CLT the normal distribution is (almost) everywhere and forms the basis of the many statistical tests
+
+- The CLT states with increasing sample sizes (n > 30): $\bar{X}$ = $\mu$   and,  $\sigma_{\bar{X}}$ = $\frac{\sigma}{\sqrt{n}}$
+   
+-  $\sigma_{\bar{X}}$ is the standard deviation of the sampling distribution of the sample means, it also referred to as the standard error
+
+- $\sigma_{\bar{X}}$ reflects the uncertainty in our **estimate of the mean**, we can use the $\sigma_{\bar{X}}$ and what we know about the normal distribution to calculate confidence intervals around our estimate
+
+- in most cases  $\sigma$ will be unknown! but we have *s* an estimate of the standard deviation (more on this later)
 
 ## Exploratory Data Analysis (or EDA)
 
-- You've got some data, what do you do next?
+- You've got some data, what should you do next?
 
-```{r cars, echo = TRUE}
-summary(cars)
-```
+- EDA is an approach to data analysis that uses (mostly) visual tools to summarize the main characteristics of your dataset
+
+- You may already have some formal analysis task (e.g. hypothesis testing) that you wish to conduct with your data set but EDA is still **very useful**
+
+- Why EDA?
+
+    - Transform or manipulate data so it is amenable for analysis, identify mistakes (data wrangling) <small>(we won't talk about this today but you will learn this later in the week) </small>
+    - Suggest hypotheses about the causes of observed phenomena (data driven hypothesis)
+    - Assess assumptions on which statistical inference will be based (tests for normality etc.)
+    - Identify relationships among explanatory variable
+
+- further reading: Tukey, John Wilder (1977). Exploratory Data Analysis. Addison-Wesley. ISBN 978-0-201-07616-5.
+
+## Graphical Tools of EDA
+
+**barplots** for categorical data
+
+**histogram, dot plots, stem and leaf plots** to see the shape of numerical distributions
+
+**boxplots** to see summaries of a numerical distribution, useful in comparing distributions and identifying long and short-tailed distributions.
+
+**normal probability plots** To see if data is approximately normal
+  
+**PCA, multidimensional scaling, clustering techniques** multivariate methods for dimensionality reduction
+
+Plus many more.... 
+
 
 ## Slide with Plot
 
