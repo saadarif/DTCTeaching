@@ -84,7 +84,7 @@ between the **independent** and **dependent** variable(s).
  
 - s = sample standard deviation ,  $\sigma$ = population standard deviation (usually unknown)
 
-- <iframe src="index.html", frameborder=0, width=1000, height=800></iframe>
+- <iframe src="sampling.html", frameborder=0, width=1000, height=800></iframe>
 
 ## Central Limit Theorem (CLT) and Sampling Distributions
 
@@ -95,10 +95,12 @@ If you are measuring something and taking the average, then the average will be 
 ## Central Limit Theorem (CLT) and Sampling Distributions: Die example
 
 - What is the underlying probability distrbution of a fair six sided die?
-  - a uniform distribution with six equal possibilites
+  
+    - a uniform distribution with six equal possibilites
 
 - What is the expected value or average of rolling a die many time?
-  - 3.5
+  
+    - 3.5
   
 - What happens if we throw a single die 10000 times?
 ```{r, fig.height=4, echo =F}
@@ -109,7 +111,7 @@ abline(v=3.5, col = "red",lty=1)
 
 ## Central Limit Theorem (CLT) and Sampling Distributions: Die example
 
-- Lets take sample sizes of n=10 from the previous simulation experiment (10000 rolls of a single die) take the mean of those 10 samples, repeat it 10000 times and plot a histogram of the means
+- Lets take a sample size of n=10 rolls from the previous simulation experiment (total of 10000 rolls of a single die) and take the mean of those 10 samples, repeat this 10000 times and plot a histogram of the means
 ```{r, echo =F}
 x10 <- c()
 k =10000
@@ -122,7 +124,7 @@ k =10000
 
 ## Central Limit Theorem (CLT) and Sampling Distributions: Die example
 
--  What if i increase my sample size?
+-  What if I increase my sample size?
 ```{r, echo =F}
  x30 <- c()
  x100 <- c()
