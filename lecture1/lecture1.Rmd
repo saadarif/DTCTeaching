@@ -80,7 +80,7 @@ between the **independent** and **dependent** variable(s).
 
 ## Sampling and Sampling Distribution {.build}
 
-- $\bar{X}$ = sample mean,  $\mu$ = population mean (usually unknown),
+- $\bar{X}$ = sample mean,  $\mu$ = population mean (usually unknown), $\mu_{\bar{X}}$ = mean of a sample of $\bar{X}$'s
  
 - s = sample standard deviation ,  $\sigma$ = population standard deviation (usually unknown)
 
@@ -150,7 +150,7 @@ k =10000
 
 - Because of the CLT the normal distribution is (almost) everywhere and forms the basis of the many statistical tests
 
-- The CLT states with increasing sample sizes (n > 30): $\bar{X}$ = $\mu$   and,  $\sigma_{\bar{X}}$ = $\frac{\sigma}{\sqrt{n}}$
+- The CLT states with increasing sample sizes (n > 30): $\mu_{\bar{X}}$ = $\mu$   and,  $\sigma_{\bar{X}}$ = $\frac{\sigma}{\sqrt{n}}$
    
 -  $\sigma_{\bar{X}}$ is the standard deviation of the sampling distribution of the sample means, it also referred to as the standard error
 
