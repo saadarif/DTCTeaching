@@ -19,11 +19,6 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Course Organization 
 
 
-
-## Course Organization 
-
-
-
 ## Four Aspects of a Statistical Analysis <br /> <br /> 
 
 
@@ -158,7 +153,7 @@ k =10000
 
 - in most cases  $\sigma$ will be unknown! but we have *s* an estimate of the standard deviation (more on this later)
 
-- with increasing sample sizes $\bar{X}$ will convere to $\mu$
+- with increasing sample sizes $\bar{X}$ will converge to $\mu$ (*law of large numbers*)
 
 ## Exploratory Data Analysis (or EDA)
 
@@ -173,7 +168,7 @@ k =10000
     - Transform or manipulate data so it is amenable for analysis, identify mistakes (data wrangling) <small>(we won't talk about this today but you will learn this later in the week) </small>
     - Suggest hypotheses about the causes of observed phenomena (data driven hypothesis)
     - Assess assumptions on which statistical inference will be based (tests for normality etc.)
-    - Identify relationships among explanatory variable
+    - Identify relationships among explanatory variables
 
 - further reading: Tukey, John Wilder (1977). Exploratory Data Analysis. Addison-Wesley. ISBN 978-0-201-07616-5.
 
@@ -191,10 +186,116 @@ k =10000
 
 Plus many more.... 
 
-
-## Slide with Plot
-
-```{r pressure}
-plot(pressure)
+## Boxplots for quick summaries of data
+```{r, echo=F, fig.align="center"}
+x <- rnorm(100, mean=-2, sd=1)
+x <- c(x, rnorm(100, mean=2, sd=1))
+#hist(x)
+boxplot(x,  ylab="some measurement")
 ```
+
+Box = interquartile range 25 to 75  percentile (dispersion of the middle 50% of the values)
+Whisker= range (max-min)
+Bar = **median**
+
+## Boxplots don't always tell the whole story
+```{r, echo=F, fig.align="center"}
+x <- rnorm(100, mean=-2, sd=1)
+x <- c(x, rnorm(100, mean=2, sd=1))
+par(mfrow=c(1,2))
+hist(x, xlab="some measurement")
+boxplot(x,  ylab="some measurement")
+```
+
+## Violin or Bee Swarm plots are a much better alternative
+```{r, fig.align="center"}
+if (!require(grid, quietly=TRUE)) {
+  install.packages("grid")
+  library(grid)
+}
+x <- rnorm(100, mean=-2, sd=1)
+x <- c(x, rnorm(100, mean=2, sd=1))
+par(mfrow=c(1,2))
+#beeswarm boxplot
+if (!require(beeswarm, quietly=TRUE)) {
+  install.packages("beeswarm")
+  library(beeswarm)
+}
+boxplot(x, ylab="some measurement")
+beeswarm(x, add=TRUE)
+
+#plotting ggplot2 and base plot in same row
+vp.Right <- viewport(height=unit(.6, "npc"), width=unit(0.5, "npc"), 
+                           just=c("left","top"), 
+                           y=0.75, x=0.5)
+# Violin plot
+if (!require(ggplot2, quietly=TRUE)) {
+  install.packages("ggplot2")
+  library(ggplot2)
+}
+X <- as.data.frame(x)
+
+p <- ggplot(X, aes(1,x)) + ylab("some measurement") + xlab("")
+p <-p + geom_violin()
+print(p, vp=vp.Right)
+
+```
+
+## Histograms for looking at distributions of data
+
+## QQ plots for assessing normality
+
+## Multiple boxplots for patterns
+
+## Scatterplots for patterns
+
+## Princpal Component Analysis for Patterns (batch effects)
+
+## Princpal Component Analysis for Patterns 
+
+## Cluster Analysis to Look for Groupings in data
+
+
+## Summary for EDA {.build}
+
+> - Exploratory plots are "quick and dirty" (*these are not meant as final figures for your publications*)
+
+> - Let you summarize the data (usually graphically) and highlight any broad features
+
+> - Explore basic questions and hypotheses (and perhaps rule them out)
+
+> - Suggest modeling strategies for the "next step"
+
+> - Can identify additional patterns in the data
+
+# Statistical Inference
+
+## Motivation for Statistical Inference
+
+## Frequentist vs. Bayesian Statisitics
+
+## Machine Learning vs. Statistical Inference
+
+## Confidence Intervals??
+
+## Data Types
+
+## Hypothesis Testing
+
+## Hypothesis Types
+
+## Test types
+
+## Type 1 type 2 errors
+
+## p-values
+
+## p-values vs. effect size
+
+## multiple testing Problem
+
+## FWER
+
+## FDR
+
 
