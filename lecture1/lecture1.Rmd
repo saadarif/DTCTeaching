@@ -158,6 +158,8 @@ k =10000
 
 - in most cases  $\sigma$ will be unknown! but we have *s* an estimate of the standard deviation (more on this later)
 
+- with increasing sample sizes $\bar{X}$ will convere to $\mu$
+
 ## Exploratory Data Analysis (or EDA)
 
 - You've got some data, what should you do next?
