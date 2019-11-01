@@ -1,18 +1,19 @@
 ---
 title: "Introduction to Statistical Data Analysis <br/> <br/>"
-author: Saad Arif <br/>  Dept. of Biological and Medical Sciences & Centre for Functional Genomics <br/> Oxford
-  Brookes University <br/>
+author: Saad Arif <br/>  Dept. of Biological and Medical Sciences & Centre for Functional
+  Genomics <br/> Oxford Brookes University <br/>
 date: "<small>Nov 2019</small>"
 output:
   slidy_presentation:
+    highlighter: prettify
+    hitheme: tomorrow
     incremental: yes
-    highlighter : prettify      # {highlight.js, prettify, highlight}
-    hitheme     : tomorrow      # 
-    widescreen: true
+    widescreen: yes
+    mode: standalone
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align="center")
 ```
 
 
@@ -69,17 +70,17 @@ between the **independent** and **dependent** variable(s).
 
 - Differences between sample values (e.g. $\bar{X}$, *s* ) and population values ($\mu$, $\sigma$) are the sampling error
 
--  As long as we sample from a population some sampling error is unavoidable, but we can minimize it <center> ![](../images/Outline Application For Nigel Groome Studentship Competition_SA.png) </center>
+-  As long as we sample from a population some sampling error is unavoidable, but we can minimize it <center> ![](images/Outline Application For Nigel Groome Studentship Competition_SA.png) </center>
 
 - **Blocking** is another way we minimize sampling error. This only works if we know some other variable (the block variable) adds uninteresting variability to our measurements
 
-## Sampling and Sampling Distribution {.build}
+## Sampling and Sampling Distribution: Some Definitions {.build}
 
 - $\bar{X}$ = sample mean,  $\mu$ = population mean (usually unknown), $\mu_{\bar{X}}$ = mean of a sample of $\bar{X}$'s
- 
+
 - s = sample standard deviation ,  $\sigma$ = population standard deviation (usually unknown)
 
-- <iframe src="sampling.html", frameborder=0, width=1000, height=800></iframe>
+- [sampling distributions in action](http://shiny.stat.calpoly.edu/Sampling_Distribution/)
 
 ## Central Limit Theorem (CLT) and Sampling Distributions
 
@@ -120,7 +121,7 @@ k =10000
 ## Central Limit Theorem (CLT) and Sampling Distributions: Die example
 
 -  What if I increase my sample size?
-```{r, echo =F}
+```{r, echo =F, fig.align="center"}
  x30 <- c()
  x100 <- c()
  x1000 <- c()
@@ -207,7 +208,7 @@ hist(x, xlab="some measurement")
 boxplot(x,  ylab="some measurement")
 ```
 
-## Violin or Bee Swarm plots are a much better alternative
+## Violin or Beeswarm plots are a better alternative (show all your data)
 ```{r, fig.align="center"}
 if (!require(grid, quietly=TRUE)) {
   install.packages("grid")
@@ -243,17 +244,126 @@ print(p, vp=vp.Right)
 
 ## Histograms for looking at distributions of data
 
+We will work with the "iris" data set on the following slides. This dataset included measurement on 4 aspects of flower morphology for 3 different species of iris.
+```{r iris, echo=F}
+head(iris)
+```
+
+We might want to see if petal length is signficantly different among the species? We might want to see if the data are normally distributed.
+
+```{r  echo=F, fig.height=6, fig.align="center"}
+par(mfrow=c(1,3))
+hist(iris$Petal.Length[iris$Species=="setosa"], main="Petal Length for I. setosa")
+hist(iris$Petal.Length[iris$Species=="versicolor"], main="Petal Length for I. versicolor")
+hist(iris$Petal.Length[iris$Species=="virginica"], main="Petal Length for I. virginica")
+```
 ## QQ plots for assessing normality
 
-## Multiple boxplots for patterns
+Another graphical method for assessing normality. A Q-Q plot is a scatterplot created by plotting two sets of quantiles against one another. If both sets of quantiles came from the same distribution, we should see the points forming a line that’s roughly straight. 
 
-## Scatterplots for patterns
+What are **quantiles**? These are often referred to as “percentiles”. These are points in your data below which a certain proportion of your data fall. For example, imagine the classic bell-curve standard Normal distribution with a mean of 0. The 0.5 quantile, or 50th percentile, is 0. Half the data lie below 0. That’s the peak of the hump in the curve. The 0.95 quantile, or 95th percentile, is about 1.64. 95 percent of the data lie below 1.64.
 
-## Princpal Component Analysis for Patterns (batch effects)
+Q-Q plots take your sample data, sort it in ascending order, and then plot them versus quantiles calculated from a theoretical distribution. The number of quantiles is selected to match the size of your sample data. While Normal Q-Q Plots are the ones most often used in practice due to so many statistical methods assuming normality, Q-Q Plots can actually be created for any distribution.
+
+## QQ plots for assessing normality for petal length for three iris species
+
+```{r  echo=F, fig.height=4, fig.width=9,fig.align="center"}
+par(mfrow=c(1,3))
+qqnorm(iris$Petal.Length[iris$Species=="setosa"], main="Petal Length for I. setosa")
+qqline(iris$Petal.Length[iris$Species=="setosa"])
+qqnorm(iris$Petal.Length[iris$Species=="versicolor"], main="Petal Length for I. versicolor")
+qqline(iris$Petal.Length[iris$Species=="versicolor"])
+qqnorm(iris$Petal.Length[iris$Species=="virginica"], main="Petal Length for I. virginica")
+qqline(iris$Petal.Length[iris$Species=="virginica"])
+```
+
+1. light tails         
+2. skew to the left      
+3. skew to the right
+
+## Multiple boxplots for quick patterns
+
+```{r, fig.align="center"}
+par(mfrow=c(2,2))
+boxplot(iris$Sepal.Length ~ iris$Species, main="Sepal Length")
+boxplot(iris$Sepal.Width ~ iris$Species, main="Sepal Width")
+boxplot(iris$Petal.Length ~ iris$Species, main="Petal Length")
+boxplot(iris$Petal.Width ~ iris$Species, main="Petal Length")
+```
+
+## Scatterplots for patterns and evaluating relationships between variables
+
+```{r , fig.height=7, fig.width=7, fig.align="center"}
+pairs(iris[1:4], main = "Iris data red:setosa, green:versicolor, blue:virginca", pch = 21, bg = c("red", "green3", "blue")[unclass(iris$Species)], lower.panel=NULL, labels=c("SL","SW","PL","PW"), font.labels=2, cex.labels=4.5) 
+```
 
 ## Princpal Component Analysis for Patterns 
 
-## Cluster Analysis to Look for Groupings in data
+Principal Components is sometimes referred to as a **dimensionality reduction** technique. It tries to find the orthogonal (uncorrelated) axes of variation in your dataset and then rotates your data set to align with maximal axes of variation (in descending order) 
+
+```{r, warning=F, message=F, fig.align="center"}
+library(dplyr)
+library(grid)
+library(cowplot) #too arrange plots in a grid
+iris %>% select(-Species) %>% # remove Species column
+  scale() %>%                 # scale to 0 mean and unit variance
+  prcomp() ->                 # do PCA
+  pca                         # store result as `pca`
+
+pca_data <- data.frame(pca$x, Species=iris$Species)
+p1<- ggplot(pca_data, aes(x=PC1, y=PC2, color=Species)) + geom_point()
+
+# capture the rotation matrix in a data frame
+rotation_data <- data.frame(pca$rotation, variable=row.names(pca$rotation))
+# define a pleasing arrow style
+arrow_style <- arrow(length = unit(0.05, "inches"),
+                     type = "closed")
+# now plot, using geom_segment() for arrows and geom_text for labels
+p2 <- ggplot(rotation_data) + 
+  geom_segment(aes(xend=PC1, yend=PC2), x=0, y=0, arrow=arrow_style) + 
+  geom_text(aes(x=PC1, y=PC2, label=variable), hjust=0, size=3, color='red') + 
+  xlim(-1.,1.25) + 
+  ylim(-1.,1.) +
+  coord_fixed() # fix aspect ratio to 1:1
+
+percent <- 100*pca$sdev^2/sum(pca$sdev^2)
+perc_data <- data.frame(percent=percent, PC=1:length(percent))
+p3 <- ggplot(perc_data, aes(x=PC, y=percent)) + 
+  geom_bar(stat="identity") + 
+  geom_text(aes(label=round(percent, 2)), size=4, vjust=-.5) + 
+  ylim(0, 80)
+
+plot_grid(p1, p2, p3, labels = "AUTO")
+```
+
+## Princpal Component Analysis for batch correction 
+
+PCA can be used to get of systematic bias in data collection (over time, different machines etc.)
+
+<center>![](images/PCAbatchcorrection_Fig2.gig.gif) </center>
+
+
+
+<font size="-1">from: Zhu, X., Wolfgruber, T.K., Tasato, A. et al. Genome Med (2017) 9: 108. https://doi.org/10.1186/s13073-017-0492-3 </font>
+
+## Princpal Component Analysis for general patterns in mutlivariate data
+
+PCA is a **general pattern engine** that is useful to look for patterns in your data without any prior knowledge of groupings or clusters (in machine learning terminology is is unsupervised clustering)
+
+<center><img src="images/nihms132060f1.jpg"/></center>
+
+
+<font size="-1"> from: Novembre J, Johnson T, Bryc K, et al. Genes mirror geography within Europe [published correction appears in Nature. 2008 Nov 13;456(7219):274]. Nature. 2008;456(7218):98–101. doi:10.1038/nature07331 </font>
+
+
+## Other Clustering Techniques
+
+```{r, echo=FALSE,out.width="49%",out.height="20%",fig.cap=" ",fig.show='hold',fig.align='center'}
+knitr::include_graphics(c("images/heirarchical.png","images/entire_clust.svg"))
+``` 
+
+<font size="-1">from :http://gastrulation.stemcells.cam.ac.uk, 
+Mishra, A.K., Duraisamy, G.S., Khare, M. et al. Genome-wide transcriptome profiling of transgenic hop (Humulus lupulus L.) constitutively overexpressing HlWRKY1 and HlWDR1 transcription factors. BMC Genomics 19, 739 (2018) doi:10.1186/s12864-018-5125-8 </font>
 
 
 ## Summary for EDA {.build}
@@ -264,7 +374,7 @@ print(p, vp=vp.Right)
 
 > - Explore basic questions and hypotheses (and perhaps rule them out)
 
-> - Suggest modeling strategies for the "next step"
+> - Suggest modeling strategies and check assumptions for the "next step"
 
 > - Can identify additional patterns in the data
 
