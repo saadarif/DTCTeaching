@@ -1,7 +1,8 @@
 ---
 title: "Introduction to Statistical Data Analysis <br/> <br/>"
 author: Saad Arif <br/>  Dept. of Biological and Medical Sciences & Centre for Functional
-  Genomics <br/> Oxford Brookes University <br/>
+  Genomics <br/> Oxford Brookes University <br/> <br/>
+  Maria Christodoulo <br/> Department of Statistics <br/> University of Oxford <br/>
 date: "<small>Nov 2019</small>"
 output:
   slidy_presentation:
@@ -32,15 +33,27 @@ Daily Schedule:
 
 There will be some variation during the three days but we will always start with a lecture session.
 
+
+## Course Organization 
+
+
+Day 1: Introduction to Statistical Analysis, Introduction to the R programming language
+
+Day 2: Programming in R, Basic Statistical Tests in R
+
+Day 3: Advanced Data Wrangling in R, Introduction to Linear Models
+
+Day 4(morning only): Introduction to Generalized Linear Models (time permitting), Revision Exercises
+
 ## Four Aspects of a Statistical Analysis <br /> <br /> 
 
 
 1. Experimental Design
 2. Exploratory Data Analysis (EDA)
 3. Inference
-4. Visualisation
+4. *Visualisation*
 
-We will discusss these steps of statistical analysis in order. But we might take some detours along the way where an important concept needs to be highlighted. 
+* We will discusss these steps of statistical analysis in order. But we might take some detours along the way where an important concept needs to be highlighted. 
 
 ## Experimental Design {.build}
 
@@ -523,7 +536,7 @@ $H_a$ | $H_0$  | Type II error
 * Returning to our sleep example
 
 * A reasonable strategy would reject the null hypothesis if
-  $\bar{X_{1}} - \bar{X_{2}}$ was less than some constant, say $C$
+  $\bar{X_{1}} - \bar{X_{2}}$ was **lesser**/greater than some constant, say $C$
 
 * Typically, $C$ is chosen so that the probability of a Type I
   error, $\alpha$, is $.05$ (or some other relevant constant)
@@ -561,10 +574,11 @@ $H_a$ | $H_0$  | Type II error
 
 * Assumptions of a two-sample t-test
    
-    - **Normality** the numerical variable should be normally distributed across the two groups. data can be transformed to normality if required. The test is robust to small deviations from normality.
+    - **Normality** the numerical variable should be normally distributed across the two groups. data can be transformed to normality if required. The test is robust to small deviations from normality. With small sample sizes it is extremely difficult to test for normality.
     - **Independent observations** data points need to be independent from one another. For a particular case of this violation e.g. in before/after studies where data across the groups are clearly not independent a *paired* t-test can be used
     - **Equal Variance** the two groups need to have equal variances. A t-test assuming unequal variance (Welch's t-test) can be used if variances are unequal
     - **Randomness** data are obtained from random sampling or a randomization procedure
+
     
 ## Performing a two-sample t-test
 
@@ -598,11 +612,10 @@ visualize.t(stat=-1.701, df=28)
  sleeping less than 3 hours *effects* people’s memory.
 
 * This has a less informative alternative (the null is still the same):
-  
   $H_o : \bar{X_{1}} = \bar{X_{2}}$
   $H_a : \bar{X_{1}} \neq \bar{X_{2}}$
   
-* For two-tailed alternatives we divide ${\frac{\alpha}{2}$ and test for extremes in *both* tails of the distribution
+* For two-tailed alternatives we divide $\frac{\alpha}{2}$ and test for extremes in *both* tails of the distribution
 
 
 ## Critical regions of a t-distribution with 28 degrees of freedom for a two-tailed alternative
@@ -688,6 +701,13 @@ In modern Biolgy, particularly genomics, we are often conducting 100's-1000000's
 
 * There are various formulas that help you evaluate the optimal sample size, for a given test, guesstimated effect size and variance - these can be useful when designing your study.
 
+## A note on non-parametric tests
+
+* tests that assume an underlying distribution of your data and calculate parameters assuming that distribution (e.g. mean) are called parametric tests
+
+* if your data don't meet the assumptions (e.g. your data is highly non-normal) you can use what are called non-paramteric tests
+
+* example: the Mann-Whitney U test/Wilcoxon test is a a non-parametric alternative for the two sample t-test we just saw.
 
 ## Further Reading
 
