@@ -12,9 +12,7 @@ output:
     mode: standalone
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, fig.align="center")
-```
+
 
 
 ## Course Organization 
@@ -113,48 +111,17 @@ If you are measuring something and taking the average, then the average will be 
     - 3.5
   
 - What happens if we throw a single die 10000 times?
-```{r, fig.height=4, echo =F}
-DieOutcome <- sample(1:6,10000, replace= TRUE)
-hist(DieOutcome, col ="light blue", breaks=(c(0.5, 1.5, 2.5, 3.5, 4.5 , 5.5, 6.5)))
-abline(v=3.5, col = "red",lty=1, lwd=2,)
-```
+<img src="lecture1_files/figure-slidy/unnamed-chunk-1-1.png" width="768" style="display: block; margin: auto;" />
 
 ## Central Limit Theorem (CLT) and Sampling Distributions: Die example
 
 - Lets take a sample size of n=10 rolls from the previous simulation experiment (total of 10000 rolls of a single die) and take the mean of those 10 samples, repeat this 10000 times and plot a histogram of the means
-```{r, echo =F}
-x10 <- c()
-k =10000
- for ( i in 1:k) {
- x10[i] = mean(sample(1:6,10, replace = TRUE))}
- hist(x10, col ="pink", main="Sample size =10",xlab ="Outcome of die roll")
- abline(v = mean(x10), col = "Red")
- abline(v = 3.5, col = "blue")
-```
+<img src="lecture1_files/figure-slidy/unnamed-chunk-2-1.png" width="768" style="display: block; margin: auto;" />
 
 ## Central Limit Theorem (CLT) and Sampling Distributions: Die example
 
 -  What if I increase my sample size?
-```{r, echo =F, fig.align="center"}
- x30 <- c()
- x100 <- c()
- x1000 <- c()
- k =10000
- for ( i in 1:k){
- x30[i] = mean(sample(1:6,30, replace = TRUE))
- x100[i] = mean(sample(1:6,100, replace = TRUE))
- x1000[i] = mean(sample(1:6,1000, replace = TRUE))
- }
- par(mfrow=c(1,3))
- hist(x30, col ="green",main="n=30",xlab ="die roll")
- abline(v = mean(x30), col = "blue")
-
- hist(x100, col ="light blue", main="n=100",xlab ="die roll")
- abline(v = mean(x100), col = "red")
-
- hist(x1000, col ="orange",main="n=1000",xlab ="die roll")
- abline(v = mean(x1000), col = "red")
-```
+<img src="lecture1_files/figure-slidy/unnamed-chunk-3-1.png" width="768" style="display: block; margin: auto;" />
 
 ## Central Limit Theorem (CLT) and Sampling Distributions
 
@@ -204,75 +171,35 @@ k =10000
 Plus many more.... 
 
 ## Boxplots for quick summaries of data
-```{r, echo=F, fig.align="center"}
-x <- rnorm(100, mean=-2, sd=1)
-x <- c(x, rnorm(100, mean=2, sd=1))
-#hist(x)
-boxplot(x,  ylab="some measurement")
-```
+<img src="lecture1_files/figure-slidy/unnamed-chunk-4-1.png" width="768" style="display: block; margin: auto;" />
 
 Box = interquartile range 25 to 75  percentile (dispersion of the middle 50% of the values)
 Whisker= range (max-min)
 Bar = **median**
 
 ## Boxplots don't always tell the whole story
-```{r, echo=F, fig.align="center"}
-x <- rnorm(100, mean=-2, sd=1)
-x <- c(x, rnorm(100, mean=2, sd=1))
-par(mfrow=c(1,2))
-hist(x, xlab="some measurement")
-boxplot(x,  ylab="some measurement")
-```
+<img src="lecture1_files/figure-slidy/unnamed-chunk-5-1.png" width="768" style="display: block; margin: auto;" />
 
 ## Violin or Beeswarm plots are a better alternative (show all your data)
-```{r, fig.align="center"}
-if (!require(grid, quietly=TRUE)) {
-  install.packages("grid")
-  library(grid)
-}
-x <- rnorm(100, mean=-2, sd=1)
-x <- c(x, rnorm(100, mean=2, sd=1))
-par(mfrow=c(1,2))
-#beeswarm boxplot
-if (!require(beeswarm, quietly=TRUE)) {
-  install.packages("beeswarm")
-  library(beeswarm)
-}
-boxplot(x, ylab="some measurement")
-beeswarm(x, add=TRUE)
-
-#plotting ggplot2 and base plot in same row
-vp.Right <- viewport(height=unit(.6, "npc"), width=unit(0.5, "npc"), 
-                           just=c("left","top"), 
-                           y=0.75, x=0.5)
-# Violin plot
-if (!require(ggplot2, quietly=TRUE)) {
-  install.packages("ggplot2")
-  library(ggplot2)
-}
-X <- as.data.frame(x)
-
-p <- ggplot(X, aes(1,x)) + ylab("some measurement") + xlab("")
-p <-p + geom_violin()
-print(p, vp=vp.Right)
-
-```
+<img src="lecture1_files/figure-slidy/unnamed-chunk-6-1.png" width="768" style="display: block; margin: auto;" />
 
 ## Histograms for looking at distributions of data
 
 We will work with the "iris" data set on the following slides. This dataset included measurement on 4 aspects of flower morphology for 3 different species of iris.
-```{r iris, echo=F}
-head(iris)
+
+```
+##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.1         3.5          1.4         0.2  setosa
+## 2          4.9         3.0          1.4         0.2  setosa
+## 3          4.7         3.2          1.3         0.2  setosa
+## 4          4.6         3.1          1.5         0.2  setosa
+## 5          5.0         3.6          1.4         0.2  setosa
+## 6          5.4         3.9          1.7         0.4  setosa
 ```
 
 We might want to see if petal length is signficantly different among the species? We might want to see if the data are normally distributed.
 
-```{r  echo=F, fig.height=6, fig.align="center"}
-par(mfrow=c(1,3))
-hist(iris$Petal.Length[iris$Species=="setosa"], main="Petal Length for I. setosa")
-hist(iris$Petal.Length[iris$Species=="versicolor"], main="Petal Length for I. versicolor")
-hist(iris$Petal.Length[iris$Species=="virginica"], main="Petal Length for I. virginica")
-```
+<img src="lecture1_files/figure-slidy/unnamed-chunk-7-1.png" width="768" style="display: block; margin: auto;" />
 ## QQ plots for assessing normality
 
 Another graphical method for assessing normality. A Q-Q plot is a scatterplot created by plotting two sets of quantiles against one another. If both sets of quantiles came from the same distribution, we should see the points forming a line that’s roughly straight. 
@@ -283,15 +210,7 @@ Q-Q plots take your sample data, sort it in ascending order, and then plot them 
 
 ## QQ plots for assessing normality for petal length for three iris species
 
-```{r  echo=F, fig.height=4, fig.width=9,fig.align="center"}
-par(mfrow=c(1,3))
-qqnorm(iris$Petal.Length[iris$Species=="setosa"], main="Petal Length for I. setosa")
-qqline(iris$Petal.Length[iris$Species=="setosa"])
-qqnorm(iris$Petal.Length[iris$Species=="versicolor"], main="Petal Length for I. versicolor")
-qqline(iris$Petal.Length[iris$Species=="versicolor"])
-qqnorm(iris$Petal.Length[iris$Species=="virginica"], main="Petal Length for I. virginica")
-qqline(iris$Petal.Length[iris$Species=="virginica"])
-```
+<img src="lecture1_files/figure-slidy/unnamed-chunk-8-1.png" width="864" style="display: block; margin: auto;" />
 
 1. light tails         
 2. skew to the left      
@@ -299,58 +218,17 @@ qqline(iris$Petal.Length[iris$Species=="virginica"])
 
 ## Multiple boxplots for quick patterns
 
-```{r, fig.align="center"}
-par(mfrow=c(2,2))
-boxplot(iris$Sepal.Length ~ iris$Species, main="Sepal Length")
-boxplot(iris$Sepal.Width ~ iris$Species, main="Sepal Width")
-boxplot(iris$Petal.Length ~ iris$Species, main="Petal Length")
-boxplot(iris$Petal.Width ~ iris$Species, main="Petal Length")
-```
+<img src="lecture1_files/figure-slidy/unnamed-chunk-9-1.png" width="768" style="display: block; margin: auto;" />
 
 ## Scatterplots for patterns and evaluating relationships between variables
 
-```{r , fig.height=7, fig.width=7, fig.align="center"}
-pairs(iris[1:4], main = "Iris data red:setosa, green:versicolor, blue:virginca", pch = 21, bg = c("red", "green3", "blue")[unclass(iris$Species)], lower.panel=NULL, labels=c("SL","SW","PL","PW"), font.labels=2, cex.labels=4.5) 
-```
+<img src="lecture1_files/figure-slidy/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" />
 
 ## Principal Component Analysis for Patterns 
 
 Principal Components is sometimes referred to as a **dimensionality reduction** technique. It tries to find the orthogonal (uncorrelated) axes of variation in your dataset and then rotates your data set to align with maximal axes of variation (in descending order) 
 
-```{r, warning=F, message=F, fig.align="center"}
-library(dplyr)
-library(grid)
-library(cowplot) #too arrange plots in a grid
-iris %>% select(-Species) %>% # remove Species column
-  scale() %>%                 # scale to 0 mean and unit variance
-  prcomp() ->                 # do PCA
-  pca                         # store result as `pca`
-
-pca_data <- data.frame(pca$x, Species=iris$Species)
-p1<- ggplot(pca_data, aes(x=PC1, y=PC2, color=Species)) + geom_point()
-
-# capture the rotation matrix in a data frame
-rotation_data <- data.frame(pca$rotation, variable=row.names(pca$rotation))
-# define a pleasing arrow style
-arrow_style <- arrow(length = unit(0.05, "inches"),
-                     type = "closed")
-# now plot, using geom_segment() for arrows and geom_text for labels
-p2 <- ggplot(rotation_data) + 
-  geom_segment(aes(xend=PC1, yend=PC2), x=0, y=0, arrow=arrow_style) + 
-  geom_text(aes(x=PC1, y=PC2, label=variable), hjust=0, size=3, color='red') + 
-  xlim(-1.,1.25) + 
-  ylim(-1.,1.) +
-  coord_fixed() # fix aspect ratio to 1:1
-
-percent <- 100*pca$sdev^2/sum(pca$sdev^2)
-perc_data <- data.frame(percent=percent, PC=1:length(percent))
-p3 <- ggplot(perc_data, aes(x=PC, y=percent)) + 
-  geom_bar(stat="identity") + 
-  geom_text(aes(label=round(percent, 2)), size=4, vjust=-.5) + 
-  ylim(0, 80)
-
-plot_grid(p1, p2, p3, labels = "AUTO")
-```
+<img src="lecture1_files/figure-slidy/unnamed-chunk-11-1.png" width="768" style="display: block; margin: auto;" />
 
 ## Princpal Component Analysis for batch correction 
 
@@ -374,9 +252,10 @@ PCA is a **general pattern engine** that is useful to look for patterns in your 
 
 ## Other Clustering Techniques
 
-```{r, echo=FALSE,out.width="49%",out.height="20%",fig.cap=" ",fig.show='hold',fig.align='center'}
-knitr::include_graphics(c("images/heirarchical.png","images/entire_clust.svg"))
-``` 
+<div class="figure" style="text-align: center">
+<img src="images/heirarchical.png" alt=" " width="49%" height="20%" /><img src="images/entire_clust.svg" alt=" " width="49%" height="20%" />
+<p class="caption"> </p>
+</div>
 
 <font size="-1">from :http://gastrulation.stemcells.cam.ac.uk, 
 Mishra, A.K., Duraisamy, G.S., Khare, M. et al. Genome-wide transcriptome profiling of transgenic hop (Humulus lupulus L.) constitutively overexpressing HlWRKY1 and HlWDR1 transcription factors. BMC Genomics 19, 739 (2018) doi:10.1186/s12864-018-5125-8 </font>
@@ -582,13 +461,7 @@ $H_a$ | $H_0$  | Type II error
 ## A t-distribution with 28 degrees of freedom
 
 * The $C$ with a lower-tail probability of 0.05 on a t-distribution with 28 degrees of freedom is roughly 1.701
-```{r, echo=F, fig.height=3,fig.width=3}
-if (!require(visualize, quietly=TRUE)) {
-  install.packages("visualize")
-  library(visualize)
-}
-visualize.t(stat=-1.701, df=28)
-```
+<img src="lecture1_files/figure-slidy/unnamed-chunk-13-1.png" width="288" style="display: block; margin: auto;" />
 
 * The shaded blue region is called the critical region (for $\alpha = 0.05$), as long as our observed $t$ is in this region, we can reject the null hypothesis. We can also get an exact p-value for our $t$ using computers. In this case the exact p-value is 1.204e-14. $C$ is also called the critical value.
   
@@ -607,13 +480,7 @@ visualize.t(stat=-1.701, df=28)
 
 ## Critical regions of a t-distribution with 28 degrees of freedom for a two-tailed alternative
 
-```{r, echo=F, fig.height=3,fig.width=3}
-if (!require(visualize, quietly=TRUE)) {
-  install.packages("visualize")
-  library(visualize)
-}
-visualize.t(stat=c(-2.048, 2.0484), df=28, section="tails")
-```
+<img src="lecture1_files/figure-slidy/unnamed-chunk-14-1.png" width="288" style="display: block; margin: auto;" />
 
 * In this this case the critical region is at the extreme ends of the distribution
 
