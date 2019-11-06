@@ -1,16 +1,18 @@
 ---
 title: "Introduction to Statistical Data Analysis <br/> <br/>"
 author: Saad Arif <br/>  Dept. of Biological and Medical Sciences & Centre for Functional
-  Genomics <br/> Oxford Brookes University <br/> <br/>
-  Maria Christodoulo <br/> Department of Statistics <br/> University of Oxford <br/>
+  Genomics <br/> Oxford Brookes University <br/> <br/> Maria Christodoulo <br/> Department
+  of Statistics <br/> University of Oxford <br/>
 date: "<small>Nov 2019</small>"
 output:
   slidy_presentation:
     highlighter: prettify
     hitheme: tomorrow
     incremental: yes
-    widescreen: yes
     mode: standalone
+    widescreen: yes
+  beamer_presentation:
+    incremental: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -630,9 +632,9 @@ visualize.t(stat=c(-2.048, 2.0484), df=28, section="tails")
 
 * In this this case the critical region is at the extreme ends of the distribution
 
-* The p-value for a two-tailed test with a symmetric distribution (like the $t distribution$) will always be twice that of the one-tailed alternative
+* The p-value for a two-tailed test with a symmetric distribution (like the $t-distribution$) will always be twice that of the one-tailed alternative
 
-* one-tailed tests can be more powerful (less type II error) but only use them if you have good reason to do so and always make the decision before doing the test.
+* one-tailed tests can be more powerful (lesser type II error) but *only use them if you have good reason to do so and always make the decision before doing the test*.
 
 ## More about Null hypothesis and interpreting p-values
 
@@ -713,16 +715,16 @@ In modern Biolgy, particularly genomics, we are often conducting 100's-1000000's
 
 * For those interested in a more mathematical/formal exposition to statistical inference:
    
-   - Wasserman, LA (2004) All of Statistics. Springer
-   - Miller, I (2013) John E. Freund's Mathematical Statistics with Applications. Pearson
+    - Wasserman, LA (2004) All of Statistics. Springer
+    - Miller, I (2013) John E. Freund's Mathematical Statistics with Applications. Pearson
    
 * A great reference for Statistics and Using R (good for all levels):
   
-  - Crawley, MJ (2012) The R Book. Wiley
+    - Crawley, MJ (2012) The R Book. Wiley
   
 * Beginnger to Intermediate Statistics in R 
 
-  - Hector, A (2015) The New Statistics with R: An Introduction for Biologists. OUP
+    - Hector, A (2015) The New Statistics with R: An Introduction for Biologists. OUP
   
-* There are actually too many books and online resources to mention. Look around and find somethign that works for you.
+* There are actually too many books and online resources to mention. Look around and find something that works for you.
 
