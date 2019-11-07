@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Introduction to Linear Models</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Introduction to Linear Models">
+  <meta name="author" content="Saad Arif">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  
+  <hgroup class="auto-fadein">
+    <h1>Introduction to Linear Models</h1>
+    <h2>Multifactor ANOVAs, Multiple Linear Regression, ANCOVA</h2>
+    <p>Saad Arif<br/>Dept. of Biological and Medical Sciences &amp; Centre for Functional Genomics, Oxford                  Brookes University</p>
+  </hgroup>
+  
+  <article></article>  
+  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  
+  <article data-timings="">
+    <style>
+em {
+  font-style: italic
+}
+
+strong {
+  font-weight: bold;
+}
+
+sup {
+  top: -0.5em;
+  vertical-align: baseline;
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+}
+
+article p {
+  font-size: 20px;
+}
+
+article li.build {
+  font-size: 18px;
+}
+
+article code {
+  font-size: 14px;
+}
+
+
+</style>
+
+<h2>What are linear models?</h2>
+
+<ul>
+<li><p>All the parametric tests you have learned thus far (t-tests, ANOVAs, regression) are special cases of what are known as <strong>linear models</strong></p></li>
+<li><p>These tests make certain assumptions (normality, independence, randomness, equality of variance) about aspects of your data and the same assumptions apply to <strong>linear models</strong></p></li>
+<li><p>These more complex and even more general methods that extend linear methods to deal with unequal variances (General Linear Models), non-normality (Generalized Linear Models), non-independence (Mixed Models) and non-linearity (Generalized Additive Models). </p></li>
+<li><p>Before we see Linear models in their general form, let&#39;s explore some special instances of these models </p></li>
+</ul>
+
+<p>These instances are so special and commonly used, that they have their own specific names (multifactor ANOVA, multiple Regression, ANCOVA)</p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  
+  <hgroup>
+    <h2>Multi-factor ANOVA (Analysis of Variance)</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>We have seen the <strong>one-way ANOVA</strong> to test for <strong>differences in means</strong> of one <strong>numerical continuous dependent</strong> variable across two or more groups/levels of one <strong>categorical independent</strong> variable.</p></li>
+<li><p>What if we had more than one independent categorical variable?</p></li>
+<li><p>Multifactor ANOVAs to the rescue</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  
+  <hgroup>
+    <h2>Two-way ANOVA Example: Tooth Growth</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>To illustrate the utility of a two-way ANOVA we will use a built-in dataset in R called <code>Tooth Growth</code>. </p>
+
+<p>Research was conducted to examine the effect of vitamin C on tooth growth in guinea pigs. Each animal was assigned to one of six groups (K=6) of 10 subjects each (n=10 ) for a total of 60 Guinea Pigs in all (N=60). The two variables that were manipulated in this study were the dosage level of Vitamin C (0.5, 1.0, or 2 mg/day) and the delivery method of the dosage (orange juice or absorbic acid [coded as “VC”]). The response is the length of odontoblasts (cells responsible for tooth growth).</p>
+
+<p>The <strong>dependent/response</strong> variable is the length of the odontoblasts and there two <strong>independent/explanatory</strong> variables (<strong>IV</strong>), dose of Vit. C and delivery method. There are three different levels or groups of Vit. C and two different levels/groups of the delivery method.</p>
+
+<p>The researchers were interested if (i) Vit. C dose levels had an effect on tooth growth; (ii) if different delivery methods had an effect on tooth growth. Additionally, we might be interested in knowing if certain combinations of delivery method and dose are signficantly better than others.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  
+  <hgroup>
+    <h2>Exploring the Tooth dataset</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>Let&#39;s have a quick look at the tooth dataset</p>
+
+<pre><code class="r">data(&quot;ToothGrowth&quot;)
+head(ToothGrowth)
+</code></pre>
+
+<pre><code>##    len supp dose
+## 1  4.2   VC  0.5
+## 2 11.5   VC  0.5
+## 3  7.3   VC  0.5
+## 4  5.8   VC  0.5
+## 5  6.4   VC  0.5
+## 6 10.0   VC  0.5
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  
+  <hgroup>
+    <h2>Exploring the Tooth dataset: Quick Boxplots</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p><img src="assets/fig/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" style="display: block; margin: auto;" /></p>
+
+<p>We can see a trend of increasing growth with increasing dose. The pattern between different delivery methods is unclear and it is not clear cut which combinations might be best</p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  
+  <hgroup>
+    <h2>The two-way ANOVA model: Additive effects only</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>There are two possible formulations of two-way ANOVA model, the simpler one is called the <strong>additive</strong> model</p></li>
+<li><p>In the additive model each single observation can be modelled as:
+<center>\(Y_{ijk} = \mu + \alpha_{i} + \beta_{i} + \epsilon_{ijk}\) </center>
+<center>Where  \(\mu\) is the grand mean of all data points  </center>
+<center>  \(\alpha_{i}\) is the fixed effect of level i for the 1st IV  </center>
+<center>  \(\beta_{j}\) is the fixed effect of level j for the 2nd IV  </center>
+<center>  \(\epsilon_{ijk}\) is the error term of the $k$th entry in subgroup \(ij\) </center></p></li>
+<li><p>\(\epsilon_{ijk}\) is assumed to be normally distributed with a mean of zero and a variance of \(\sigma^{2}\)</p></li>
+<li><p>\(\alpha\) (<strong>dose</strong> in this case) and \(\beta\) (<strong>delivery method</strong> in this case) are also called the <strong>main effects</strong> and they are considered <strong>fixed</strong> in the sense they are estimated constants</p></li>
+<li><p>There are two sets of hypothesis for the additive two-way ANOVA, one for each <strong>IV</strong>:</p>
+
+<ul>
+<li>\(H_0 : \mu_1 = \mu_2=...=\mu_k \ , H_a : not \ H_0\)</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  
+  <hgroup>
+    <h2>The two-way ANOVA model: Interaction effects</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>The interaction model includes an additional term other than the ones for the main effects: the <strong>interaction term</strong>. The definition of interaction is that the effect of a change in the level or value of one explanatory variable on the mean outcome depends on the level or value of another explanatory variable. <strong>The interaction is only between different explanatory variables</strong></p></li>
+<li><p>This model, referred to as a <strong>full factorial design</strong> is specified as:
+<center>\(Y_{ijk} = \mu + \alpha_{i} + \beta_{i} + (\alpha\beta)_{ij}+\epsilon_{ijk}\) </center>
+<center>Where \((\alpha\beta)_{ij}\) is the interaction term  </center></p></li>
+<li><p>There are three sets of null/alternative hypothesis for this test:</p>
+
+<ul>
+<li>The first two are the same as the additive only model from before</li>
+<li>the third is \(H_0\) : there is no interaction between the two IV&#39;s  \(H_a\) : there is an interaction between the two IV&#39;s</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  
+  <hgroup>
+    <h2>Which two-way ANOVA model is suitable for me?</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>In general you unless there is good <em>a priori</em> to not expect an interaction between the two IV&#39;s go for the additive/fractional-factorial model</p></li>
+<li><p>You should still graphically explore your data to see for any hints for an interaction i.e. use EDA to pick your model</p></li>
+<li><p>There is no harm in starting with a full factorial/interaction model and then dropping the interaction term if the ANOVA results deem it insignficant</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  
+  <hgroup>
+    <h2>Two-way ANOVA: some more EDA</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>An additional bit of reconaissance we need to do is check if the data is <strong>balanced</strong> (equal number of observations in subgroups):</p>
+
+<pre><code class="r">#cross tabulate the two columns of IV
+table(ToothGrowth$dose, ToothGrowth$supp)
+</code></pre>
+
+<pre><code>##      
+##       OJ VC
+##   0.5 10 10
+##   1   10 10
+##   2   10 10
+</code></pre>
+
+<p>As we can see this data is <strong>balanced</strong>. In this case we can use the built-in functions for ANOVA in R. If our data is not balanced we need to use ANOVA functions from another package called <code>car</code>.</p>
+
+<p>For an explanation of why this is the case see <a href="https://www.r-bloggers.com/anova-%E2%80%93-type-iiiiii-ss-explained/">here</a></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  
+  <hgroup>
+    <h2>The Two-way ANOVA in R</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <pre><code class="r">tooth.aov &lt;- aov(len ~ supp + dose + supp:dose, data = ToothGrowth)
+summary(tooth.aov)
+</code></pre>
+
+<pre><code>##             Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## supp         1  205.4   205.4  15.572 0.000231 ***
+## dose         2 2426.4  1213.2  92.000  &lt; 2e-16 ***
+## supp:dose    2  108.3    54.2   4.107 0.021860 *  
+## Residuals   54  712.1    13.2                     
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+</code></pre>
+
+<p>We see that our Main Effect of Supplement, Main Effect of Dose, and Supplement x Dose Interaction are all statistically significant. We can reject the null hypothesis that there is no interaction between delivery method (supplement) and Vitamin C dosage (dose) on tooth growth in guinea pigs, \(F_{2,54} = 4.107,\ p = .022\). We can also say that there are significant differences in the impact of delivery methods on tooth growth, \(F_{1,54} = 15.572, \ p = 0.000231\), as well as significant differences in the impact of dosage on tooth growth, \(F_{2,54} = 92,\ p = 0\).</p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  
+  <hgroup>
+    <h3>Interpreting results in the light of a significant interaction</h3>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>Are those <em>p-values</em> really telling the whole truth? p-value interpretation: there are significant differences in the impact of delivery methods on tooth growth, \(F_{1,54} = 15.572, p = 0.00023\)</p></li>
+<li><p>remember this plot:
+<img src="assets/fig/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" style="display: block; margin: auto;" /></p></li>
+<li><p>The delivery methods are clearly not different at a dose level of 2!</p></li>
+<li><p>interpreting null hypothesis about main effects can be problematic when the interaction term is significant!</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
+  
+  <hgroup>
+    <h2>Post-hoc tests</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>If the interaction term is <strong>not signficant</strong>, you can conduct pairwise comparisions for each significant main effect.</p></li>
+<li><p>If the interaction term <strong>is signficant</strong> focus on the pairwise comparisons of the all combinations of the IV&#39;s.</p></li>
+<li><p>If the interaction term is signficant and so is a main effect it might mean that the groups for the main effect are only different in certain contexts (the delivery method seems to be significantly different only at low doses of Vitamin C)</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  
+  <hgroup>
+    <h3>Post-hoc tests</h3>
+  </hgroup>
+  
+  <article data-timings="">
+    <pre><code class="r">TukeyHSD(tooth.aov, which = &quot;supp:dose&quot;)
+</code></pre>
+
+<pre><code>##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = len ~ supp + dose + supp:dose, data = ToothGrowth)
+## 
+## $`supp:dose`
+##                diff        lwr        upr     p adj
+## VC:0.5-OJ:0.5 -5.25 -10.048124 -0.4518762 0.0242521
+## OJ:1-OJ:0.5    9.47   4.671876 14.2681238 0.0000046
+## VC:1-OJ:0.5    3.54  -1.258124  8.3381238 0.2640208
+## OJ:2-OJ:0.5   12.83   8.031876 17.6281238 0.0000000
+## VC:2-OJ:0.5   12.91   8.111876 17.7081238 0.0000000
+## OJ:1-VC:0.5   14.72   9.921876 19.5181238 0.0000000
+## VC:1-VC:0.5    8.79   3.991876 13.5881238 0.0000210
+## OJ:2-VC:0.5   18.08  13.281876 22.8781238 0.0000000
+## VC:2-VC:0.5   18.16  13.361876 22.9581238 0.0000000
+## VC:1-OJ:1     -5.93 -10.728124 -1.1318762 0.0073930
+## OJ:2-OJ:1      3.36  -1.438124  8.1581238 0.3187361
+## VC:2-OJ:1      3.44  -1.358124  8.2381238 0.2936430
+## OJ:2-VC:1      9.29   4.491876 14.0881238 0.0000069
+## VC:2-VC:1      9.37   4.571876 14.1681238 0.0000058
+## VC:2-OJ:2      0.08  -4.718124  4.8781238 1.0000000
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  
+  <hgroup>
+    <h2>Visualizing a two-way ANOVA with interaction</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>Interaction plots are good way for understanding and visually displaying this data (but they don&#39;t show any  standard errors of the means or Confidence intervals)</p>
+
+<pre><code class="r">par(mfrow=c(1,2))
+with(ToothGrowth, interaction.plot(supp, dose, len))
+with(ToothGrowth, interaction.plot(dose, supp, len))
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  
+  <hgroup>
+    <h2>A better visualization...</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p><img src="assets/fig/unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  
+  <hgroup>
+    <h2>We&#39;re not done yet! Checking Assumptions</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>We still need to check the assumptions of our analysis before setting on the results</p></li>
+<li><p>The assumptions are (in order of importance in relation to the robustness of your results):</p>
+
+<ol>
+<li> errors terms (\(\epsilon_{ijk}\)) are independent</li>
+<li> equal variance of errors terms (homogeneity of variances)</li>
+<li> The errors  are normally distributed.</li>
+</ol></li>
+<li><p>Remember independence implies that our data are not connected in any way. Knowing one observation doesn&#39;t tell us any information about the other. Imagine if the pigs came from 2 different families, there could be some dependence of tooth growth within members of the same family due to relatedness. There is no testing for independence! Just like there is no testing for random sampling/randomization. We need to be cognizant of this during the experimental design stage. </p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  
+  <hgroup>
+    <h2>Error terms \(\simeq\) Residuals!</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>the error terms \(\epsilon_{ijk}\) are not actually known, but can be approximated.</p></li>
+<li><p>the <strong>residuals</strong> (\(r_{ijk}\)) are the <strong>estimates</strong> of the error terms (\(\epsilon_{ijk}\)) in our model. They are estimated as follows
+<center> \(r_{ijk} = Y_{ijk} - \bar{Y_{ij}} =  Y_{ijk} - \hat{\mu} + \hat{\alpha_{i}} + \hat{\beta_{i}} +\hat{(\alpha\beta)_{ij}}\) </center></p></li>
+<li><p>Notice i have put a hat on all the parameters, this is to emphasize that now we are dealing with values estimated from sampled/randomized data</p></li>
+<li><p>\(\bar{Y_{ij}}\) is the predicted or fitted value just like in linear regression</p></li>
+<li><p>The residuals are <strong>key</strong> in checking model assumptions (just replace error term with residual in the previous slide), we will see them often.</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  
+  <hgroup>
+    <h2>Assumption 2: Homogeneity of Variances</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>This assumption can also be recast in terms of the distribution of residuals. In this case the distributions of residuals should be the same across all levels of each IV and the fitted values (\(bar{Y_{ij}}\))</p>
+
+<pre><code class="r">par(mfrow=c(1,3))
+plot(tooth.aov,1) # you do not want the average of residuals to #deviate from zero at at data point on the x-axis
+plot(ToothGrowth$dose, residuals(tooth.aov))
+plot(ToothGrowth$supp, residuals(tooth.aov))
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" width="700px" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
+  
+  <hgroup>
+    <h2>Assumption 3: Normality of the residuals</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>This is fairly straight-forward, one suitable way is to make a QQ plot of the residuals.  In a perfect dataset, these values would create a perfect diagonal line.</p>
+
+<pre><code class="r">plot(tooth.aov,2)
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" /></p>
+
+<ul class = "build incremental">
+<li>But this is not too bad.. no heavy skew or bimodality</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  
+  <hgroup>
+    <h2>Summary for MultiFactor ANOVAs</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>You can have 3-way, 4-way any-way ANOVAs you like, but interpreting 3rd order interactions is quite difficult</p></li>
+<li><p>Multi-way ANOVAs are an excellent tool if you are conducting experimental work, are interested in the difference in means between some groups, and need to control for several categorical variables at once.</p></li>
+<li><p>ANOVAs are intimately tied to Experimental Design, and usually courses/Books in Experimental design are usually books about different types of ANOVA</p></li>
+<li><p>We will later see this same ANOVA model recast as a linear model.</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  
+  <hgroup>
+    <h2>Multiple Linear Regression</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>Recall the model for simple linear regression:
+  \[
+  \begin{aligned}
+   y_{i} = \beta_{0} + \beta_{1} + \epsilon_{i}
+  \end{aligned}
+  \] 
+    <center> Where \(y\) is the response/dependent variable </center>
+    <center> \(x\) is the independent/predictor/explanatory variable </center>
+    <center> \(\beta_{0}\) and \(\beta_{1}\) are the intercept and slope of a straight line relationship between \(y\) and \(x\) </center>
+    <center> \(\epsilon_{i}\) are the error terms or the variation unxeplained by our linear relationship, these are assumed to normally distributed with mean 0 and variance \(\sigma^{2}\) </center></p></li>
+<li><p>You want to use a linear regression when you have  <strong>numerical continuous</strong> dependent and independent variables, you assume \(y\) is a linear function \(x\), and you want to estimate the parameters of this model (\(\beta_{0}\), \(\beta_{1}\)) to define the relationship. You usually do one of two or both things with a linear regression: <strong>(i)</strong> assess whether your linear model of \(y\) as a function of \(x\) is a good fit (provide interpretable representations of the data that enhance our understanding of the phenomena under study?) and; <strong>(ii)</strong> predict future or unknown values (interpolate, extrapolation is not advisable)</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  
+  <hgroup>
+    <h2>Uses of Linear regression</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul>
+<li><p>The <strong>prediction task</strong> (ii; previous slide) has slightly different criteria criteria, needs for interpretability and standards for generalizability than the <strong>modeling task</strong> (i, previous slide)</p></li>
+<li><p>You will get to the see regression in the context of the prediction task more next week (AI/ML), here we will focus on the modeling task</p></li>
+<li><p>In modeling, our interest lies in parsimonious, interpretable representations of the data that enhance our understanding of the phenomena under study</p></li>
+<li><p>What&#39;s the best model? one criteria: Whatever model connects the data to a true, parsimonious statement about what you&#39;re studying (Occam&#39;s razor).</p></li>
+<li><p>If you are performing highly controlled experiments, regression can also help explain causal relationships between variables, but this is an area of contentious debate.</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  
+  <hgroup>
+    <h2>Estimating parameters of a Linear Regression</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>We have : 
+\[
+\begin{aligned}
+y  = \beta_{0} + \beta_{1} x_{i} + \epsilon_{i} \\
+\epsilon_{i} = y_{i} - \beta_{0} + \beta_{1} x_{i}  \\ 
+\end{aligned}
+\]</p></li>
+<li><p>We want to minimize the errors, but the these will cancel out, so we square and then find the minimum of 
+\[
+\begin{aligned}
+\sum_{i=1}^{n} (y_{i} - \beta_{0} + \beta_{1} x_{i})^{2}
+\end{aligned}
+\]</p></li>
+<li><p>The minimum of the above can be found by using calculus by taking partial derivatives setting them to zero and solving for both \(\beta_{0}\) and \(\beta_{1}\)</p></li>
+<li><p>This minimizing of the squared of the erros is sometimes referred to least squares estimation or <strong>ordinary least squares</strong> (OLS)</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-24" style="background:;">
+  
+  <hgroup>
+    <h2>Estimating parameters of a Multiple Linear Regression</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>We can add an arbitrary number of numerical continuous predictor/explanatory/independent variables (note in equations below I have dropped the \(i\) subscript for individuals enteries, here \(x\) and \(y\) are column vectors with all the values) :
+\[
+\begin{aligned}
+y  = \beta_{0} + \beta_{1} x_{1} + \beta_{2} x_{2} + .. + \beta_{n} x_{n}  , 
+\end{aligned}
+\] 
+<center> for \(n\) predictor variables </center></p></li>
+<li><p>This can be written (and solved) more succinctly in matrix form:
+\[
+\begin{aligned}
+y = X \beta + \epsilon 
+\end{aligned}
+\] 
+\(y\) is still a vector of all response/dependent values 
+\(X\) is now a matrix where each column are the values of a single predictor variable
+\(\beta\) is a vector where the first value is a slope and the rest are slopes for each predictor variable.</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  
+  <hgroup>
+    <h2>Assumptions of a Multiple Linear Regression</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>This time let&#39;s start with the assumptions first, some of these should look somewhat familiar:</p>
+
+<ol>
+<li><p>The model is <strong>linear</strong> in paramters (each term is either a constant or the product of a parameter and a predictor, the \(\beta\)&#39;s cannot be exponents or products of one another)</p></li>
+<li><p>residuals (the estimates of the \(/epsilon\) error terms) should be normally distributed</p></li>
+<li><p>The variance of the residuals is constant (homoegeniety of variances or homoscedasticity)</p></li>
+<li><p>The residuals are independent</p></li>
+<li><p>Finally, multiple linear regression is <strong>not robust</strong> to <strong>outliers</strong> or <strong>multicollinearity</strong> (high correlation) between independent/predictor variables</p></li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  
+  <hgroup>
+    <h2>Example: Birth Weight Data</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>This data comes from an investigation conducted by Secher <em>et al.</em>, (1987). The birth
+weight (BW) in grams for 107 babies was ascertained. For all babies,
+both the abdominal (AD) and biparietal (BPD) diameters (in mm) were
+measured shortly before birth using ultrasound .</p>
+
+<p>The purpose of this study was to describe the relationship between
+birthweight and these two ultrasound measurements in order to
+establish a way to predict birthweight .</p>
+
+<p>The dataset consists of the following variables:</p>
+
+<p>bw: Birth weight of the baby in grams (the response/dependent variabale)</p>
+
+<p>bpd: biparietal diameter (in mm), as determined by ultrasound (a potential predictor variable)</p>
+
+<p>ad:  abdominal diameter (in mm), as determined by ultrasound  (a potential predictor variable)</p>
+
+<p>id: identification of the mother (not sure if we can do anything with this)</p>
+
+<p><font size="-1"> From:  &quot;Regression with Linear Predictors&quot; by Per Kragh Andersen and Lene Theil Skovgaard published 2010 by Springer-Verlag </font></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-27" style="background:;">
+  
+  <hgroup>
+    <h3>Exploratory Data Analysis</h3>
+  </hgroup>
+  
+  <article data-timings="">
+    <pre><code class="r">#read in data from the web
+birthw&lt;-read.csv2(&quot;http://staff.pubhealth.ku.dk/~linearpredictors/datafiles/BirthWeight.csv&quot;,
+  sep = &quot;;&quot;,dec = &quot;.&quot;,header = TRUE,colClasses = c(&quot;numeric&quot;,&quot;numeric&quot;,&quot;numeric&quot;),
+  na.strings=&quot;.&quot;)
+#Draw some scatterplots
+par(mfrow=c(1,3))
+plot(birthw$bpd, birthw$bw); plot(birthw$ad, birthw$bw); plot(birthw$bpd, birthw$ad)
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" width="800px" style="display: block; margin: auto;" /></p>
+
+<ul class = "build incremental">
+<li><p>Relationships between bw and and IV&#39;s may not be linear</p></li>
+<li><p>The IV&#39;s seem correlated (multicollinearity)</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-28" style="background:;">
+  
+  <article data-timings="">
+    <p>Physiological and morphological relationships often follow the power law :\(y=a x^{b}\) which can be lineared with a log transformation.</p>
+
+<pre><code class="r">par(mfrow=c(1,2))
+#for bpd
+plot(log10(birthw$bpd), log10(birthw$bw));logbpd_model&lt;-lm(log10(bw)~log10(bpd), data=birthw)
+abline(logbpd_model)
+#for ad
+plot(log10(birthw$ad), log10(birthw$bw));logad_model&lt;-lm(log10(bw)~log10(ad), data=birthw)
+abline(logad_model)
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-13-1.png" title="plot of chunk unnamed-chunk-13" alt="plot of chunk unnamed-chunk-13" width="800px" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-29" style="background:;">
+  
+  <hgroup>
+    <h2>Building the Multiple Regression model</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>There are at least four possible models here</p>
+
+<p>model 1: \(\log_{10}(birthweight) = \beta_{0} + \beta_{1} \log_{10}(bpd) + \epsilon\)</p>
+
+<pre><code class="r">logbpd_model&lt;-lm(log10(bw)~log10(bpd), data=birthw)
+summary(logbpd_model)
+</code></pre>
+
+<pre><code>## 
+## Call:
+## lm(formula = log10(bw) ~ log10(bpd), data = birthw)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.158422 -0.042235  0.005435  0.033452  0.222159 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  -3.0775     0.3936  -7.819 4.35e-12 ***
+## log10(bpd)    3.3320     0.2017  16.516  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.06464 on 105 degrees of freedom
+## Multiple R-squared:  0.7221, Adjusted R-squared:  0.7194 
+## F-statistic: 272.8 on 1 and 105 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-30" style="background:;">
+  
+  <article data-timings="">
+    <p>model 2: \(\log_{10}(birthweight) = \beta_{0} + \beta_{1} \log_{10}(ad) + \epsilon\)</p>
+
+<pre><code class="r">logad_model&lt;-lm(log10(bw)~log10(ad), data=birthw)
+summary(logad_model)
+</code></pre>
+
+<pre><code>## 
+## Call:
+## lm(formula = log10(bw) ~ log10(ad), data = birthw)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.254322 -0.028702  0.000798  0.032482  0.210351 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  -1.0617     0.2216  -4.791 5.49e-06 ***
+## log10(ad)     2.2365     0.1105  20.238  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.05539 on 105 degrees of freedom
+## Multiple R-squared:  0.7959, Adjusted R-squared:  0.794 
+## F-statistic: 409.6 on 1 and 105 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-31" style="background:;">
+  
+  <article data-timings="">
+    <p>model 3: \(\log_{10}(birthweight) = \beta_{0} + \beta_{1} \log_{10}(bpd)+  \beta_{2} \log_{10}(ad) + \epsilon\)</p>
+
+<pre><code class="r">#the additive model
+logadd_model&lt;-lm(log10(bw)~log10(bpd)+log10(ad), data=birthw)
+summary(logadd_model)
+</code></pre>
+
+<pre><code>## 
+## Call:
+## lm(formula = log10(bw) ~ log10(bpd) + log10(ad), data = birthw)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.152325 -0.029275 -0.003438  0.024973  0.157907 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  -2.5456     0.2874  -8.859 2.36e-14 ***
+## log10(bpd)    1.5519     0.2294   6.764 8.09e-10 ***
+## log10(ad)     1.4667     0.1467   9.998  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.04638 on 104 degrees of freedom
+## Multiple R-squared:  0.8583, Adjusted R-squared:  0.8556 
+## F-statistic: 314.9 on 2 and 104 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-32" style="background:;">
+  
+  <article data-timings="">
+    <p>model 3: \(\log_{10}(birthweight) = \beta_{0} + \beta_{1} \log_{10}(bpd)+  \beta_{2} \log_{10}(ad) + \beta_{3}\log_{10}(bpd)*\log_{10}(ad) + \epsilon\)</p>
+
+<pre><code class="r">#including the interaction between continuous variables
+logadd_model&lt;-lm(log10(bw)~log10(bpd)+log10(ad)+log10(bpd):log10(ad), data=birthw)
+#The following call is equivalent: lm(log10(bw)~log10(bpd)*log10(ad), data=birthw)
+summary(logadd_model)
+</code></pre>
+
+<pre><code>## 
+## Call:
+## lm(formula = log10(bw) ~ log10(bpd) + log10(ad) + log10(bpd):log10(ad), 
+##     data = birthw)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.133608 -0.031985 -0.000878  0.025499  0.156310 
+## 
+## Coefficients:
+##                      Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)            14.062      7.843   1.793   0.0759 .
+## log10(bpd)             -6.963      4.025  -1.730   0.0866 .
+## log10(ad)              -7.119      4.054  -1.756   0.0821 .
+## log10(bpd):log10(ad)    4.400      2.077   2.119   0.0365 *
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.04562 on 103 degrees of freedom
+## Multiple R-squared:  0.8642, Adjusted R-squared:  0.8602 
+## F-statistic: 218.5 on 3 and 103 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-33" style="background:;">
+  
+  <hgroup>
+    <h3>Summary of the models</h3>
+  </hgroup>
+  
+  <article data-timings="">
+    <table><thead>
+<tr>
+<th align="center">model</th>
+<th align="right">\(\beta\) bpd</th>
+<th align="right">SE bpd</th>
+<th align="right">\(\beta\) ad</th>
+<th align="right">SE ad</th>
+<th align="right">$R<sup>{2}</sup></th>
+<th align="right">residual SE</th>
+</tr>
+</thead><tbody>
+<tr>
+<td align="center">model 1,2</td>
+<td align="right">3.33</td>
+<td align="right">0.202</td>
+<td align="right">2.24</td>
+<td align="right">0.111</td>
+<td align="right">0.72,.79</td>
+<td align="right">0.064, 0.055</td>
+</tr>
+</tbody></table>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='NA'>
+         1
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Multi-factor ANOVA (Analysis of Variance)'>
+         2
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Two-way ANOVA Example: Tooth Growth'>
+         3
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Exploring the Tooth dataset'>
+         4
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Exploring the Tooth dataset: Quick Boxplots'>
+         5
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='The two-way ANOVA model: Additive effects only'>
+         6
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='The two-way ANOVA model: Interaction effects'>
+         7
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Which two-way ANOVA model is suitable for me?'>
+         8
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Two-way ANOVA: some more EDA'>
+         9
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='The Two-way ANOVA in R'>
+         10
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Interpreting results in the light of a significant interaction'>
+         11
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Post-hoc tests'>
+         12
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='Post-hoc tests'>
+         13
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Visualizing a two-way ANOVA with interaction'>
+         14
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='A better visualization...'>
+         15
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='We&#39;re not done yet! Checking Assumptions'>
+         16
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='Error terms \(\simeq\) Residuals!'>
+         17
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='Assumption 2: Homogeneity of Variances'>
+         18
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='Assumption 3: Normality of the residuals'>
+         19
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='Summary for MultiFactor ANOVAs'>
+         20
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='Multiple Linear Regression'>
+         21
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='Uses of Linear regression'>
+         22
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='Estimating parameters of a Linear Regression'>
+         23
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='Estimating parameters of a Multiple Linear Regression'>
+         24
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='Assumptions of a Multiple Linear Regression'>
+         25
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='Example: Birth Weight Data'>
+         26
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='Exploratory Data Analysis'>
+         27
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title='NA'>
+         28
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title='Building the Multiple Regression model'>
+         29
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=30 title='NA'>
+         30
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=31 title='NA'>
+         31
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=32 title='NA'>
+         32
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=33 title='Summary of the models'>
+         33
+      </a>
+    </li>
+    
+    </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  
+<script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
