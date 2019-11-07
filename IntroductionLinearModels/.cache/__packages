@@ -4,3 +4,6 @@ slidify
 slidifyLibraries
 ggplot2
 knitr
+readxl
+car
+scatterplot3d

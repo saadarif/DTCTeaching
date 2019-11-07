@@ -695,9 +695,9 @@ establish a way to predict birthweight .</p>
   
   <article data-timings="">
     <pre><code class="r">#read in data from the web
-birthw&lt;-read.csv2(&quot;http://staff.pubhealth.ku.dk/~linearpredictors/datafiles/BirthWeight.csv&quot;,
-  sep = &quot;;&quot;,dec = &quot;.&quot;,header = TRUE,colClasses = c(&quot;numeric&quot;,&quot;numeric&quot;,&quot;numeric&quot;),
-  na.strings=&quot;.&quot;)
+birthw&lt;- read.csv2(&quot;http://staff.pubhealth.ku.dk/~linearpredictors/datafiles/BirthWeight.csv&quot;,
+                     sep = &quot;;&quot;,dec = &quot;.&quot;,header = TRUE, colClasses = c(&quot;numeric&quot;,&quot;numeric&quot;,&quot;numeric&quot;), na.strings=&quot;.&quot;
+                     )
 #Draw some scatterplots
 par(mfrow=c(1,3))
 plot(birthw$bpd, birthw$bw); plot(birthw$ad, birthw$bw); plot(birthw$bpd, birthw$ad)
@@ -849,12 +849,14 @@ summary(logadd_model)
 <slide class="" id="slide-32" style="background:;">
   
   <article data-timings="">
-    <p>model 3: \(\log_{10}(birthweight) = \beta_{0} + \beta_{1} \log_{10}(bpd)+  \beta_{2} \log_{10}(ad) + \beta_{3}\log_{10}(bpd)*\log_{10}(ad) + \epsilon\)</p>
+    <p>An interaction between two continuous variables means that slope of one variable changes for different values of the other variable. (make note )</p>
+
+<p>model 3: \(\log_{10}(birthweight) = \beta_{0} + \beta_{1} \log_{10}(bpd)+  \beta_{2} \log_{10}(ad) + \beta_{3}\log_{10}(bpd)*\log_{10}(ad) + \epsilon\)</p>
 
 <pre><code class="r">#including the interaction between continuous variables
-logadd_model&lt;-lm(log10(bw)~log10(bpd)+log10(ad)+log10(bpd):log10(ad), data=birthw)
+logmult_model&lt;-lm(log10(bw)~log10(bpd)+log10(ad)+log10(bpd):log10(ad), data=birthw)
 #The following call is equivalent: lm(log10(bw)~log10(bpd)*log10(ad), data=birthw)
-summary(logadd_model)
+summary(logmult_model)
 </code></pre>
 
 <pre><code>## 
@@ -899,7 +901,7 @@ summary(logadd_model)
 <th align="right">SE bpd</th>
 <th align="right">\(\beta\) ad</th>
 <th align="right">SE ad</th>
-<th align="right">$R<sup>{2}</sup></th>
+<th align="right">\(R^{2}\)</th>
 <th align="right">residual SE</th>
 </tr>
 </thead><tbody>
@@ -909,11 +911,246 @@ summary(logadd_model)
 <td align="right">0.202</td>
 <td align="right">2.24</td>
 <td align="right">0.111</td>
-<td align="right">0.72,.79</td>
+<td align="right">0.72,0.79</td>
 <td align="right">0.064, 0.055</td>
+</tr>
+<tr>
+<td align="center">model 3</td>
+<td align="right">1.55</td>
+<td align="right">0.229</td>
+<td align="right">1.46</td>
+<td align="right">0.146</td>
+<td align="right">0.856</td>
+<td align="right">0.04638</td>
+</tr>
+<tr>
+<td align="center">model 4</td>
+<td align="right">-6.96</td>
+<td align="right">4.025</td>
+<td align="right">-7.12</td>
+<td align="right">4.054</td>
+<td align="right">0.860</td>
+<td align="right">0.04562</td>
 </tr>
 </tbody></table>
 
+<ul class = "build incremental">
+<li><p>The adjusted \(R^{2}\) penalizes for additional IV&#39;s the multiple \(R^{2}\) will always improve with additional variables</p></li>
+<li><p>For nested models, like these, we can use nested likelihood ratio test (these tests compare the goodness-of-fit of two more competing statistical models to the data at hand)</p></li>
+<li><p>The <strong>likelihood</strong> of a given regression model for the data set is the  conditional probability  of observing the data given the model estimated parameters (slopes, intercepts) </p></li>
+<li><p>For non-nested models there are other approaches like the Akaike Information criteria (AIC), which you might see next week.</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-34" style="background:;">
+  
+  <hgroup>
+    <h3>likelihood ratio test for our models</h3>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>note the <code>anova()</code> function is different from from the <code>aov()</code> function we used to make the ANOVA tables</p>
+
+<pre><code class="r">anova(logad_model, logadd_model, logmult_model)
+</code></pre>
+
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: log10(bw) ~ log10(ad)
+## Model 2: log10(bw) ~ log10(bpd) + log10(ad)
+## Model 3: log10(bw) ~ log10(bpd) + log10(ad) + log10(bpd):log10(ad)
+##   Res.Df     RSS Df Sum of Sq       F    Pr(&gt;F)    
+## 1    105 0.32211                                   
+## 2    104 0.22370  1  0.098405 47.2838 4.865e-10 ***
+## 3    103 0.21436  1  0.009344  4.4899    0.0365 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+</code></pre>
+
+<ul class = "build incremental">
+<li><p>This suggests that the model with the three variables (\(\log_{10}(bpd)\),\(\log_{10}(ad)\), \(\log_{10}(bpd)*\log_{10}(ad)\)) is the best fit for the given data (<em>just marginally</em>), but there is big improvement in the case of the the shift from one variable (just ad) to including both variables (line)</p></li>
+<li><p>What about the correlation between variables?</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-35" style="background:;">
+  
+  <hgroup>
+    <h2>Dealing with multicollinearity (correlated explanatory variables)</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>In the presence of multicollinearity, the estimated parameters (slopes) of the regression model becomes unstable (recall the output of the model with interaction term)</p></li>
+<li><p>For a given explanatory variable, multicollinearity can assessed by computing a score called the <strong>variance inflation factor</strong> (or VIF), which measures how much the variance of a regression coefficient is inflated due to multicollinearity in the model</p></li>
+<li><p>The smallest possible value of VIF is one (absence of multicollinearity). As a rule of thumb, a VIF value that exceeds 5 or 10 indicates a problematic amount of collinearity (James et al. 2014).</p></li>
+<li><p>assessing multicollinearity is useful for the modeling task but may not be that important for predictive tasks. In the latter case you want to include certain variables, even if they dramatically inflate our variance, as long as they are good at predicting outcomes.</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-36" style="background:;">
+  
+  <hgroup>
+    <h3>Calculating VIFs for our the additive model and the interaction model</h3>
+  </hgroup>
+  
+  <article data-timings="">
+    <pre><code class="r">#we need the car package for this
+if (!require(car, quietly=TRUE)) {install.packages(&quot;car&quot;);library(car)}
+#vif for variables from the additive model
+vif(logadd_model)
+</code></pre>
+
+<pre><code>## log10(bpd)  log10(ad) 
+##   2.512781   2.512781
+</code></pre>
+
+<pre><code class="r">vif(logmult_model)
+</code></pre>
+
+<pre><code>##           log10(bpd)            log10(ad) log10(bpd):log10(ad) 
+##              799.031             1983.838             4728.313
+</code></pre>
+
+<ul class = "build incremental">
+<li><p>The interaction variable greatly inflates variance for the other two variables (it makes sense that it should be highly correlated with both ad and bpd more than ad and bpd better)</p></li>
+<li><p>Given this information, and the fact that the interaction variable makes th slope estimated unstable, model3: \(\log_{10}(birthweight) = \beta_{0} + \beta_{1} \log_{10}(bpd)+  \beta_{2} \log_{10}(ad) + \epsilon\), might be the most parsimonious model for descrbing this relationship (but maybe not the best)</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-37" style="background:;">
+  
+  <hgroup>
+    <h2>We&#39;re not done yet! Checking other Assumptions</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>Checking normality of the residuals (assumption 2)</p>
+
+<pre><code class="r">par(mfrow=c(1,1))
+qqnorm(rstandard(logadd_model), main=&quot;&quot;,
+       ylab = &quot;Standardised residual&quot;,
+       xlab = &quot;Normal quantile&quot;)
+abline(0,1, lty = &quot;21&quot;)
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-20-1.png" title="plot of chunk unnamed-chunk-20" alt="plot of chunk unnamed-chunk-20" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-38" style="background:;">
+  
+  <hgroup>
+    <h3>The variance of the residuals is constant (assumption 3)</h3>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>Plot residuals against fitted values and explanatory variables</p>
+
+<pre><code class="r">par(mfrow=c(1,3))
+scatter.smooth(logmult_model$residuals ~ log10(birthw$bpd),evaluation = 1000, degree = 1, ylab = &quot;Residual&quot;,ylim = c(-0.2, 0.2), 
+              xlab =  expression(paste(log[10],&quot;(biparietal diameter)&quot;, sep=&quot;&quot;)))
+abline(h = 0, lty = &quot;21&quot;)
+scatter.smooth(logmult_model$residuals ~ log10(birthw$ad),evaluation = 1000,degree = 1, ylab = &quot;Residual&quot;,ylim = c(-0.2, 0.2), 
+               xlab = expression(paste(log[10],&quot;(abdominal diameter)&quot;, sep=&quot;&quot;)))
+abline(h = 0, lty = &quot;21&quot;)
+scatter.smooth(logadd_model$residuals ~ logadd_model$fitted,evaluation = 1000,
+               degree = 1, ylab = &quot;Residual&quot;, ylim = c(-0.2, 0.2), xlab = &quot;Fitted value&quot;)
+abline(h = 0, lty = &quot;21&quot;)
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-21-1.png" title="plot of chunk unnamed-chunk-21" alt="plot of chunk unnamed-chunk-21" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-39" style="background:;">
+  
+  <hgroup>
+    <h2>Other assumptions</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>we assumed our measurments were independent, however, if you have variables over time and space, or related individuals, than your measurements may not be independent and this can be checked by plotting the residuals against time,space, relatedness etc.</p></li>
+<li><p>We already check for multicollinearity using the scatterplots in EDA</p></li>
+<li><p>outliers can be checked for graphically as well.</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-40" style="background:;">
+  
+  <hgroup>
+    <h2>Predictions and Confidence Intervals</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-41" style="background:;">
+  
+  <hgroup>
+    <h2>Visualizing and Reporting Multiple Regression</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p><img src="assets/fig/unnamed-chunk-22-1.png" title="plot of chunk unnamed-chunk-22" alt="plot of chunk unnamed-chunk-22" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-42" style="background:;">
+  
+  <hgroup>
+    <h2>Summary for Multiple Regression</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-43" style="background:;">
+  
+  <hgroup>
+    <h2>Analysis of Covariance</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    
   </article>
   <!-- Presenter Notes -->
   
@@ -1152,6 +1389,76 @@ summary(logadd_model)
       <a href="#" target="_self" rel='tooltip' 
         data-slide=33 title='Summary of the models'>
          33
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=34 title='likelihood ratio test for our models'>
+         34
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=35 title='Dealing with multicollinearity (correlated explanatory variables)'>
+         35
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=36 title='Calculating VIFs for our the additive model and the interaction model'>
+         36
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=37 title='We&#39;re not done yet! Checking other Assumptions'>
+         37
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=38 title='The variance of the residuals is constant (assumption 3)'>
+         38
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=39 title='Other assumptions'>
+         39
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=40 title='Predictions and Confidence Intervals'>
+         40
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=41 title='Visualizing and Reporting Multiple Regression'>
+         41
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=42 title='Summary for Multiple Regression'>
+         42
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=43 title='Analysis of Covariance'>
+         43
       </a>
     </li>
     

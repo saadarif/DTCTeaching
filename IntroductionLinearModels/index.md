@@ -474,9 +474,9 @@ id: identification of the mother (not sure if we can do anything with this)
 
 ```r
 #read in data from the web
-birthw<-read.csv2("http://staff.pubhealth.ku.dk/~linearpredictors/datafiles/BirthWeight.csv",
-  sep = ";",dec = ".",header = TRUE,colClasses = c("numeric","numeric","numeric"),
-  na.strings=".")
+birthw<- read.csv2("http://staff.pubhealth.ku.dk/~linearpredictors/datafiles/BirthWeight.csv",
+                     sep = ";",dec = ".",header = TRUE, colClasses = c("numeric","numeric","numeric"), na.strings="."
+                     )
 #Draw some scatterplots
 par(mfrow=c(1,3))
 plot(birthw$bpd, birthw$bw); plot(birthw$ad, birthw$bw); plot(birthw$bpd, birthw$ad)
@@ -602,14 +602,15 @@ summary(logadd_model)
 ```
 
 ---
+An interaction between two continuous variables means that slope of one variable changes for different values of the other variable. (make note )
 
 model 3: $\log_{10}(birthweight) = \beta_{0} + \beta_{1} \log_{10}(bpd)+  \beta_{2} \log_{10}(ad) + \beta_{3}\log_{10}(bpd)*\log_{10}(ad) + \epsilon$
 
 ```r
 #including the interaction between continuous variables
-logadd_model<-lm(log10(bw)~log10(bpd)+log10(ad)+log10(bpd):log10(ad), data=birthw)
+logmult_model<-lm(log10(bw)~log10(bpd)+log10(ad)+log10(bpd):log10(ad), data=birthw)
 #The following call is equivalent: lm(log10(bw)~log10(bpd)*log10(ad), data=birthw)
-summary(logadd_model)
+summary(logmult_model)
 ```
 
 ```
@@ -641,7 +642,155 @@ summary(logadd_model)
 
 ### Summary of the models
 
-|  model   | $\beta$ bpd | SE bpd | $\beta$ ad | SE ad |   $R^{2}  | residual SE |
+|  model   | $\beta$ bpd | SE bpd | $\beta$ ad | SE ad |   $R^{2}$  | residual SE |
 |:--------:|------------:|-------:|-----------:|------:|----------:|------------:|
-|model 1,2 |  3.33       | 0.202  |   2.24     | 0.111 | 0.72,.79  | 0.064, 0.055|
+|model 1,2 |  3.33       | 0.202  |   2.24     | 0.111 | 0.72,0.79 | 0.064, 0.055|
+|model 3   |  1.55       | 0.229  |   1.46     | 0.146 | 0.856     | 0.04638     |
+|model 4   | -6.96       | 4.025  |  -7.12     | 4.054 | 0.860     | 0.04562     |
+
+>-  The adjusted $R^{2}$ penalizes for additional IV's the multiple $R^{2}$ will always improve with additional variables
+
+>- For nested models, like these, we can use nested likelihood ratio test (these tests compare the goodness-of-fit of two more competing statistical models to the data at hand)
+
+>- The **likelihood** of a given regression model for the data set is the  conditional probability  of observing the data given the model estimated parameters (slopes, intercepts) 
+
+>- For non-nested models there are other approaches like the Akaike Information criteria (AIC), which you might see next week.
+
+---
+
+
+### likelihood ratio test for our models
+
+note the ```anova()``` function is different from from the ```aov()``` function we used to make the ANOVA tables
+
+```r
+anova(logad_model, logadd_model, logmult_model)
+```
+
+```
+## Analysis of Variance Table
+## 
+## Model 1: log10(bw) ~ log10(ad)
+## Model 2: log10(bw) ~ log10(bpd) + log10(ad)
+## Model 3: log10(bw) ~ log10(bpd) + log10(ad) + log10(bpd):log10(ad)
+##   Res.Df     RSS Df Sum of Sq       F    Pr(>F)    
+## 1    105 0.32211                                   
+## 2    104 0.22370  1  0.098405 47.2838 4.865e-10 ***
+## 3    103 0.21436  1  0.009344  4.4899    0.0365 *  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+>- This suggests that the model with the three variables ($\log_{10}(bpd)$,$\log_{10}(ad)$, $\log_{10}(bpd)*\log_{10}(ad)$) is the best fit for the given data (*just marginally*), but there is big improvement in the case of the the shift from one variable (just ad) to including both variables (line)
+
+>- What about the correlation between variables?
+
+---
+
+## Dealing with multicollinearity (correlated explanatory variables)
+
+>- In the presence of multicollinearity, the estimated parameters (slopes) of the regression model becomes unstable (recall the output of the model with interaction term)
+
+>- For a given explanatory variable, multicollinearity can assessed by computing a score called the **variance inflation factor** (or VIF), which measures how much the variance of a regression coefficient is inflated due to multicollinearity in the model
+
+>- The smallest possible value of VIF is one (absence of multicollinearity). As a rule of thumb, a VIF value that exceeds 5 or 10 indicates a problematic amount of collinearity (James et al. 2014).
+
+>- assessing multicollinearity is useful for the modeling task but may not be that important for predictive tasks. In the latter case you want to include certain variables, even if they dramatically inflate our variance, as long as they are good at predicting outcomes.
+
+---
+
+### Calculating VIFs for our the additive model and the interaction model
+
+
+```r
+#we need the car package for this
+if (!require(car, quietly=TRUE)) {install.packages("car");library(car)}
+#vif for variables from the additive model
+vif(logadd_model)
+```
+
+```
+## log10(bpd)  log10(ad) 
+##   2.512781   2.512781
+```
+
+```r
+vif(logmult_model)
+```
+
+```
+##           log10(bpd)            log10(ad) log10(bpd):log10(ad) 
+##              799.031             1983.838             4728.313
+```
+
+>- The interaction variable greatly inflates variance for the other two variables (it makes sense that it should be highly correlated with both ad and bpd more than ad and bpd better)
+
+>- Given this information, and the fact that the interaction variable makes th slope estimated unstable, model3: $\log_{10}(birthweight) = \beta_{0} + \beta_{1} \log_{10}(bpd)+  \beta_{2} \log_{10}(ad) + \epsilon$, might be the most parsimonious model for descrbing this relationship (but maybe not the best)
+
+---
+
+## We're not done yet! Checking other Assumptions
+
+Checking normality of the residuals (assumption 2)
+
+
+```r
+par(mfrow=c(1,1))
+qqnorm(rstandard(logadd_model), main="",
+       ylab = "Standardised residual",
+       xlab = "Normal quantile")
+abline(0,1, lty = "21")
+```
+
+<img src="assets/fig/unnamed-chunk-20-1.png" title="plot of chunk unnamed-chunk-20" alt="plot of chunk unnamed-chunk-20" style="display: block; margin: auto;" />
+
+---
+
+### The variance of the residuals is constant (assumption 3)
+
+Plot residuals against fitted values and explanatory variables
+
+
+```r
+par(mfrow=c(1,3))
+scatter.smooth(logmult_model$residuals ~ log10(birthw$bpd),evaluation = 1000, degree = 1, ylab = "Residual",ylim = c(-0.2, 0.2), 
+              xlab =  expression(paste(log[10],"(biparietal diameter)", sep="")))
+abline(h = 0, lty = "21")
+scatter.smooth(logmult_model$residuals ~ log10(birthw$ad),evaluation = 1000,degree = 1, ylab = "Residual",ylim = c(-0.2, 0.2), 
+               xlab = expression(paste(log[10],"(abdominal diameter)", sep="")))
+abline(h = 0, lty = "21")
+scatter.smooth(logadd_model$residuals ~ logadd_model$fitted,evaluation = 1000,
+               degree = 1, ylab = "Residual", ylim = c(-0.2, 0.2), xlab = "Fitted value")
+abline(h = 0, lty = "21")
+```
+
+<img src="assets/fig/unnamed-chunk-21-1.png" title="plot of chunk unnamed-chunk-21" alt="plot of chunk unnamed-chunk-21" style="display: block; margin: auto;" />
+
+---
+
+## Other assumptions
+
+>- we assumed our measurments were independent, however, if you have variables over time and space, or related individuals, than your measurements may not be independent and this can be checked by plotting the residuals against time,space, relatedness etc.
+
+>- We already check for multicollinearity using the scatterplots in EDA
+
+>- outliers can be checked for graphically as well.
+
+---
+
+## Predictions and Confidence Intervals
+
+---
+
+## Visualizing and Reporting Multiple Regression
+<img src="assets/fig/unnamed-chunk-22-1.png" title="plot of chunk unnamed-chunk-22" alt="plot of chunk unnamed-chunk-22" style="display: block; margin: auto;" />
+
+---
+
+## Summary for Multiple Regression
+
+---
+
+## Analysis of Covariance
+
 
