@@ -251,7 +251,7 @@ head(ToothGrowth)
 <slide class="" id="slide-9" style="background:;">
   
   <hgroup>
-    <h2>Two-way ANOVA: some more EDA</h2>
+    <h3>Two-way ANOVA: some more EDA</h3>
   </hgroup>
   
   <article data-timings="">
@@ -268,9 +268,11 @@ table(ToothGrowth$dose, ToothGrowth$supp)
 ##   2   10 10
 </code></pre>
 
-<p>As we can see this data is <strong>balanced</strong>. In this case we can use the built-in functions for ANOVA in R. If our data is not balanced we need to use ANOVA functions from another package called <code>car</code>.</p>
+<p>As we can see this data is <strong>balanced</strong>. In this case we can use the built-in functions for ANOVA in R. If our data is <strong>not balanced</strong> we need to use ANOVA functions from another package called <code>car</code>.</p>
 
-<p>For an explanation of why this is the case see <a href="https://www.r-bloggers.com/anova-%E2%80%93-type-iiiiii-ss-explained/">here</a></p>
+<p>For an explanation of why this is the case see and how to use ANOVA functions from the <code>car</code> package <a href="https://www.r-bloggers.com/anova-%E2%80%93-type-iiiiii-ss-explained/">here</a></p>
+
+<p>Alternatively, you can analyse it as a linear model (see later)</p>
 
   </article>
   <!-- Presenter Notes -->
@@ -297,7 +299,8 @@ summary(tooth.aov)
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 </code></pre>
 
-<p>We see that our Main Effect of Supplement, Main Effect of Dose, and Supplement x Dose Interaction are all statistically significant. We can reject the null hypothesis that there is no interaction between delivery method (supplement) and Vitamin C dosage (dose) on tooth growth in guinea pigs, \(F_{2,54} = 4.107,\ p = .022\). We can also say that there are significant differences in the impact of delivery methods on tooth growth, \(F_{1,54} = 15.572, \ p = 0.000231\), as well as significant differences in the impact of dosage on tooth growth, \(F_{2,54} = 92,\ p = 0\).</p>
+<p>This is the 2-way ANOVA table. <strong>If we have interactions in our model, we want to start parsing this table from the interactions (the <code>supp:dose</code> line in this case)</strong>. We can reject the null hypothesis that there is no interaction between delivery method (supplement) and Vitamin C dosage (dose) on tooth growth in guinea pigs, \(F_{2,54} = 4.107,\ p = .022\)
+We see that our Main Effect of Supplement and  Main Effect of Dose are also signficant. If the interaction term was not signficcant it would be easy to interpret signficance of the main effects (at least of the group means for each main effect is different), but with a signficant interaction , signficant main effects can be difficult to interpret.</p>
 
   </article>
   <!-- Presenter Notes -->
@@ -324,7 +327,20 @@ summary(tooth.aov)
   
 </slide>
 
-<slide class="" id="slide-12" style="background:;">
+<slide class="" id="slide-12">
+<hgroup>
+  <h3>Interpreting ANOVAs from <strong>interaction plots</strong></h3>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<p><img src="https://skeetersays.files.wordpress.com/2008/08/picture12.jpg" alt=""></p>
+
+<p><font size="-1"> source: <a href="https://skeetersays.wordpress.com/2008/08/12/demystifying-statistics-on-the-interpretation-of-anova-effects/">https://skeetersays.wordpress.com/2008/08/12/demystifying-statistics-on-the-interpretation-of-anova-effects/</a> </font></p>
+
+</article>
+<!-- Presenter Notes -->
+
+</slide>
+<slide class="" id="slide-13" style="background:;">
   
   <hgroup>
     <h2>Post-hoc tests</h2>
@@ -342,7 +358,7 @@ summary(tooth.aov)
   
 </slide>
 
-<slide class="" id="slide-13" style="background:;">
+<slide class="" id="slide-14" style="background:;">
   
   <hgroup>
     <h3>Post-hoc tests</h3>
@@ -381,14 +397,14 @@ summary(tooth.aov)
   
 </slide>
 
-<slide class="" id="slide-14" style="background:;">
+<slide class="" id="slide-15" style="background:;">
   
   <hgroup>
     <h2>Visualizing a two-way ANOVA with interaction</h2>
   </hgroup>
   
   <article data-timings="">
-    <p>Interaction plots are good way for understanding and visually displaying this data (but they don&#39;t show any  standard errors of the means or Confidence intervals)</p>
+    <p>Interaction plots are good way for understanding and visually displaying this data (but they don&#39;t show any  standard errors of the means or Confidence intervals). <strong>Note</strong> the lines don&#39;t mean anything they are just visual aids.</p>
 
 <pre><code class="r">par(mfrow=c(1,2))
 with(ToothGrowth, interaction.plot(supp, dose, len))
@@ -402,10 +418,10 @@ with(ToothGrowth, interaction.plot(dose, supp, len))
   
 </slide>
 
-<slide class="" id="slide-15" style="background:;">
+<slide class="" id="slide-16" style="background:;">
   
   <hgroup>
-    <h2>A better visualization...</h2>
+    <h3>A better visualization...</h3>
   </hgroup>
   
   <article data-timings="">
@@ -416,7 +432,7 @@ with(ToothGrowth, interaction.plot(dose, supp, len))
   
 </slide>
 
-<slide class="" id="slide-16" style="background:;">
+<slide class="" id="slide-17" style="background:;">
   
   <hgroup>
     <h2>We&#39;re not done yet! Checking Assumptions</h2>
@@ -432,28 +448,8 @@ with(ToothGrowth, interaction.plot(dose, supp, len))
 <li> equal variance of errors terms (homogeneity of variances)</li>
 <li> The errors  are normally distributed.</li>
 </ol></li>
+<li><p>One way of checking assumption (independence), plot residuals against all levels of each explanatory variable </p></li>
 <li><p>Remember independence implies that our data are not connected in any way. Knowing one observation doesn&#39;t tell us any information about the other. Imagine if the pigs came from 2 different families, there could be some dependence of tooth growth within members of the same family due to relatedness. There is no testing for independence! Just like there is no testing for random sampling/randomization. We need to be cognizant of this during the experimental design stage. </p></li>
-</ul>
-
-  </article>
-  <!-- Presenter Notes -->
-  
-</slide>
-
-<slide class="" id="slide-17" style="background:;">
-  
-  <hgroup>
-    <h2>Error terms \(\simeq\) Residuals!</h2>
-  </hgroup>
-  
-  <article data-timings="">
-    <ul class = "build incremental">
-<li><p>the error terms \(\epsilon_{ijk}\) are not actually known, but can be approximated.</p></li>
-<li><p>the <strong>residuals</strong> (\(r_{ijk}\)) are the <strong>estimates</strong> of the error terms (\(\epsilon_{ijk}\)) in our model. They are estimated as follows
-<center> \(r_{ijk} = Y_{ijk} - \bar{Y_{ij}} =  Y_{ijk} - \hat{\mu} + \hat{\alpha_{i}} + \hat{\beta_{i}} +\hat{(\alpha\beta)_{ij}}\) </center></p></li>
-<li><p>Notice i have put a hat on all the parameters, this is to emphasize that now we are dealing with values estimated from sampled/randomized data</p></li>
-<li><p>\(\bar{Y_{ij}}\) is the predicted or fitted value just like in linear regression</p></li>
-<li><p>The residuals are <strong>key</strong> in checking model assumptions (just replace error term with residual in the previous slide), we will see them often.</p></li>
 </ul>
 
   </article>
@@ -464,19 +460,19 @@ with(ToothGrowth, interaction.plot(dose, supp, len))
 <slide class="" id="slide-18" style="background:;">
   
   <hgroup>
-    <h2>Assumption 2: Homogeneity of Variances</h2>
+    <h2>Error terms \(\simeq\) Residuals!</h2>
   </hgroup>
   
   <article data-timings="">
-    <p>This assumption can also be recast in terms of the distribution of residuals. In this case the distributions of residuals should be the same across all levels of each IV and the fitted values (\(bar{Y_{ij}}\))</p>
-
-<pre><code class="r">par(mfrow=c(1,3))
-plot(tooth.aov,1) # you do not want the average of residuals to #deviate from zero at at data point on the x-axis
-plot(ToothGrowth$dose, residuals(tooth.aov))
-plot(ToothGrowth$supp, residuals(tooth.aov))
-</code></pre>
-
-<p><img src="assets/fig/unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" width="700px" style="display: block; margin: auto;" /></p>
+    <ul class = "build incremental">
+<li><p>the error terms \(\epsilon_{ijk}\) are not actually known, but can be approximated.</p></li>
+<li><p>the <strong>residuals</strong> (\(r_{ijk}\)) are the <strong>estimates</strong> of the error terms (\(\epsilon_{ijk}\)) in our model. They are estimated as follows
+<center> \(r_{ijk} = Y_{ijk} - \bar{Y_{ij}} =  Y_{ijk} - \hat{\mu} + \hat{\alpha_{i}} + \hat{\beta_{i}} +\hat{(\alpha\beta)_{ij}}\) </center>
+<center>\(\text{where,}\ \bar{Y_{ij}} = \hat{\mu} + \hat{\alpha_{i}} + \hat{\beta_{i}} +\hat{(\alpha\beta)_{ij}}\) </center></p></li>
+<li><p>Notice i have put a hat on all the parameters, this is to emphasize that now we are dealing with values estimated from sampled/randomized data</p></li>
+<li><p>\(\bar{Y_{ij}}\) is the predicted or fitted value just like in linear regression</p></li>
+<li><p>The residuals are <strong>key</strong> in checking model assumptions (just replace error term with residual in the previous slide), we will see them often.</p></li>
+</ul>
 
   </article>
   <!-- Presenter Notes -->
@@ -486,7 +482,50 @@ plot(ToothGrowth$supp, residuals(tooth.aov))
 <slide class="" id="slide-19" style="background:;">
   
   <hgroup>
-    <h2>Assumption 3: Normality of the residuals</h2>
+    <h3>Assumption 1: independence of residuals</h3>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>In this case the distributions of residuals should be the same across all levels  the fitted values (\(bar{Y_{ij}}\))</p>
+
+<pre><code class="r">par(mfrow=c(1,2))
+plot(ToothGrowth$dose, residuals(tooth.aov))
+abline(h=0)# you do not want the average of residuals to deviate from zero at at data point on the x-axis
+plot(ToothGrowth$supp, residuals(tooth.aov))
+abline(h=0)
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-20" style="background:;">
+  
+  <hgroup>
+    <h3>Assumption 2: Homogeneity of Variances</h3>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>This assumption can also be recast in terms of the distribution of residuals. In this case the distributions of residuals should be the same across all levels  the fitted values (\(bar{Y_{ij}}\))</p>
+
+<pre><code class="r">par(mfrow=c(1,1))
+plot(tooth.aov,1) # you do not want the average of residuals to deviate from zero at at data point on the x-axis
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  
+  <hgroup>
+    <h3>Assumption 3: Normality of the residuals</h3>
   </hgroup>
   
   <article data-timings="">
@@ -495,7 +534,7 @@ plot(ToothGrowth$supp, residuals(tooth.aov))
 <pre><code class="r">plot(tooth.aov,2)
 </code></pre>
 
-<p><img src="assets/fig/unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" /></p>
+<p><img src="assets/fig/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" /></p>
 
 <ul class = "build incremental">
 <li>But this is not too bad.. no heavy skew or bimodality</li>
@@ -506,7 +545,7 @@ plot(ToothGrowth$supp, residuals(tooth.aov))
   
 </slide>
 
-<slide class="" id="slide-20" style="background:;">
+<slide class="" id="slide-22" style="background:;">
   
   <hgroup>
     <h2>Summary for MultiFactor ANOVAs</h2>
@@ -515,9 +554,10 @@ plot(ToothGrowth$supp, residuals(tooth.aov))
   <article data-timings="">
     <ul class = "build incremental">
 <li><p>You can have 3-way, 4-way any-way ANOVAs you like, but interpreting 3rd order interactions is quite difficult</p></li>
-<li><p>Multi-way ANOVAs are an excellent tool if you are conducting experimental work, are interested in the difference in means between some groups, and need to control for several categorical variables at once.</p></li>
+<li><p>Multi-way ANOVAs are an excellent tool if you are conducting experimental work, are interested in the difference in means between some groups, and need to evaluate the effect of or control for several categorical variables at once.</p></li>
 <li><p>ANOVAs are intimately tied to Experimental Design, and usually courses/Books in Experimental design are usually books about different types of ANOVA</p></li>
 <li><p>We will later see this same ANOVA model recast as a linear model.</p></li>
+<li><p>As with linear models ,there are advanced tools and techniques to handle your analysis when the assumptions are violated (you might see some of these next week)</p></li>
 </ul>
 
   </article>
@@ -525,7 +565,7 @@ plot(ToothGrowth$supp, residuals(tooth.aov))
   
 </slide>
 
-<slide class="" id="slide-21" style="background:;">
+<slide class="" id="slide-23" style="background:;">
   
   <hgroup>
     <h2>Multiple Linear Regression</h2>
@@ -551,7 +591,7 @@ plot(ToothGrowth$supp, residuals(tooth.aov))
   
 </slide>
 
-<slide class="" id="slide-22" style="background:;">
+<slide class="" id="slide-24" style="background:;">
   
   <hgroup>
     <h2>Uses of Linear regression</h2>
@@ -571,7 +611,7 @@ plot(ToothGrowth$supp, residuals(tooth.aov))
   
 </slide>
 
-<slide class="" id="slide-23" style="background:;">
+<slide class="" id="slide-25" style="background:;">
   
   <hgroup>
     <h2>Estimating parameters of a Linear Regression</h2>
@@ -601,10 +641,10 @@ y  = \beta_{0} + \beta_{1} x_{i} + \epsilon_{i} \\
   
 </slide>
 
-<slide class="" id="slide-24" style="background:;">
+<slide class="" id="slide-26" style="background:;">
   
   <hgroup>
-    <h2>Estimating parameters of a Multiple Linear Regression</h2>
+    <h3>Estimating parameters of a Multiple Linear Regression</h3>
   </hgroup>
   
   <article data-timings="">
@@ -632,7 +672,7 @@ y = X \beta + \epsilon
   
 </slide>
 
-<slide class="" id="slide-25" style="background:;">
+<slide class="" id="slide-27" style="background:;">
   
   <hgroup>
     <h2>Assumptions of a Multiple Linear Regression</h2>
@@ -643,7 +683,7 @@ y = X \beta + \epsilon
 
 <ol>
 <li><p>The model is <strong>linear</strong> in paramters (each term is either a constant or the product of a parameter and a predictor, the \(\beta\)&#39;s cannot be exponents or products of one another)</p></li>
-<li><p>residuals (the estimates of the \(/epsilon\) error terms) should be normally distributed</p></li>
+<li><p>residuals (the estimates of the \(\epsilon\) error terms) should be normally distributed</p></li>
 <li><p>The variance of the residuals is constant (homoegeniety of variances or homoscedasticity)</p></li>
 <li><p>The residuals are independent</p></li>
 <li><p>Finally, multiple linear regression is <strong>not robust</strong> to <strong>outliers</strong> or <strong>multicollinearity</strong> (high correlation) between independent/predictor variables</p></li>
@@ -654,7 +694,7 @@ y = X \beta + \epsilon
   
 </slide>
 
-<slide class="" id="slide-26" style="background:;">
+<slide class="" id="slide-28" style="background:;">
   
   <hgroup>
     <h2>Example: Birth Weight Data</h2>
@@ -687,7 +727,7 @@ establish a way to predict birthweight .</p>
   
 </slide>
 
-<slide class="" id="slide-27" style="background:;">
+<slide class="" id="slide-29" style="background:;">
   
   <hgroup>
     <h3>Exploratory Data Analysis</h3>
@@ -703,7 +743,7 @@ par(mfrow=c(1,3))
 plot(birthw$bpd, birthw$bw); plot(birthw$ad, birthw$bw); plot(birthw$bpd, birthw$ad)
 </code></pre>
 
-<p><img src="assets/fig/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" width="800px" style="display: block; margin: auto;" /></p>
+<p><img src="assets/fig/unnamed-chunk-13-1.png" title="plot of chunk unnamed-chunk-13" alt="plot of chunk unnamed-chunk-13" width="800px" style="display: block; margin: auto;" /></p>
 
 <ul class = "build incremental">
 <li><p>Relationships between bw and and IV&#39;s may not be linear</p></li>
@@ -715,7 +755,7 @@ plot(birthw$bpd, birthw$bw); plot(birthw$ad, birthw$bw); plot(birthw$bpd, birthw
   
 </slide>
 
-<slide class="" id="slide-28" style="background:;">
+<slide class="" id="slide-30" style="background:;">
   
   <article data-timings="">
     <p>Physiological and morphological relationships often follow the power law :\(y=a x^{b}\) which can be lineared with a log transformation.</p>
@@ -729,14 +769,14 @@ plot(log10(birthw$ad), log10(birthw$bw));logad_model&lt;-lm(log10(bw)~log10(ad),
 abline(logad_model)
 </code></pre>
 
-<p><img src="assets/fig/unnamed-chunk-13-1.png" title="plot of chunk unnamed-chunk-13" alt="plot of chunk unnamed-chunk-13" width="800px" style="display: block; margin: auto;" /></p>
+<p><img src="assets/fig/unnamed-chunk-14-1.png" title="plot of chunk unnamed-chunk-14" alt="plot of chunk unnamed-chunk-14" width="800px" style="display: block; margin: auto;" /></p>
 
   </article>
   <!-- Presenter Notes -->
   
 </slide>
 
-<slide class="" id="slide-29" style="background:;">
+<slide class="" id="slide-31" style="background:;">
   
   <hgroup>
     <h2>Building the Multiple Regression model</h2>
@@ -776,7 +816,7 @@ summary(logbpd_model)
   
 </slide>
 
-<slide class="" id="slide-30" style="background:;">
+<slide class="" id="slide-32" style="background:;">
   
   <article data-timings="">
     <p>model 2: \(\log_{10}(birthweight) = \beta_{0} + \beta_{1} \log_{10}(ad) + \epsilon\)</p>
@@ -810,7 +850,7 @@ summary(logad_model)
   
 </slide>
 
-<slide class="" id="slide-31" style="background:;">
+<slide class="" id="slide-33" style="background:;">
   
   <article data-timings="">
     <p>model 3: \(\log_{10}(birthweight) = \beta_{0} + \beta_{1} \log_{10}(bpd)+  \beta_{2} \log_{10}(ad) + \epsilon\)</p>
@@ -846,12 +886,12 @@ summary(logadd_model)
   
 </slide>
 
-<slide class="" id="slide-32" style="background:;">
+<slide class="" id="slide-34" style="background:;">
   
   <article data-timings="">
-    <p>An interaction between two continuous variables means that slope of one variable changes for different values of the other variable. (make note )</p>
+    <p>An interaction between two continuous variables means that slope of one variable (against the response) changes for different values of the other variable. (make note )</p>
 
-<p>model 3: \(\log_{10}(birthweight) = \beta_{0} + \beta_{1} \log_{10}(bpd)+  \beta_{2} \log_{10}(ad) + \beta_{3}\log_{10}(bpd)*\log_{10}(ad) + \epsilon\)</p>
+<p>model 4: \(\log_{10}(birthweight) = \beta_{0} + \beta_{1} \log_{10}(bpd)+  \beta_{2} \log_{10}(ad) + \beta_{3}\log_{10}(bpd)*\log_{10}(ad) + \epsilon\)</p>
 
 <pre><code class="r">#including the interaction between continuous variables
 logmult_model&lt;-lm(log10(bw)~log10(bpd)+log10(ad)+log10(bpd):log10(ad), data=birthw)
@@ -887,10 +927,10 @@ summary(logmult_model)
   
 </slide>
 
-<slide class="" id="slide-33" style="background:;">
+<slide class="" id="slide-35" style="background:;">
   
   <hgroup>
-    <h3>Summary of the models</h3>
+    <h2>Summary of the models</h2>
   </hgroup>
   
   <article data-timings="">
@@ -946,7 +986,7 @@ summary(logmult_model)
   
 </slide>
 
-<slide class="" id="slide-34" style="background:;">
+<slide class="" id="slide-36" style="background:;">
   
   <hgroup>
     <h3>likelihood ratio test for our models</h3>
@@ -981,7 +1021,7 @@ summary(logmult_model)
   
 </slide>
 
-<slide class="" id="slide-35" style="background:;">
+<slide class="" id="slide-37" style="background:;">
   
   <hgroup>
     <h2>Dealing with multicollinearity (correlated explanatory variables)</h2>
@@ -1000,7 +1040,7 @@ summary(logmult_model)
   
 </slide>
 
-<slide class="" id="slide-36" style="background:;">
+<slide class="" id="slide-38" style="background:;">
   
   <hgroup>
     <h3>Calculating VIFs for our the additive model and the interaction model</h3>
@@ -1034,68 +1074,26 @@ vif(logadd_model)
   
 </slide>
 
-<slide class="" id="slide-37" style="background:;">
-  
-  <hgroup>
-    <h2>We&#39;re not done yet! Checking other Assumptions</h2>
-  </hgroup>
-  
-  <article data-timings="">
-    <p>Checking normality of the residuals (assumption 2)</p>
-
-<pre><code class="r">par(mfrow=c(1,1))
-qqnorm(rstandard(logadd_model), main=&quot;&quot;,
-       ylab = &quot;Standardised residual&quot;,
-       xlab = &quot;Normal quantile&quot;)
-abline(0,1, lty = &quot;21&quot;)
-</code></pre>
-
-<p><img src="assets/fig/unnamed-chunk-20-1.png" title="plot of chunk unnamed-chunk-20" alt="plot of chunk unnamed-chunk-20" style="display: block; margin: auto;" /></p>
-
-  </article>
-  <!-- Presenter Notes -->
-  
-</slide>
-
-<slide class="" id="slide-38" style="background:;">
-  
-  <hgroup>
-    <h3>The variance of the residuals is constant (assumption 3)</h3>
-  </hgroup>
-  
-  <article data-timings="">
-    <p>Plot residuals against fitted values and explanatory variables</p>
-
-<pre><code class="r">par(mfrow=c(1,3))
-scatter.smooth(logmult_model$residuals ~ log10(birthw$bpd),evaluation = 1000, degree = 1, ylab = &quot;Residual&quot;,ylim = c(-0.2, 0.2), 
-              xlab =  expression(paste(log[10],&quot;(biparietal diameter)&quot;, sep=&quot;&quot;)))
-abline(h = 0, lty = &quot;21&quot;)
-scatter.smooth(logmult_model$residuals ~ log10(birthw$ad),evaluation = 1000,degree = 1, ylab = &quot;Residual&quot;,ylim = c(-0.2, 0.2), 
-               xlab = expression(paste(log[10],&quot;(abdominal diameter)&quot;, sep=&quot;&quot;)))
-abline(h = 0, lty = &quot;21&quot;)
-scatter.smooth(logadd_model$residuals ~ logadd_model$fitted,evaluation = 1000,
-               degree = 1, ylab = &quot;Residual&quot;, ylim = c(-0.2, 0.2), xlab = &quot;Fitted value&quot;)
-abline(h = 0, lty = &quot;21&quot;)
-</code></pre>
-
-<p><img src="assets/fig/unnamed-chunk-21-1.png" title="plot of chunk unnamed-chunk-21" alt="plot of chunk unnamed-chunk-21" style="display: block; margin: auto;" /></p>
-
-  </article>
-  <!-- Presenter Notes -->
-  
-</slide>
-
 <slide class="" id="slide-39" style="background:;">
   
   <hgroup>
-    <h2>Other assumptions</h2>
+    <h2>Interpreting the Model coefficients</h2>
   </hgroup>
   
   <article data-timings="">
-    <ul class = "build incremental">
-<li><p>we assumed our measurments were independent, however, if you have variables over time and space, or related individuals, than your measurements may not be independent and this can be checked by plotting the residuals against time,space, relatedness etc.</p></li>
-<li><p>We already check for multicollinearity using the scatterplots in EDA</p></li>
-<li><p>outliers can be checked for graphically as well.</p></li>
+    <p>What do the model coeffients mean and how do they relate to the mathematical model. Let&#39;s look at the coefficients from our choosen model again:</p>
+
+<pre><code class="r">summary(logadd_model)$coefficients
+</code></pre>
+
+<pre><code>##              Estimate Std. Error   t value     Pr(&gt;|t|)
+## (Intercept) -2.545618  0.2873540 -8.858823 2.360650e-14
+## log10(bpd)   1.551943  0.2294493  6.763771 8.088579e-10
+## log10(ad)    1.466662  0.1466910  9.998314 6.788350e-17
+</code></pre>
+
+<ul class = "build incremental">
+<li><strong>Important</strong> The following interpretation of the coefficients (\(\beta\)&#39;s) is in terms of <strong>percentages</strong> <em>because</em> of the log transformation, if we had done linear regression on <em>untransformed</em> data, you can replace the % by the <strong>actual units of the variables</strong>. See <a href="https://kenbenoit.net/assets/courses/ME104/logmodels2.pdf">here</a> for a good explanation of how to make sense of \(\beta\)&#39;s when you log transform your data.</li>
 </ul>
 
   </article>
@@ -1105,39 +1103,56 @@ abline(h = 0, lty = &quot;21&quot;)
 
 <slide class="" id="slide-40" style="background:;">
   
-  <hgroup>
-    <h2>Predictions and Confidence Intervals</h2>
-  </hgroup>
-  
   <article data-timings="">
-    
-  </article>
-  <!-- Presenter Notes -->
-  
-</slide>
-
-<slide class="" id="slide-41" style="background:;">
-  
-  <hgroup>
-    <h2>Visualizing and Reporting Multiple Regression</h2>
-  </hgroup>
-  
-  <article data-timings="">
-    <p><img src="assets/fig/unnamed-chunk-22-1.png" title="plot of chunk unnamed-chunk-22" alt="plot of chunk unnamed-chunk-22" style="display: block; margin: auto;" /></p>
+    <ul class = "build incremental">
+<li><p><code>intercept</code> = \(\beta_{0}\): at log(1) mm  and log(1) mm <code>ad</code> the birth weight is <code>10^-2.54= 0.0029</code> grams. The intercept in a regression is often of no interest in intepretation but is presented here for completeness and is required for the model. </p></li>
+<li><p><code>log10(bpd)</code> = \(\beta_{1}\): increasing <code>bpd</code> by 1%, while holding <code>ad</code> constant,  increasing birthweight by 1.55%. To get an exact value. But this is in log units, which might not be easy to interpret. To get an answer of % change in terms of the original units <code>10^(1.55 * log(1.01))=1.036</code> means a 1% change in the original units of <code>bpd</code> leads to 3.6% increase in the original units of birth weight.</p></li>
+<li><p><code>log10(ad)</code> = \(\beta_{2}\): increasing <code>ad</code> by 1%, while holding <code>bpd</code> constant,  increases the log of birthweight by 1.47%. Again this is in term of log units. in terms of the original units <code>10^(1.47 * log(1.01))=1.034</code> means a 1% change in the original units of <code>bpd</code> leads to a 3.4% increase in the original units of birth weight.</p></li>
+</ul>
 
   </article>
   <!-- Presenter Notes -->
   
 </slide>
 
+<slide class="" id="slide-41">
+<hgroup>
+  <h3>What would interactions between two continuous explanatory variables look like?</h3>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<p>To understand what the interaction means you can do use the model (with the interaction) to make predictions for birth weight for unknown values of bpd, while holding the ad value constant at different values (at 90, 100, 110 mm in this case)  </p>
+
+<p><img src="https://publicifsv.sund.ku.dk/%7Elinearpredictors/Illustrationer/thumbs/fig-ch5-secher-threenewlines.jpeg" alt=""></p>
+
+<ul class = "build incremental">
+<li>Theses three lines show the relationship between birth weight and bpd for three different fixed valued of ad. Notice the slopes look different.</li>
+</ul>
+
+<p><font size="-1"> source: <a href="https://publicifsv.sund.ku.dk/%7Elinearpredictors/Illustrationer/thumbs/">https://publicifsv.sund.ku.dk/~linearpredictors/Illustrationer/thumbs/</a> </font></p>
+
+</article>
+<!-- Presenter Notes -->
+
+</slide>
 <slide class="" id="slide-42" style="background:;">
   
   <hgroup>
-    <h2>Summary for Multiple Regression</h2>
+    <h2>We&#39;re not done yet! Checking Assumptions</h2>
   </hgroup>
   
   <article data-timings="">
-    
+    <p>For our choosen model to be valid we still need to check assumptions
+Checking normality of the residuals (assumption 2)</p>
+
+<pre><code class="r">par(mfrow=c(1,1))
+qqnorm(rstandard(logadd_model), main=&quot;&quot;,
+       ylab = &quot;Standardised residual&quot;,
+       xlab = &quot;Normal quantile&quot;)
+abline(0,1, lty = &quot;21&quot;)
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-22-1.png" title="plot of chunk unnamed-chunk-22" alt="plot of chunk unnamed-chunk-22" style="display: block; margin: auto;" /></p>
+
   </article>
   <!-- Presenter Notes -->
   
@@ -1146,11 +1161,539 @@ abline(h = 0, lty = &quot;21&quot;)
 <slide class="" id="slide-43" style="background:;">
   
   <hgroup>
+    <h3>The variance of the residuals is constant (assumption 3)</h3>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>The residuals should be even distributed for all fitted/predicted values</p>
+
+<pre><code class="r">par(mfrow=c(1,1))
+plot(logadd_model,1)
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-23-1.png" title="plot of chunk unnamed-chunk-23" alt="plot of chunk unnamed-chunk-23" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-44" style="background:;">
+  
+  <hgroup>
+    <h3>The residuals are independent (assumption 4)</h3>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>Plot residuals against explanatory variables</p>
+
+<pre><code class="r">par(mfrow=c(1,2))
+scatter.smooth(logmult_model$residuals ~ log10(birthw$bpd),evaluation = 1000, degree = 1, ylab = &quot;Residual&quot;,ylim = c(-0.2, 0.2), 
+              xlab =  expression(paste(log[10],&quot;(biparietal diameter)&quot;, sep=&quot;&quot;)))
+abline(h = 0, lty = &quot;21&quot;)
+scatter.smooth(logmult_model$residuals ~ log10(birthw$ad),evaluation = 1000,degree = 1, ylab = &quot;Residual&quot;,ylim = c(-0.2, 0.2), 
+               xlab = expression(paste(log[10],&quot;(abdominal diameter)&quot;, sep=&quot;&quot;)))
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-24-1.png" title="plot of chunk unnamed-chunk-24" alt="plot of chunk unnamed-chunk-24" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-45" style="background:;">
+  
+  <hgroup>
+    <h3>Check for outliers (part of assumption 5 along with multicollinearity)</h3>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>Use Cook&#39;s distance to find influential points (or other methods you saw yesterdau)</p>
+
+<pre><code class="r">par(mfrow=c(1,1))
+plot(logadd_model,4)
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-25-1.png" title="plot of chunk unnamed-chunk-25" alt="plot of chunk unnamed-chunk-25" style="display: block; margin: auto;" /></p>
+
+<ul class = "build incremental">
+<li>There are a couple of outliers here, it might be prudent to see how our model estimated change without these parameters</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-46" style="background:;">
+  
+  <hgroup>
+    <h2>Visualizing and Reporting Multiple Regression</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li>But this won&#39;t be possible for more than 2 explanatory variables (and in most use-cases you will have more than two expalantory variables)</li>
+</ul>
+
+<p><img src="assets/fig/unnamed-chunk-26-1.png" title="plot of chunk unnamed-chunk-26" alt="plot of chunk unnamed-chunk-26" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-47" style="background:;">
+  
+  <hgroup>
+    <h3>Reporting and visualizing results</h3>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul>
+<li><p>You can provide a table of slopes with standard errors/CI&#39;s for your final model (you can use the <code>confint()</code> function on your saved model to get CI&#39;s)</p></li>
+<li><p>if you have many variables you might consider and effects plot:</p></li>
+</ul>
+
+<pre><code class="r">if (!require(jtools, quietly=TRUE)) {install.packages(&quot;jtools&quot;);library(jtools)}
+#plots the coefficients with the 95% CI
+plot_summs(logadd_model)
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-27-1.png" title="plot of chunk unnamed-chunk-27" alt="plot of chunk unnamed-chunk-27" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-48" style="background:;">
+  
+  <hgroup>
+    <h2>Summary for birth weight data</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>The original data was really meant for a prediction task, being able to accurately predict birth weight from two ultrasound measurements</p></li>
+<li><p>A different modelling strategy might be more suitable for the prediction task (you will see some of this next week)</p></li>
+<li><p>The interaction term suggested that the slope of \(bpd\) for \(bw\) might be different for differing values of \(ad\)</p>
+
+<ul>
+<li>you could visualize this interaction by performing several regressions for \(bpd\) againt \(bw\) at different values of \(ad\), you can find out more <a href="https://publicifsv.sund.ku.dk/%7Elinearpredictors/?page=datasets&amp;dataset=BirthWeight">here</a></li>
+<li>for more details on how to deal with and visualize interactions between continuous predictor variables look <a href="https://rpubs.com/milesdwilliams15/328471">here</a></li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-49" style="background:;">
+  
+  <hgroup>
+    <h2>Summary for Multiple Regression</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>Multiple linear regression is a special instance of linear models when all explanatory variables are <strong>numerical continuous</strong>, just as multiway ANOVAs are a special case of linear models when all the explanatory variables are <strong>categorical</strong></p></li>
+<li><p>Multiple regression can be used either to model some phenomena, to understand the relationships between variables, or for predicting unknown outcomes or both (but there will be some trade-off generalizibility of a model vs accuracy of prediction)</p></li>
+<li><p>In biology, continuous variables will rarely be linearly related in parameters (the power law is quite pervasice in biological relationships). However linear models are simple and easy to interpret. You can often transform variables (like we did) to get to linear models. There are also methods such as <strong>non-linear regression</strong> and <strong>Generalized additive models</strong> that can work even when transformations won&#39;t</p></li>
+<li><p>In general, just like for ANOVA, there are multiple extensions of the simple linear model to deal with gross violations of assumptions. The most general of these methods is known as <strong>Generalized additive models</strong></p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-50" style="background:;">
+  
+  <hgroup>
     <h2>Analysis of Covariance</h2>
   </hgroup>
   
   <article data-timings="">
+    <ul class = "build incremental">
+<li><p>An Analysis of Covariance (ANCOVA) is a special case of linear models where we are interested in the effects of one <strong>numerical continuous explanatory</strong> variable and one <strong>categorical explanatory</strong> variable and their <strong>interaction</strong> (often the interaction is the important aspect of the analysis design). The response/dependent variable is still a numerical variable.</p></li>
+<li><p>An analysis of covariance is also used in slighlty different instance where we want to control for the effects of some continuous variable while assessing the difference between some categorical variable of interest. Imagine trying to determing the effects of some treatment on the growth of an organism, but the organisms are at different sizes at the start. An ANCOVA would try to compare the means of the treatment while controlling for the different intial sizes.</p></li>
+<li><p>In simpler terms an ANCOVA is a combination of simple linear regression and a one-way ANOVA</p></li>
+<li><p>It also offer an insight into how linear models work in general. The flexibility of linear models lets us combine <strong>any number</strong> of categorical and numerical explanatory variables to model our phenomena of interest and/or make predictions.</p></li>
+<li><p>Since the ANCOVA only has one numerical and one explanatory variable, it offers some easy interpretations. </p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-51" style="background:;">
+  
+  <hgroup>
+    <h2>The ANCOVA model and assumptions</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>The ANCOVA, tries to decompose each observation as follows:
+<center>\(y_{ij} = \mu + \alpha_{i} + \beta x_{ij} + \epsilon_{ij}\)</center>
+<center>\(y_{ij} \ \text{is the jth observation under the ith categorical group }\)</center>
+<center> \(x_{ij} \ \text{is the jth observation of the continuous IV under the ith group}\)</center>
+<center>\(\bar{x} \ \text{is the grand mean of the continuous IV}\)</center>
+<center>\(\alpha_{i} \ \text{is the the effect of the ith level of the categorical IV}\)</center>
+<center>\(\beta \ \text{is the slope of the relation ship b/w the DV and the continuos IV}\)</center>
+<center>\(\epsilon_{ij} \ \text{the associated unobserved error term for the jth observation in the ith group}\)</center></p></li>
+<li><p>There is <strong>another</strong> term here that is missing, this is the <strong>interaction</strong> term, but this time between a categorical and a numerical variable. The interaction term has the same interpretation as before (the effect of one IV on the response variable is dependent on another IV).</p></li>
+<li><p>The assumptions of the ANCOVA are identical to those of the multiple linear regression, except we don&#39;t have to worry about multicollinearity</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-52" style="background:;">
+  
+  <hgroup>
+    <h2>ANCOVA example: Tetrahymena data</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>In an experiment with the unicellar organism tetrahymena
+(Hellung-Larsen et al., 1990), we are interested in determining how
+cell concentration may affect the cell size (average cell diameter).</p>
+
+<p>Moreover, the effect of adding glucose to the growth media is
+investigated, by studying 19 cell cultures with no glucose added and
+comparing to 32 cell cultures grown with glucose added.</p>
+
+<p>Variable list:</p>
+
+<p>glucose:    Presence of glucose in the growth media 0: No 1: Yes (IV/explanatory categorical variable with 2 groups)</p>
+
+<p>concentration:  Cell concentration (number of cells in 1 mL of the growth media) (IV/explanatory numerical continuous variable)</p>
+
+<p>diameter:   Average cell diameter (measured in µm) (DV/response variable)</p>
+
+<p><font size="-1"> From:  &quot;Regression with Linear Predictors&quot; by Per Kragh Andersen and Lene Theil Skovgaard published 2010 by Springer-Verlag </font></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-53" style="background:;">
+  
+  <hgroup>
+    <h2>EDA</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <pre><code class="r">#read in the data
+tetrahymena &lt;- read.csv2( &quot;http://staff.pubhealth.ku.dk/~linearpredictors/datafiles/Tetrahymena.csv&quot;,
+                         sep = &quot;;&quot;,dec = &quot;.&quot;, header=TRUE, colClasses = c(&quot;factor&quot;,&quot;numeric&quot;,&quot;numeric&quot;),
+                         na.strings=&quot;.&quot;)
+#Plot the relation ship between cell size and concenrtation for both glucose levels and some regression lines for visuals
+eda &lt;- ggplot(tetrahymena, aes(x = concentration, y = diameter, colour = glucose)) +
+geom_point(aes(colour = glucose)) + geom_smooth(method = &quot;lm&quot;, se = FALSE) +
+theme_light() + scale_color_brewer(palette = &quot;Set1&quot;) + facet_grid(~glucose) ; eda
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-28-1.png" title="plot of chunk unnamed-chunk-28" alt="plot of chunk unnamed-chunk-28" style="display: block; margin: auto;" /></p>
+
+<ul class = "build incremental">
+<li>The relationship between diameter and concentration doesn&#39;t look that linear</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-54" style="background:;">
+  
+  <hgroup>
+    <h3>more EDA</h3>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>A log transformation here also does the trick</p>
+
+<pre><code class="r">eda + scale_x_continuous(trans = &#39;log10&#39;) +
+  scale_y_continuous(trans = &#39;log10&#39;)
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-29-1.png" title="plot of chunk unnamed-chunk-29" alt="plot of chunk unnamed-chunk-29" style="display: block; margin: auto;" /></p>
+
+<ul class = "build incremental">
+<li>These lines seem like they fit well! What can we say about the effect of glucose on the diameter? and does the relationship between cell size and concentration change depending on whether glucose is present or not?</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-55" style="background:;">
+  
+  <hgroup>
+    <h2>Fitting the ANCOVA model to the tetrahymena data</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li>Always fit the ANCOVA with the interaction term first, and evaluate it first</li>
+</ul>
+
+<pre><code class="r">tet_model1 &lt;- lm(log10(diameter) ~ log10(concentration)*glucose, data=tetrahymena)
+#equivalent to log10(diameter) ~ log10(concentration) + glucose + log10(concentration):glucose
+#let&#39;s just look at a summary of the model
+summary(tet_model1)
+</code></pre>
+
+<pre><code>## 
+## Call:
+## lm(formula = log10(diameter) ~ log10(concentration) * glucose, 
+##     data = tetrahymena)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.026722 -0.004888  0.000056  0.003767  0.017608 
+## 
+## Coefficients:
+##                                Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                    1.634761   0.019205  85.123   &lt;2e-16 ***
+## log10(concentration)          -0.059677   0.003920 -15.225   &lt;2e-16 ***
+## glucose1                      -0.003418   0.023695  -0.144    0.886    
+## log10(concentration):glucose1  0.006480   0.004821   1.344    0.185    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.009059 on 47 degrees of freedom
+## Multiple R-squared:  0.9361, Adjusted R-squared:  0.9321 
+## F-statistic: 229.6 on 3 and 47 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-56" style="background:;">
+  
+  <hgroup>
+    <h3>Interpreting the Model the coefficients</h3>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>What do the coeffficients mean?</p>
+
+<pre><code class="r">summary(tet_model1)
+</code></pre>
+
+<pre><code>## 
+## Call:
+## lm(formula = log10(diameter) ~ log10(concentration) * glucose, 
+##     data = tetrahymena)
+## 
+## Residuals:
+##       Min        1Q    Median        3Q       Max 
+## -0.026722 -0.004888  0.000056  0.003767  0.017608 
+## 
+## Coefficients:
+##                                Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                    1.634761   0.019205  85.123   &lt;2e-16 ***
+## log10(concentration)          -0.059677   0.003920 -15.225   &lt;2e-16 ***
+## glucose1                      -0.003418   0.023695  -0.144    0.886    
+## log10(concentration):glucose1  0.006480   0.004821   1.344    0.185    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.009059 on 47 degrees of freedom
+## Multiple R-squared:  0.9361, Adjusted R-squared:  0.9321 
+## F-statistic: 229.6 on 3 and 47 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+
+<ul class = "build incremental">
+<li><strong>For the following I&#39;ll ignore the log transformations and assume I did the model fitting on the untransformed variables</strong> and give a conceptual explanation of the coefficients. For literal interpration see the note on log-log models from the multiple linear regression model</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-57" style="background:;">
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p><code>(Intercept)</code>: under the no glucose (0) treatment and with a concentration of 0 cells/ml, cell diameter is 1.63. In other words this would be the intercept for a simple linear regression of diameter on concentration for the subset of the data where there was no glucose treatment. (<code>how do I know this corresponds to the no glucose treatment?</code>)</p></li>
+<li><p>`<code>log10(concentration)</code>: This is the slope for a simple linear regression of diameter on concentration for the subset of the data where there was no glucose treatment. There is 0.059677 unit <em>decrease</em> for every one unit increase in concentration.</p></li>
+<li><p><code>glucose1</code>: Under the glucose treatment (1) and for a  concentration of 0 cells/ml the diameter is 0.0034 lower compared to no glucose treatment. In other words this is the difference in intercepts of two simple linear regressions of diameter on concentration, one for the no glucose samples and one for the glucose treated samples. <strong>Note</strong> the standard error on this term</p></li>
+<li><p><code>log10(concentration):glucose1</code>: the effect of concentration on diameter is higher by 0.0064 in the glucose condition compared to no glucose treatment. In other words the slope between concentration and diameter is <code>-0.0596+0.00646</code> in elevated temperature condition. <strong>Note</strong> the standard error on this term.</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-58">
+<hgroup>
+  <h3>What would a signficant interaction between a categorical and numerical explanatory variable look like?</h3>
+</hgroup>
+<article class = 'flexbox vcenter'>
+<p><img src="https://newonlinecourses.science.psu.edu/stat509/sites/onlinecourses.science.psu.edu.stat509/files/lesson12/plot_03/index.gif" alt=""></p>
+
+<ul>
+<li>the numerical explanatory variable is often referred to as <strong>covariate</strong> in an ANCOVA context</li>
+</ul>
+
+<p><font size="-1"> source: <a href="https://newonlinecourses.science.psu.edu/stat509/node/101/">https://newonlinecourses.science.psu.edu/stat509/node/101/</a> </font></p>
+
+</article>
+<!-- Presenter Notes -->
+
+</slide>
+<slide class="" id="slide-59" style="background:;">
+  
+  <hgroup>
+    <h2>Simplifying the model</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>Let&#39;s drop the interaction term (we have no reason to beleive the relationship between cell size and concentration changes in the prescence/abscence of glucose)</p>
+
+<pre><code class="r">tet_model2 &lt;- lm(log10(diameter) ~ log10(concentration)+glucose, data=tetrahymena)
+#let&#39;s just look at a summary of the coefficents to be brief
+summary(tet_model2)$coefficients
+</code></pre>
+
+<pre><code>##                         Estimate  Std. Error   t value     Pr(&gt;|t|)
+## (Intercept)           1.61389454 0.011402234 141.54196 1.386479e-64
+## log10(concentration) -0.05539270 0.002301060 -24.07269 1.917681e-28
+## glucose1              0.02823788 0.002647223  10.66698 2.932214e-14
+</code></pre>
+
+<pre><code class="r">#since the two models we fit are nested we could use the likelehood ratio tests to see which is more apprpriate
+anova(tet_model1, tet_model2)
+</code></pre>
+
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: log10(diameter) ~ log10(concentration) * glucose
+## Model 2: log10(diameter) ~ log10(concentration) + glucose
+##   Res.Df       RSS Df   Sum of Sq     F Pr(&gt;F)
+## 1     47 0.0038567                            
+## 2     48 0.0040050 -1 -0.00014828 1.807 0.1853
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-60" style="background:;">
+  
+  <hgroup>
+    <h2>Visualization</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <pre><code class="r">ggplot(tetrahymena, aes(x = concentration, y = diameter, colour = glucose)) +
+geom_point(aes(colour = glucose))+ geom_smooth(method = &quot;lm&quot;, se = T) + theme_light() + scale_color_brewer(palette = &quot;Set1&quot;) +  scale_x_continuous(trans = &#39;log10&#39;) + scale_y_continuous(trans = &#39;log10&#39;)
+</code></pre>
+
+<p><img src="assets/fig/unnamed-chunk-33-1.png" title="plot of chunk unnamed-chunk-33" alt="plot of chunk unnamed-chunk-33" style="display: block; margin: auto;" /></p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-61" style="background:;">
+  
+  <hgroup>
+    <h2>Summary</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul class = "build incremental">
+<li><p>We have now seen a model that combines categorical and numerical <strong>explanatory</strong> variables. The response variable is still <strong>numerical</strong> in all cases.</p></li>
+<li><p>ANOVAs, multiple linear regression and ANCOVA are special cases of the linear models (they are used a lot and hence have special names)</p></li>
+<li><p>You can combine any number of catergorical and numerical explanatory variables in a model of the form:
+-\[
+\begin{aligned}
+y  = \beta_{0} + \beta_{1} x_{1} + \beta_{2} x_{2} + .. + \beta_{n} x_{n}  , \\
+y = X \beta + \epsilon 
+\end{aligned}
+\]</p>
+
+<ul>
+<li>categorical \(x\)&#39;s are usually represented by matrices with columns of 1,0&#39;s assigning group level identity</li>
+<li>The matrix equation can be solved well-established matrix techniques (OLS) to calculate the coefficients. </li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-62" style="background:;">
+  
+  <hgroup>
+    <h2>Summary</h2>
+  </hgroup>
+  
+  <article data-timings="">
     
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-63" style="background:;">
+  
+  <hgroup>
+    <h2>Postscript running ANOVAs with the <code>lm</code> function</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>To show that anova and linear models are the same thing, we can visit the tooth growth 2 way ANOVA example and analyze the data using <code>lm</code>) instead of <code>aov()</code> like we did before</p>
+
+<pre><code class="r">tlm &lt;- lm(len ~ supp + dose + supp:dose, data = ToothGrowth)
+summary(tlm)$coefficients
+</code></pre>
+
+<pre><code>##              Estimate Std. Error    t value     Pr(&gt;|t|)
+## (Intercept)     13.23   1.148353 11.5208468 3.602548e-16
+## suppVC          -5.25   1.624017 -3.2327258 2.092470e-03
+## dose1            9.47   1.624017  5.8312215 3.175641e-07
+## dose2           12.83   1.624017  7.9001660 1.429712e-10
+## suppVC:dose1    -0.68   2.296706 -0.2960762 7.683076e-01
+## suppVC:dose2     5.33   2.296706  2.3207148 2.410826e-02
+</code></pre>
+
+<p>The first line (intercept) is the mean for a reference level subgroup 1 of the 6 combinations of 3 doses and 2 supply methods. The low SE tells you that this is signficantly different from zero. The 2nd line is the difference of the mean of </p>
+
+<pre><code class="r">m1 &lt;- mean(ToothGrowth$len[ToothGrowth$dose==&quot;0.5&quot; &amp; ToothGrowth$supp==&quot;OJ&quot;])
+m1
+</code></pre>
+
+<pre><code>## [1] 13.23
+</code></pre>
+
+<pre><code class="r">m2 &lt;- mean(ToothGrowth$len[ToothGrowth$dose==&quot;0.5&quot; &amp; ToothGrowth$supp==&quot;VC&quot;])
+m1-m2
+</code></pre>
+
+<pre><code>## [1] 5.25
+</code></pre>
+
   </article>
   <!-- Presenter Notes -->
   
@@ -1240,7 +1783,7 @@ abline(h = 0, lty = &quot;21&quot;)
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=12 title='Post-hoc tests'>
+        data-slide=12 title='Interpreting ANOVAs from <strong>interaction plots</strong>'>
          12
       </a>
     </li>
@@ -1254,112 +1797,112 @@ abline(h = 0, lty = &quot;21&quot;)
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=14 title='Visualizing a two-way ANOVA with interaction'>
+        data-slide=14 title='Post-hoc tests'>
          14
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=15 title='A better visualization...'>
+        data-slide=15 title='Visualizing a two-way ANOVA with interaction'>
          15
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=16 title='We&#39;re not done yet! Checking Assumptions'>
+        data-slide=16 title='A better visualization...'>
          16
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=17 title='Error terms \(\simeq\) Residuals!'>
+        data-slide=17 title='We&#39;re not done yet! Checking Assumptions'>
          17
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=18 title='Assumption 2: Homogeneity of Variances'>
+        data-slide=18 title='Error terms \(\simeq\) Residuals!'>
          18
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=19 title='Assumption 3: Normality of the residuals'>
+        data-slide=19 title='Assumption 1: independence of residuals'>
          19
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=20 title='Summary for MultiFactor ANOVAs'>
+        data-slide=20 title='Assumption 2: Homogeneity of Variances'>
          20
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=21 title='Multiple Linear Regression'>
+        data-slide=21 title='Assumption 3: Normality of the residuals'>
          21
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=22 title='Uses of Linear regression'>
+        data-slide=22 title='Summary for MultiFactor ANOVAs'>
          22
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=23 title='Estimating parameters of a Linear Regression'>
+        data-slide=23 title='Multiple Linear Regression'>
          23
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=24 title='Estimating parameters of a Multiple Linear Regression'>
+        data-slide=24 title='Uses of Linear regression'>
          24
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=25 title='Assumptions of a Multiple Linear Regression'>
+        data-slide=25 title='Estimating parameters of a Linear Regression'>
          25
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=26 title='Example: Birth Weight Data'>
+        data-slide=26 title='Estimating parameters of a Multiple Linear Regression'>
          26
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=27 title='Exploratory Data Analysis'>
+        data-slide=27 title='Assumptions of a Multiple Linear Regression'>
          27
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=28 title='NA'>
+        data-slide=28 title='Example: Birth Weight Data'>
          28
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=29 title='Building the Multiple Regression model'>
+        data-slide=29 title='Exploratory Data Analysis'>
          29
       </a>
     </li>
@@ -1373,7 +1916,7 @@ abline(h = 0, lty = &quot;21&quot;)
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=31 title='NA'>
+        data-slide=31 title='Building the Multiple Regression model'>
          31
       </a>
     </li>
@@ -1387,78 +1930,218 @@ abline(h = 0, lty = &quot;21&quot;)
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=33 title='Summary of the models'>
+        data-slide=33 title='NA'>
          33
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=34 title='likelihood ratio test for our models'>
+        data-slide=34 title='NA'>
          34
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=35 title='Dealing with multicollinearity (correlated explanatory variables)'>
+        data-slide=35 title='Summary of the models'>
          35
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=36 title='Calculating VIFs for our the additive model and the interaction model'>
+        data-slide=36 title='likelihood ratio test for our models'>
          36
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=37 title='We&#39;re not done yet! Checking other Assumptions'>
+        data-slide=37 title='Dealing with multicollinearity (correlated explanatory variables)'>
          37
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=38 title='The variance of the residuals is constant (assumption 3)'>
+        data-slide=38 title='Calculating VIFs for our the additive model and the interaction model'>
          38
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=39 title='Other assumptions'>
+        data-slide=39 title='Interpreting the Model coefficients'>
          39
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=40 title='Predictions and Confidence Intervals'>
+        data-slide=40 title='NA'>
          40
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=41 title='Visualizing and Reporting Multiple Regression'>
+        data-slide=41 title='What would interactions between two continuous explanatory variables look like?'>
          41
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=42 title='Summary for Multiple Regression'>
+        data-slide=42 title='We&#39;re not done yet! Checking Assumptions'>
          42
       </a>
     </li>
     
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=43 title='Analysis of Covariance'>
+        data-slide=43 title='The variance of the residuals is constant (assumption 3)'>
          43
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=44 title='The residuals are independent (assumption 4)'>
+         44
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=45 title='Check for outliers (part of assumption 5 along with multicollinearity)'>
+         45
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=46 title='Visualizing and Reporting Multiple Regression'>
+         46
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=47 title='Reporting and visualizing results'>
+         47
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=48 title='Summary for birth weight data'>
+         48
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=49 title='Summary for Multiple Regression'>
+         49
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=50 title='Analysis of Covariance'>
+         50
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=51 title='The ANCOVA model and assumptions'>
+         51
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=52 title='ANCOVA example: Tetrahymena data'>
+         52
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=53 title='EDA'>
+         53
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=54 title='more EDA'>
+         54
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=55 title='Fitting the ANCOVA model to the tetrahymena data'>
+         55
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=56 title='Interpreting the Model the coefficients'>
+         56
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=57 title='NA'>
+         57
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=58 title='What would a signficant interaction between a categorical and numerical explanatory variable look like?'>
+         58
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=59 title='Simplifying the model'>
+         59
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=60 title='Visualization'>
+         60
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=61 title='Summary'>
+         61
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=62 title='Summary'>
+         62
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=63 title='Postscript running ANOVAs with the <code>lm</code> function'>
+         63
       </a>
     </li>
     
