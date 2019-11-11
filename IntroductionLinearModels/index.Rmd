@@ -7,7 +7,7 @@ framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
 highlighter : highlight.js  # {highlight.js, prettify, highlight}
 hitheme     : tomorrow      # 
 widgets     : [mathjax]            # {mathjax, quiz, bootstrap}
-mode        : selfcontained # {standalone, draft}
+mode        : standalone # {standalone, draft}
 knit        : slidify::knit2slides
 ---
 
@@ -978,7 +978,7 @@ geom_point(aes(colour = glucose))+ geom_smooth(method = "lm", se = T) + theme_li
 
 ---
 
-### Assumptions are meant to be violated
+### Assumptions are quite often violated
 
 >- **dependence of residuals** - avoiding pseudoreplication and correlation with time and space, methods that deal with this are called **Mixed models**.
 
@@ -1019,13 +1019,17 @@ summary(tooth.lm)$coefficients
 
 ---
 
-Calculate the means for each subgroup
+Calculate the means for each subgroup:
 ```{r}
 #check the means
 #make a new factor which is combination of supp and dose
 ToothGrowth$suppDose <- with(ToothGrowth, interaction(supp,  dose))
 #calculate the means for each of the six sub groups and compare to coefficents
 subgrpmeans <-tapply(ToothGrowth$len, ToothGrowth$suppDose, mean)
+```
+
+Where do the interaction coefficients come from?
+```{r}
 #For suppVC:dose1:
 #difference between dose 0.5 and 1 for OJ
 OJ_05vs1 <- subgrpmeans[1]-subgrpmeans[3]
@@ -1034,6 +1038,8 @@ VC_05vs1 <- subgrpmeans[2]-subgrpmeans[4]
 #suppVC:dose1 coefficient reflects the diff b/w VC_05vs1 and OJ_05vs1
 OJ_05vs1- VC_05vs1
 ```
+
+if the change from dose 0.5 to 1 was completely independent of the delivery method, then this number should be 0. It's pretty close to zero and the standard error for this is quite high (hence it is not signficant). However the last interaction term ```suppVC:dose2``` is signficantly different
 
 ---
 

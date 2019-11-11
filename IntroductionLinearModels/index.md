@@ -7,7 +7,7 @@ framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
 highlighter : highlight.js  # {highlight.js, prettify, highlight}
 hitheme     : tomorrow      # 
 widgets     : [mathjax]            # {mathjax, quiz, bootstrap}
-mode        : selfcontained # {standalone, draft}
+mode        : standalone # {standalone, draft}
 knit        : slidify::knit2slides
 ---
 
@@ -114,7 +114,7 @@ head(ToothGrowth)
 
 <img src="assets/fig/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" style="display: block; margin: auto;" />
 
-We can see a trend of increasing growth with increasing dose. The pattern between different delivery methods is unclear and it is not clear cut which combinations might be best
+We can see a trend of increasing growth with increasing dose. The pattern between different delivery methods is unclear and it is not clear cut which combinations might be best.
 
 ---
 
@@ -303,7 +303,7 @@ with(ToothGrowth, interaction.plot(dose, supp, len))
 >- The assumptions are (in order of importance in relation to the robustness of your results):
   1.  errors terms ($\epsilon_{ijk}$) are independent
   2.  equal variance of errors terms (homogeneity of variances)
-  3.  The errors  are normally distributed.
+  3.  The response variable is normally distributed or more generally the errors  are normally distributed.
 
 >- One way of checking assumption (independence), plot residuals against all levels of each explanatory variable 
 
@@ -988,12 +988,11 @@ theme_light() + scale_color_brewer(palette = "Set1") + facet_grid(~glucose) ; ed
 
 ### more EDA
 
-A log transformation here also does the trick
+A log transformation here also does the trick but this time we only need to apply the log transformation to the concentration IV and we get what looks like a pretty linear relationship
 
 
 ```r
-eda + scale_x_continuous(trans = 'log10') +
-  scale_y_continuous(trans = 'log10')
+eda + scale_x_continuous(trans = 'log10')
 ```
 
 <img src="assets/fig/unnamed-chunk-29-1.png" title="plot of chunk unnamed-chunk-29" alt="plot of chunk unnamed-chunk-29" style="display: block; margin: auto;" />
@@ -1007,8 +1006,8 @@ eda + scale_x_continuous(trans = 'log10') +
 >- Always fit the ANCOVA with the interaction term first, and evaluate it first
 
 ```r
-tet_model1 <- lm(log10(diameter) ~ log10(concentration)*glucose, data=tetrahymena)
-#equivalent to log10(diameter) ~ log10(concentration) + glucose + log10(concentration):glucose
+tet_model1 <- lm(diameter ~ log10(concentration) + glucose + log10(concentration):glucose, data=tetrahymena)
+#equivalent to log10(diameter) ~ 
 #let's just look at a summary of the model
 summary(tet_model1)
 ```
@@ -1016,25 +1015,25 @@ summary(tet_model1)
 ```
 ## 
 ## Call:
-## lm(formula = log10(diameter) ~ log10(concentration) * glucose, 
+## lm(formula = diameter ~ log10(concentration) + glucose + log10(concentration):glucose, 
 ##     data = tetrahymena)
 ## 
 ## Residuals:
-##       Min        1Q    Median        3Q       Max 
-## -0.026722 -0.004888  0.000056  0.003767  0.017608 
+##      Min       1Q   Median       3Q      Max 
+## -1.27935 -0.19123 -0.02723  0.21369  0.89475 
 ## 
 ## Coefficients:
-##                                Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)                    1.634761   0.019205  85.123   <2e-16 ***
-## log10(concentration)          -0.059677   0.003920 -15.225   <2e-16 ***
-## glucose1                      -0.003418   0.023695  -0.144    0.886    
-## log10(concentration):glucose1  0.006480   0.004821   1.344    0.185    
+##                               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)                    36.8048     0.9815  37.499   <2e-16 ***
+## log10(concentration)           -3.0092     0.2003 -15.022   <2e-16 ***
+## glucose1                        0.7547     1.2110   0.623    0.536    
+## log10(concentration):glucose1   0.1482     0.2464   0.602    0.550    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 0.009059 on 47 degrees of freedom
-## Multiple R-squared:  0.9361,	Adjusted R-squared:  0.9321 
-## F-statistic: 229.6 on 3 and 47 DF,  p-value: < 2.2e-16
+## Residual standard error: 0.463 on 47 degrees of freedom
+## Multiple R-squared:  0.9392,	Adjusted R-squared:  0.9353 
+## F-statistic: 242.1 on 3 and 47 DF,  p-value: < 2.2e-16
 ```
 
 ---
@@ -1071,17 +1070,19 @@ summary(tet_model1)
 ## F-statistic: 229.6 on 3 and 47 DF,  p-value: < 2.2e-16
 ```
 
->- **For the following I'll ignore the log transformations and assume I did the model fitting on the untransformed variables** and give a conceptual explanation of the coefficients. For literal interpration see the note on log-log models from the multiple linear regression model
+>- **For the following I'll talk in terms the log units of the concentration** and give a conceptual explanation of the coefficients. This might not be easy to digest for some people, so if you are interested in explanations in the original units For see the note on log models from the multiple linear regression model and [here](https://stats.idre.ucla.edu/other/mult-pkg/faq/general/faqhow-do-i-interpret-a-regression-model-when-some-variables-are-log-transformed/) as well.
 
 ---
 
->- ```(Intercept)```: under the no glucose (0) treatment and with a concentration of 0 cells/ml, cell diameter is 1.63. In other words this would be the intercept for a simple linear regression of diameter on concentration for the subset of the data where there was no glucose treatment. (```how do I know this corresponds to the no glucose treatment?```)
+>- ```(Intercept)```: under the no glucose (0) treatment and with a concentration of 0 cells/ml, cell diameter is 36.8 µm. In other words this would be the intercept for a simple linear regression of diameter on concentration for the subset of the data where there was no glucose treatment. (*how do I know this corresponds to the no glucose treatment?*)
 
->- ```log10(concentration)``: This is the slope for a simple linear regression of diameter on concentration for the subset of the data where there was no glucose treatment. There is 0.059677 unit *decrease* for every one unit increase in concentration.
+>- ```log10(concentration)```: This is the slope for a simple linear regression of diameter on log10(concentration) for the subset of the data where there was no glucose treatment. There is -3.01 µm  *decrease* for every one *log* unit increase in concentration.
 
->- ```glucose1```: Under the glucose treatment (1) and for a  concentration of 0 cells/ml the diameter is 0.0034 lower compared to no glucose treatment. In other words this is the difference in intercepts of two simple linear regressions of diameter on concentration, one for the no glucose samples and one for the glucose treated samples. **Note** the standard error on this term
+>- ```glucose1```: Under the glucose treatment (1) and for a  concentration of 0 cells/ml the diameter is 0.7547 µm lower compared to no glucose treatment. In other words this is the difference in intercepts of two simple linear regressions of diameter on log10(concentration), one for the no glucose samples and one for the glucose treated samples. **Note** the standard error on this term
 
->- ```log10(concentration):glucose1```: the effect of concentration on diameter is higher by 0.0064 in the glucose condition compared to no glucose treatment. In other words the slope between concentration and diameter is ```-0.0596+0.00646``` in elevated temperature condition. **Note** the standard error on this term.
+>- ```log10(concentration):glucose1```: the effect of concentration on diameter is higher by 0.1482 in the glucose condition compared to no glucose treatment. In other words the slope between concentration and diameter is ```-3.0092+ 0.1482 ``` in elevated temperature condition. **Note** the standard error on this term.
+
+>- The relationship between diameter and cell concentration stays constant regardless of the prescence of glucose, but cells seem to acheive bigger size in the prescence of glucose. 
 
 
 --- &vcenter
@@ -1101,16 +1102,16 @@ summary(tet_model1)
 Let's drop the interaction term (we have no reason to beleive the relationship between cell size and concentration changes in the prescence/abscence of glucose)
 
 ```r
-tet_model2 <- lm(log10(diameter) ~ log10(concentration)+glucose, data=tetrahymena)
+tet_model2 <- lm(diameter ~ log10(concentration)+glucose, data=tetrahymena)
 #let's just look at a summary of the coefficents to be brief
 summary(tet_model2)$coefficients
 ```
 
 ```
-##                         Estimate  Std. Error   t value     Pr(>|t|)
-## (Intercept)           1.61389454 0.011402234 141.54196 1.386479e-64
-## log10(concentration) -0.05539270 0.002301060 -24.07269 1.917681e-28
-## glucose1              0.02823788 0.002647223  10.66698 2.932214e-14
+##                       Estimate Std. Error   t value     Pr(>|t|)
+## (Intercept)          36.327488  0.5740401  63.28388 6.684641e-48
+## log10(concentration) -2.911248  0.1158458 -25.13038 2.824871e-29
+## glucose1              1.478692  0.1332732  11.09520 7.564953e-15
 ```
 
 ```r
@@ -1121,11 +1122,11 @@ anova(tet_model1, tet_model2)
 ```
 ## Analysis of Variance Table
 ## 
-## Model 1: log10(diameter) ~ log10(concentration) * glucose
-## Model 2: log10(diameter) ~ log10(concentration) + glucose
-##   Res.Df       RSS Df   Sum of Sq     F Pr(>F)
-## 1     47 0.0038567                            
-## 2     48 0.0040050 -1 -0.00014828 1.807 0.1853
+## Model 1: diameter ~ log10(concentration) + glucose + log10(concentration):glucose
+## Model 2: diameter ~ log10(concentration) + glucose
+##   Res.Df    RSS Df Sum of Sq      F Pr(>F)
+## 1     47 10.073                           
+## 2     48 10.151 -1  -0.07757 0.3619 0.5503
 ```
 
 ---
@@ -1156,12 +1157,22 @@ geom_point(aes(colour = glucose))+ geom_smooth(method = "lm", se = T) + theme_li
   \end{aligned}
   $$
   - categorical $x$'s are usually represented by matrices with columns of 1,0's assigning group level identity
-  - The matrix equation can be solved well-established matrix techniques (OLS) to calculate the coefficients. 
-
+  - The matrix equation can be solved with well-established matrix techniques (OLS) to calculate the coefficients. 
 
 ---
 
-## Summary
+### Assumptions are quite often violated
+
+>- **dependence of residuals** - avoiding pseudoreplication and correlation with time and space, methods that deal with this are called **Mixed models**.
+
+>- **heterogeneity of variances** - we use a more general method to solve for the intercepts called **General Least Squares** and these methods are referred to **General Linear Models**
+
+>- **non-normality of data/residuals** - if a transformation doesn't work and it won't if your response variable is binary, categorical or ordinal you can use what are called **Generalized Linear Models**
+
+>- For assumptions of multiple violations there are even broader methods such as **Generalized Linear Mixed Models** or **Generalized Additive Mixed Models**
+
+>- The following is an excellent *practical* reference on all these methods:
+  - Zuur et al. 2009. Mixed Effects Models and Extensions in Ecology with R. Springer (there might be a more updated edition.)
 
 ---
 
@@ -1170,8 +1181,8 @@ geom_point(aes(colour = glucose))+ geom_smooth(method = "lm", se = T) + theme_li
 To show that anova and linear models are the same thing, we can visit the tooth growth 2 way ANOVA example and analyze the data using ```lm```) instead of ```aov()``` like we did before
 
 ```r
-tlm <- lm(len ~ supp + dose + supp:dose, data = ToothGrowth)
-summary(tlm)$coefficients
+tooth.lm <- lm(len ~ supp + dose + supp:dose, data = ToothGrowth)
+summary(tooth.lm)$coefficients
 ```
 
 ```
@@ -1183,24 +1194,101 @@ summary(tlm)$coefficients
 ## suppVC:dose1    -0.68   2.296706 -0.2960762 7.683076e-01
 ## suppVC:dose2     5.33   2.296706  2.3207148 2.410826e-02
 ```
-The first line (intercept) is the mean for a reference level subgroup 1 of the 6 combinations of 3 doses and 2 supply methods. The low SE tells you that this is signficantly different from zero. The 2nd line is the difference of the mean of 
 
+---
+
+### What are coefficients in the ```lm()``` output and how do they correspond to the ANOVA model?
+
+>- ```(Intercept)``: teeth are predicted to have a length of 13.23 under dose 0.5  and delivery method of OJ, this is our **baseline**. (*r chooses the baseline lexiographically but it can be manually changed)
+
+>- ```suppVC``: teeth grow 5.25 shorter with 0.5 dose and delivery method of VC *compared to the baseline*.
+
+>- ```dose1```: teeth grow 9.47 longer with dose 1 and delivery method of OJ compared to the baseline
+
+>- ```dose2```: teeth grow 12.83 longer with dose 2 and delivery method of OJ compared to the baseline
+
+>- ```suppVC:dose1```: effect of dose 1 on teeth with delivery method VC decreased by 0.68, compared to the effect of dose 1 and delivery method OJ. In other words, when the effect of using dose 1 was to increase teeth length by 9.47 with delivery method OJ, with the VC delivery method adding a dose of 1 lead to an average of  ```13.23 + 9.47 -5.25 -0.68 = 16.77``` in teeth length. See the next slide if things are still unclear
+
+>- ```suppVC:dose2```: same as above for dose level 2. 
+
+---
+
+Calculate the means for each subgroup:
 
 ```r
-m1 <- mean(ToothGrowth$len[ToothGrowth$dose=="0.5" & ToothGrowth$supp=="OJ"])
-m1
+#check the means
+#make a new factor which is combination of supp and dose
+ToothGrowth$suppDose <- with(ToothGrowth, interaction(supp,  dose))
+#calculate the means for each of the six sub groups and compare to coefficents
+subgrpmeans <-tapply(ToothGrowth$len, ToothGrowth$suppDose, mean)
+```
+
+Where do the interaction coefficients come from?
+
+```r
+#For suppVC:dose1:
+#difference between dose 0.5 and 1 for OJ
+OJ_05vs1 <- subgrpmeans[1]-subgrpmeans[3]
+#difference between dose 0.5 and 1 for VC
+VC_05vs1 <- subgrpmeans[2]-subgrpmeans[4]
+#suppVC:dose1 coefficient reflects the diff b/w VC_05vs1 and OJ_05vs1
+OJ_05vs1- VC_05vs1
 ```
 
 ```
-## [1] 13.23
+## OJ.0.5 
+##  -0.68
+```
+
+if the change from dose 0.5 to 1 was completely independent of the delivery method, then this number should be 0. It's pretty close to zero and the standard error for this is quite high (hence it is not signficant). However the last interaction term ```suppVC:dose2``` is signficantly different
+
+---
+
+How does the linear model formula code the categorical variables?
+
+```r
+head(model.matrix(tooth.lm), 5)
+```
+
+```
+##   (Intercept) suppVC dose1 dose2 suppVC:dose1 suppVC:dose2
+## 1           1      1     0     0            0            0
+## 2           1      1     0     0            0            0
+## 3           1      1     0     0            0            0
+## 4           1      1     0     0            0            0
+## 5           1      1     0     0            0            0
+```
+
+$\hat{y}=X \beta$ , where $\hat{y}$ are the predicted values
+
+```r
+#multiple X by vector of betas to get fitted values
+y_hat = model.matrix(tooth.lm)  %*% summary(tooth.lm)$coefficients[,1]
+#These should be the same as predicted by the lm function
+#fitted returns a row vector
+as.vector(y_hat)
+```
+
+```
+##  [1]  7.98  7.98  7.98  7.98  7.98  7.98  7.98  7.98  7.98  7.98 16.77
+## [12] 16.77 16.77 16.77 16.77 16.77 16.77 16.77 16.77 16.77 26.14 26.14
+## [23] 26.14 26.14 26.14 26.14 26.14 26.14 26.14 26.14 13.23 13.23 13.23
+## [34] 13.23 13.23 13.23 13.23 13.23 13.23 13.23 22.70 22.70 22.70 22.70
+## [45] 22.70 22.70 22.70 22.70 22.70 22.70 26.06 26.06 26.06 26.06 26.06
+## [56] 26.06 26.06 26.06 26.06 26.06
 ```
 
 ```r
-m2 <- mean(ToothGrowth$len[ToothGrowth$dose=="0.5" & ToothGrowth$supp=="VC"])
-m1-m2
+as.vector(fitted(tooth.lm))
 ```
 
 ```
-## [1] 5.25
+##  [1]  7.98  7.98  7.98  7.98  7.98  7.98  7.98  7.98  7.98  7.98 16.77
+## [12] 16.77 16.77 16.77 16.77 16.77 16.77 16.77 16.77 16.77 26.14 26.14
+## [23] 26.14 26.14 26.14 26.14 26.14 26.14 26.14 26.14 13.23 13.23 13.23
+## [34] 13.23 13.23 13.23 13.23 13.23 13.23 13.23 22.70 22.70 22.70 22.70
+## [45] 22.70 22.70 22.70 22.70 22.70 22.70 26.06 26.06 26.06 26.06 26.06
+## [56] 26.06 26.06 26.06 26.06 26.06
 ```
+
 
