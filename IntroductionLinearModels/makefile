@@ -11,7 +11,7 @@ all: pdf html
 
 
 %.pdf: %.html
-  casperjs makepdf.js $< $@ $(DELAY)
+	~/Downloads/casperjs-1.1.4-1/bin/casperjs makepdf.js $< $@ $(DELAY)
 
 %.html: %.Rmd
-  cd $(dir $<) && Rscript -e "slidify::slidify('index.Rmd')" && cd ..
+	cd $(dir $<) && Rscript -e "slidify::slidify('index.Rmd')" && cd ..
