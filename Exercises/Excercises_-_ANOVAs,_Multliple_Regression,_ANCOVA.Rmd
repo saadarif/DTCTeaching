@@ -32,15 +32,13 @@ knit_hooks$set(output = function(x, options) {
 
 A clinical trial was conducted to study the effect the levels of a drug on some measure of well-being (called ```SCORE``` in this case). Both male and female subjects were randomly choosen for the study and then randomly assigned to to either a low or a high ```DOSE``` treatment. 
 
-To read this data into an object called ```drugTrials```, do the following in R:
+To read this data, directly from the web, into an object called ```drugTrials```, do the following in R:
 
 ```{r, eval=F, , linewidth=40}
-drugTrials <- read.csv("https://raw.githubusercontent.com/
-                       saadarif/DTCTeaching/master/IntroductionLinearModels/
-                       Datasets/DrugTrials.csv")
+drugTrials <- read.csv("https://git.io/Jew2T")
 ```
 
-Make sure the data is read in correctly. If it is read correctly, there should be 48 rows and 4 columns (we don't need the first column which is unique ID for each individual)
+Make sure the data is read in correctly. If it is read correctly, there should be 48 rows and 4 columns (we don't need the first column which is unique ID for each individual).
 
 1.) Perform some exploratory analysis on the data set and answer the following questions: (a) Do you think the SCOREs are different between genders? (b) are SCORES different between differend doses of the drug? (c) is there an interaction between GENDER and DOSE? (d) is this data set balanced (i.e. equal observations across all subgroups)
 
@@ -50,8 +48,11 @@ Make sure the data is read in correctly. If it is read correctly, there should b
 
 4.) Evaluate the assumptions of the anova model for the drug trial data? Are there any assumptions violated? Which one might be the most problematic?
 
+--
 
 ## Exercise 2: The Diet Experiment
+
+
 
 
 ## Exercise 3: Swiss Fertility Data

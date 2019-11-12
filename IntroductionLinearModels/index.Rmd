@@ -661,11 +661,13 @@ abline(0,1, lty = "21")
 
 ### The variance of the residuals is constant (assumption 3)
 
-The residuals should be even distributed for all fitted/predicted values
+The residuals should be even distributed for all fitted/predicted values, however patterns on this plot can also be indicative of non-linearity in the data. Alternatively, a plot of *standardized* residuals against fitted values can also be used to check this assumption
 
 ```{r, fig.align="center", fig.height=4, fig.width=12}
-par(mfrow=c(1,1))
+par(mfrow=c(1,2))
 plot(logadd_model,1)
+# or
+#plot(logadd_model,3)
 ```
 
 ---
@@ -688,7 +690,7 @@ scatter.smooth(logmult_model$residuals ~ log10(birthw$ad),evaluation = 1000,degr
 
 ### Check for outliers (part of assumption 5 along with multicollinearity)
 
-Use Cook's distance to find influential points (or other methods you saw yesterdau)
+Use Cook's distance to find influential points (or other methods you saw yesterday)
 ```{r, fig.align="center", fig.height=4, fig.width=10}
 par(mfrow=c(1,1))
 plot(logadd_model,4)
