@@ -65,7 +65,6 @@ article code {
   font-size: 14px;
 }
 
-
 </style>
 
 ## What are linear models?

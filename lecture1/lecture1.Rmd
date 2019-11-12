@@ -448,6 +448,8 @@ a tolerable level ($\alpha$)."
 4. Bayesian inference: the use of Bayesian probability representation
 of beliefs to perform inference. Answers questions like "Given my subjective beliefs and the objective information from the data, what should I believe now?"
 
+<font size="-1"> from the Stasticial Inference course by Brian Caffo, Jeff Leek, Roger Peng, Johns Hopkins Bloomberg School of Public Health </font>
+
 ## Machine Learning vs. Statistical Inference
 
 * The major difference between the two is their purpose:
@@ -532,6 +534,8 @@ $H_a$ | $H_0$  | Type II error
   percentage of innocent people let free (correctly accepting the
   null) while we would also increase the percentage of guilty people
   let free (type II errors)
+  
+<font size="-1"> from the Stasticial Inference course by Brian Caffo, Jeff Leek, Roger Peng, Johns Hopkins Bloomberg School of Public Health </font>
 
 ## Hypothesis Testing
 
