@@ -87,6 +87,7 @@ We would like to understand what influence, if any,  the 5 socio-economic factor
 1. Use the ```pairs()``` function to draw scatterplots of all 6 variables with one another: (a) Which variables seem most correlated with ```Fertility``` (b) Which variables seem highly correlated with one another? (c) Which variable would you choose to model changes in fertility?
 
 2. Use the following code to fit all 5 variables as the explanatory variables for ```fertility``` and the save the fit in ```fit1``:
+
 ```{r, eval=F}
 fit1 <-lm(Fertility ~ . , data = swiss)
 ```
@@ -102,3 +103,18 @@ Call ```summary()``` on the saved model. Are all the slopes/coefficients signfic
 ***
 
 ## Exercise 4: Stickleback Association Study
+
+The dataset for this exercise consists of 1679 single nucleotide polymorphism (SNP) markers, typed across 647 adult threespine stickleback fish (*Gasterosteus aculeatus*). There is an  enormous range of morphological variation present within three-spined sticklebacks. These fall into two main categories, the **anadromous** and the **freshwater** forms. One major differenct between two categories of forms is the number of armour plates along the lateral side of the fish.
+
+```{r, echo=F, fig.align="center", out.width = "50%"}
+# All defaults
+include_graphics("images/journal.pone.0164578.g001.png")
+```
+
+<font size="-1"> Fig Source: Wiig E, Reseland JE, Østbye K, Haugen HJ, Vøllestad LA (2016) Variation in Lateral Plate Quality in Threespine Stickleback from Fresh, Brackish and Marine Water: A Micro-Computed Tomography Study. PLoS ONE 11(10): e0164578. https://doi.org/10.1371/journal.pone.0164578 </font>
+
+Read in the dataset as follows (this make take some time):
+
+```{r, eval=F}
+stickle <- read.csv("https://git.io/Jer8h")
+```

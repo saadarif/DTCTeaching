@@ -5,14 +5,14 @@ author: Saad Arif <br/>  Dept. of Biological and Medical Sciences & Centre for F
   of Statistics <br/> University of Oxford <br/>
 date: "<small>Nov 2019</small>"
 output:
+  beamer_presentation:
+    incremental: yes
   slidy_presentation:
     highlighter: prettify
     hitheme: tomorrow
     incremental: yes
     mode: standalone
     widescreen: yes
-  beamer_presentation:
-    incremental: yes
 ---
 
 ```{r setup, include=FALSE}
