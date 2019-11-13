@@ -35,7 +35,7 @@ A clinical trial was conducted to study the effect the levels of a drug on some 
 To read this data, directly from the web, into an object called ```drugTrials```, do the following in R:
 
 ```{r, eval=F, , linewidth=40}
-drugTrials <- read.csv("https://git.io/Jew2T")
+drugTrials <- read.csv("https://git.io/JewAf")
 ```
 
 Make sure the data is read in correctly. If it is read correctly, there should be 48 rows and 4 columns (we don't need the first column which is unique ID for each individual).
@@ -57,7 +57,7 @@ to encourage weight gain.  Additionally the diets were trialled in three differe
 
 To read this data, directly from the web, into an object called ```dietData```, do the following in R:
 ```{r, eval=F, , linewidth=40}
-dietData <- read.csv("https://git.io/JewFx")
+dietData <- read.csv("https://git.io/JewAJ")
 ```
 
 Make sure the data is read in correctly. If it is read correctly, there should be 27 rows and 3 columns. 
