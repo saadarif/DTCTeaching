@@ -1,8 +1,8 @@
 ---
 title       : Introduction to Linear Models
 subtitle    : Multifactor ANOVAs, Multiple Linear Regression, ANCOVA
-author      : Saad Arif 
-job         : Dept. of Biological and Medical Sciences & Centre for Functional Genomics, Oxford                  Brookes University
+author      : Saad Arif & Maria Christodoulo 
+job         : Dept. of BMS & Centre for Functional Genomics, Oxford Brookes University & Department of Statistics, University of Oxford
 framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
 highlighter : highlight.js  # {highlight.js, prettify, highlight}
 hitheme     : tomorrow      # 
@@ -50,7 +50,6 @@ article code {
   font-size: 14px;
 }
 
-
 </style>
 
 ## What are linear models?
@@ -61,7 +60,7 @@ article code {
 - These tests make certain assumptions (normality, independence, randomness, equality of variance) about aspects of your data and the same assumptions apply to **linear models**
 
 
-- These more complex and even more general methods that extend linear methods to deal with unequal variances (General Linear Models), non-normality (Generalized Linear Models), non-independence (Mixed Models) and non-linearity (Generalized Additive Models). 
+- There more complex and even more general methods that extend linear methods to deal with unequal variances (General Linear Models), non-normality (Generalized Linear Models), non-independence (Mixed Models) and non-linearity (Generalized Additive Models). 
 
 
 - Before we see Linear models in their general form, let's explore some special instances of these models 
@@ -88,9 +87,9 @@ To illustrate the utility of a two-way ANOVA we will use a built-in dataset in R
 
 Research was conducted to examine the effect of vitamin C on tooth growth in guinea pigs. Each animal was assigned to one of six groups (K=6) of 10 subjects each (n=10 ) for a total of 60 Guinea Pigs in all (N=60). The two variables that were manipulated in this study were the dosage level of Vitamin C (0.5, 1.0, or 2 mg/day) and the delivery method of the dosage (orange juice or absorbic acid [coded as “VC”]). The response is the length of odontoblasts (cells responsible for tooth growth).
 
-The **dependent/response** variable is the length of the odontoblasts and there two **independent/explanatory** variables (**IV**), dose of Vit. C and delivery method. There are three different levels or groups of Vit. C and two different levels/groups of the delivery method.
+The **dependent/response** variable is the length of the odontoblasts and there two **independent/explanatory** variables (**IVs**), dose of Vit. C and delivery method. There are three different levels or groups of Vit. C and two different levels/groups of the delivery method.
 
-The researchers were interested if (i) Vit. C dose levels had an effect on tooth growth; (ii) if different delivery methods had an effect on tooth growth. Additionally, we might be interested in knowing if certain combinations of delivery method and dose are signficantly better than others.
+The researchers were interested if (i) Vit. C dose levels had an effect on tooth growth; (ii) if different delivery methods had an effect on tooth growth. Additionally, we might be interested in knowing if certain combinations of delivery method and dose are signficantly more effective than others.
 
 ---
 
@@ -118,7 +117,7 @@ head(ToothGrowth)
 
 ## Exploring the Tooth dataset: Quick Boxplots
 
-<img src="assets/fig/unnamed-chunk-3-1.png" title="plot of chunk unnamed-chunk-3" alt="plot of chunk unnamed-chunk-3" style="display: block; margin: auto;" />
+<img src="assets/fig/unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" />
 
 We can see a trend of increasing growth with increasing dose. The pattern between different delivery methods is unclear and it is not clear cut which combinations might be best.
 
@@ -137,7 +136,7 @@ We can see a trend of increasing growth with increasing dose. The pattern betwee
 
 >- $\epsilon_{ijk}$ is assumed to be normally distributed with a mean of zero and a variance of $\sigma^{2}$
 
->- $\alpha$ (**dose** in this case) and $\beta$ (**delivery method** in this case) are also called the **main effects** and they are considered **fixed** in the sense they are estimated constants
+>- $\alpha$ (**dose** in this case) and $\beta$ (**delivery method** in this case) are also called the **main effects** and they are considered **fixed** in the sense they are estimated constants.
 
 >- There are two sets of hypothesis for the additive two-way ANOVA, one for each **IV**:
     - $H_0 : \mu_1 = \mu_2=...=\mu_k \ , H_a : not \ H_0$
@@ -146,7 +145,7 @@ We can see a trend of increasing growth with increasing dose. The pattern betwee
 
 ## The two-way ANOVA model: Interaction effects
 
->- The interaction model includes an additional term other than the ones for the main effects: the **interaction term**. The definition of interaction is that the effect of a change in the level or value of one explanatory variable on the mean outcome depends on the level or value of another explanatory variable. **The interaction is only between different explanatory variables**
+>- The interaction model includes an additional term other than the ones for the main effects: the **interaction term**. The definition of interaction is that the effect of a change in the level or value of one explanatory variable on the mean response depends on the level or value of another explanatory variable. **The interaction is only between different explanatory variables**
 
 >- This model, referred to as a **full factorial design** is specified as:
 <center>$Y_{ijk} = \mu + \alpha_{i} + \beta_{i} + (\alpha\beta)_{ij}+\epsilon_{ijk}$ </center>
@@ -160,7 +159,7 @@ We can see a trend of increasing growth with increasing dose. The pattern betwee
 
 ## Which two-way ANOVA model is suitable for me?
 
->- In general you unless there is good *a priori* to not expect an interaction between the two IV's go for the additive/fractional-factorial model
+>- In general, unless there is good *a priori* reason to not expect an interaction between the two IV's go for the additive/fractional-factorial model
 
 >- You should still graphically explore your data to see for any hints for an interaction i.e. use EDA to pick your model
 
@@ -189,7 +188,7 @@ As we can see this data is **balanced**. In this case we can use the built-in fu
 
 For an explanation of why this is the case see and how to use ANOVA functions from the ```car``` package [here](https://www.r-bloggers.com/anova-–-type-iiiiii-ss-explained/)
 
-Alternatively, you can analyse it as a linear model (see later)
+Alternatively, you can analyse it as a linear model (see the post-script)
 
 ---
 
@@ -202,13 +201,14 @@ summary(tooth.aov)
 ```
 
 ```
-##             Df Sum Sq Mean Sq F value   Pr(>F)    
-## supp         1  205.4   205.4  15.572 0.000231 ***
-## dose         2 2426.4  1213.2  92.000  < 2e-16 ***
-## supp:dose    2  108.3    54.2   4.107 0.021860 *  
-## Residuals   54  712.1    13.2                     
+## Df Sum Sq Mean Sq F value Pr(>F)
+## supp 1 205.4 205.4 15.572 0.000231 ***
+## dose 2 2426.4 1213.2 92.000 < 2e-16 ***
+## supp:dose 2 108.3 54.2 4.107 0.021860 *
+## Residuals 54 712.1 13.2
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1
+' ' 1
 ```
 
 This is the 2-way ANOVA table. **If we have interactions in our model, we want to start parsing this table from the interactions (the ```supp:dose``` line in this case)**. We can reject the null hypothesis that there is no interaction between delivery method (supplement) and Vitamin C dosage (dose) on tooth growth in guinea pigs, $F_{2,54} = 4.107,\ p = .022$
@@ -221,7 +221,7 @@ We see that our Main Effect of Supplement and  Main Effect of Dose are also sign
 >- Are those *p-values* really telling the whole truth? p-value interpretation: there are significant differences in the impact of delivery methods on tooth growth, $F_{1,54} = 15.572, p = 0.00023$
 
 >- remember this plot:
-<img src="assets/fig/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" style="display: block; margin: auto;" />
+<img src="assets/fig/unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" />
 
 >- The delivery methods are clearly not different at a dose level of 2!
 
@@ -256,28 +256,29 @@ TukeyHSD(tooth.aov, which = "supp:dose")
 ```
 
 ```
-##   Tukey multiple comparisons of means
-##     95% family-wise confidence level
-## 
-## Fit: aov(formula = len ~ supp + dose + supp:dose, data = ToothGrowth)
-## 
+## Tukey multiple comparisons of means
+## 95% family-wise confidence level
+##
+## Fit: aov(formula = len ~ supp + dose + supp:dose, data =
+ToothGrowth)
+##
 ## $`supp:dose`
-##                diff        lwr        upr     p adj
+## diff lwr upr p adj
 ## VC:0.5-OJ:0.5 -5.25 -10.048124 -0.4518762 0.0242521
-## OJ:1-OJ:0.5    9.47   4.671876 14.2681238 0.0000046
-## VC:1-OJ:0.5    3.54  -1.258124  8.3381238 0.2640208
-## OJ:2-OJ:0.5   12.83   8.031876 17.6281238 0.0000000
-## VC:2-OJ:0.5   12.91   8.111876 17.7081238 0.0000000
-## OJ:1-VC:0.5   14.72   9.921876 19.5181238 0.0000000
-## VC:1-VC:0.5    8.79   3.991876 13.5881238 0.0000210
-## OJ:2-VC:0.5   18.08  13.281876 22.8781238 0.0000000
-## VC:2-VC:0.5   18.16  13.361876 22.9581238 0.0000000
-## VC:1-OJ:1     -5.93 -10.728124 -1.1318762 0.0073930
-## OJ:2-OJ:1      3.36  -1.438124  8.1581238 0.3187361
-## VC:2-OJ:1      3.44  -1.358124  8.2381238 0.2936430
-## OJ:2-VC:1      9.29   4.491876 14.0881238 0.0000069
-## VC:2-VC:1      9.37   4.571876 14.1681238 0.0000058
-## VC:2-OJ:2      0.08  -4.718124  4.8781238 1.0000000
+## OJ:1-OJ:0.5 9.47 4.671876 14.2681238 0.0000046
+## VC:1-OJ:0.5 3.54 -1.258124 8.3381238 0.2640208
+## OJ:2-OJ:0.5 12.83 8.031876 17.6281238 0.0000000
+## VC:2-OJ:0.5 12.91 8.111876 17.7081238 0.0000000
+## OJ:1-VC:0.5 14.72 9.921876 19.5181238 0.0000000
+## VC:1-VC:0.5 8.79 3.991876 13.5881238 0.0000210
+## OJ:2-VC:0.5 18.08 13.281876 22.8781238 0.0000000
+## VC:2-VC:0.5 18.16 13.361876 22.9581238 0.0000000
+## VC:1-OJ:1 -5.93 -10.728124 -1.1318762 0.0073930
+## OJ:2-OJ:1 3.36 -1.438124 8.1581238 0.3187361
+## VC:2-OJ:1 3.44 -1.358124 8.2381238 0.2936430
+## OJ:2-VC:1 9.29 4.491876 14.0881238 0.0000069
+## VC:2-VC:1 9.37 4.571876 14.1681238 0.0000058
+## VC:2-OJ:2 0.08 -4.718124 4.8781238 1.0000000
 ```
 
 ---
@@ -292,13 +293,13 @@ with(ToothGrowth, interaction.plot(supp, dose, len))
 with(ToothGrowth, interaction.plot(dose, supp, len))
 ```
 
-<img src="assets/fig/unnamed-chunk-8-1.png" title="plot of chunk unnamed-chunk-8" alt="plot of chunk unnamed-chunk-8" style="display: block; margin: auto;" />
+<img src="assets/fig/unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" />
 
 ---
 
 ### A better visualization...
 
-<img src="assets/fig/unnamed-chunk-9-1.png" title="plot of chunk unnamed-chunk-9" alt="plot of chunk unnamed-chunk-9" style="display: block; margin: auto;" />
+<img src="assets/fig/unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" />
 
 ---
 
@@ -311,54 +312,37 @@ with(ToothGrowth, interaction.plot(dose, supp, len))
   2.  equal variance of errors terms (homogeneity of variances)
   3.  The response variable is normally distributed or more generally the errors  are normally distributed.
 
->- One way of checking assumption (independence), plot residuals against all levels of each explanatory variable 
+>- In the ANOVA setting (explanatory variables are all categorical) there is no real way to check if our observations are independent 
 
->-  Remember independence implies that our data are not connected in any way. Knowing one observation doesn't tell us any information about the other. Imagine if the pigs came from 2 different families, there could be some dependence of tooth growth within members of the same family due to relatedness. There is no testing for independence! Just like there is no testing for random sampling/randomization. We need to be cognizant of this during the experimental design stage. 
+>- The independence assumption must be satisfied during the experimental design stage. Obervations **between** levels/groups of a catergorical variable need to be independent. Additionally, observations **within** each levels/groups of a catergorical also need to be independent.
 
 ---
 
 ## Error terms $\simeq$ Residuals!
 
->- the error terms $\epsilon_{ijk}$ are not actually known, but can be approximated.
+>- the error terms $\epsilon_{ijk}$ are not actually known, but can be estimated.
 
 >- the **residuals** ($r_{ijk}$) are the **estimates** of the error terms ($\epsilon_{ijk}$) in our model. They are estimated as follows
  <center> $r_{ijk} = Y_{ijk} - \bar{Y_{ij}} =  Y_{ijk} - \hat{\mu} + \hat{\alpha_{i}} + \hat{\beta_{i}} +\hat{(\alpha\beta)_{ij}}$ </center>
  <center>$\text{where,}\ \bar{Y_{ij}} = \hat{\mu} + \hat{\alpha_{i}} + \hat{\beta_{i}} +\hat{(\alpha\beta)_{ij}}$ </center>
->- Notice i have put a hat on all the parameters, this is to emphasize that now we are dealing with values estimated from sampled/randomized data
+>- Notice I have put a hat on all the parameters, this is to emphasize that now we are dealing with values estimated from randomly sampled/randomly assigned data
 
 >- $\bar{Y_{ij}}$ is the predicted or fitted value just like in linear regression
 
->- The residuals are **key** in checking model assumptions (just replace error term with residual in the previous slide), we will see them often.
-
----
-
-### Assumption 1: independence of residuals
-
-In this case the distributions of residuals should be the same across all levels  the fitted values ($bar{Y_{ij}}$)
-
-```r
-par(mfrow=c(1,2))
-plot(ToothGrowth$dose, residuals(tooth.aov))
-abline(h=0)# you do not want the average of residuals to deviate from zero at at data point on the x-axis
-plot(ToothGrowth$supp, residuals(tooth.aov))
-abline(h=0)
-```
-
-<img src="assets/fig/unnamed-chunk-10-1.png" title="plot of chunk unnamed-chunk-10" alt="plot of chunk unnamed-chunk-10" style="display: block; margin: auto;" />
-
+>- The residuals are **key** in checking model assumptions (just replace ther error term with residual in the previous slide), we will see them often.
 
 ---
 
 ### Assumption 2: Homogeneity of Variances
 
-This assumption can also be recast in terms of the distribution of residuals. In this case the distributions of residuals should be the same across all levels  the fitted values ($bar{Y_{ij}}$)
+This assumption can also be recast in terms of the distribution of residuals. In this case the distributions of residuals should be the same across all levels the fitted values ($bar{Y_{ij}}$, means of each subgroup)
 
 ```r
 par(mfrow=c(1,1))
 plot(tooth.aov,1) # you do not want the average of residuals to deviate from zero at at data point on the x-axis
 ```
 
-<img src="assets/fig/unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" />
+<img src="assets/fig/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" />
 
 ---
 
@@ -370,7 +354,7 @@ This is fairly straight-forward, one suitable way is to make a QQ plot of the re
 plot(tooth.aov,2)
 ```
 
-<img src="assets/fig/unnamed-chunk-12-1.png" title="plot of chunk unnamed-chunk-12" alt="plot of chunk unnamed-chunk-12" style="display: block; margin: auto;" />
+<img src="assets/fig/unnamed-chunk-13-1.png" title="plot of chunk unnamed-chunk-13" alt="plot of chunk unnamed-chunk-13" style="display: block; margin: auto;" />
 
 >- But this is not too bad.. no heavy skew or bimodality
 
@@ -378,7 +362,7 @@ plot(tooth.aov,2)
 
 ## Summary for MultiFactor ANOVAs
 
->- You can have 3-way, 4-way any-way ANOVAs you like, but interpreting 3rd order interactions is quite difficult
+>- You can have 3-way, 4-way, any-way ANOVAs you like, but interpreting 3rd order interactions is quite difficult
 
 >- Multi-way ANOVAs are an excellent tool if you are conducting experimental work, are interested in the difference in means between some groups, and need to evaluate the effect of or control for several categorical variables at once.
 
@@ -386,7 +370,7 @@ plot(tooth.aov,2)
 
 >- We will later see this same ANOVA model recast as a linear model.
 
->- As with linear models ,there are advanced tools and techniques to handle your analysis when the assumptions are violated (you might see some of these next week)
+>- As with linear models, there are advanced tools and techniques to handle your analysis when the assumptions are violated (you might see some of these next week)
 
 ---
 
@@ -403,13 +387,13 @@ plot(tooth.aov,2)
         <center> $\beta_{0}$ and $\beta_{1}$ are the intercept and slope of a straight line relationship between $y$ and $x$ </center>
         <center> $\epsilon_{i}$ are the error terms or the variation unxeplained by our linear relationship, these are assumed to normally distributed with mean 0 and variance $\sigma^{2}$ </center>
         
->- You want to use a linear regression when you have  **numerical continuous** dependent and independent variables, you assume $y$ is a linear function $x$, and you want to estimate the parameters of this model ($\beta_{0}$, $\beta_{1}$) to define the relationship. You usually do one of two or both things with a linear regression: **(i)** assess whether your linear model of $y$ as a function of $x$ is a good fit (provide interpretable representations of the data that enhance our understanding of the phenomena under study?) and; **(ii)** predict future or unknown values (interpolate, extrapolation is not advisable)
+>- You want to use a linear regression when you have  **numerical continuous** dependent and independent variables, you assume $y$ is a linear function of $x$, and you want to estimate the parameters of this model ($\beta_{0}$, $\beta_{1}$) to define the relationship. You usually do one of two or both things with a linear regression: **(i)** assess whether your linear model of $y$ as a function of $x$ is a good fit (provide interpretable representations of the data that enhance our understanding of the phenomena under study) and; **(ii)** predict future or unknown values (interpolate, extrapolation is not advisable)
 
 ---
 
 ## Uses of Linear regression
 
-* The **prediction task** (ii; previous slide) has slightly different criteria criteria, needs for interpretability and standards for generalizability than the **modeling task** (i, previous slide)
+* The **prediction task** (ii; previous slide) has slightly different criteria and needs for interpretability and standards for generalizability than the **modeling task** (i, previous slide)
 
 * You will get to the see regression in the context of the prediction task more next week (AI/ML), here we will focus on the modeling task
 
@@ -417,7 +401,7 @@ plot(tooth.aov,2)
 
 *  What's the best model? one criteria: Whatever model connects the data to a true, parsimonious statement about what you're studying (Occam's razor).
 
-* If you are performing highly controlled experiments, regression can also help explain causal relationships between variables, but this is an area of contentious debate.
+* If you are performing highly controlled experiments, regression can also help explain causal relationships between variables, but this is remains an area of contentious debate.
 
 ---
 
@@ -472,13 +456,15 @@ This time let's start with the assumptions first, some of these should look some
 
 1. The model is **linear** in paramters (each term is either a constant or the product of a parameter and a predictor, the $\beta$'s cannot be exponents or products of one another)
 
-2.  residuals (the estimates of the $\epsilon$ error terms) should be normally distributed
+2. residuals (the estimates of the $\epsilon$ error terms) should be normally distributed
 
 3. The variance of the residuals is constant (homoegeniety of variances or homoscedasticity)
 
 4. The residuals are independent
 
 5. Finally, multiple linear regression is **not robust** to **outliers** or **multicollinearity** (high correlation) between independent/predictor variables
+
+1 and 5 are specific to continuous independent variables.
 
 ---
 
@@ -520,15 +506,15 @@ par(mfrow=c(1,3))
 plot(birthw$bpd, birthw$bw); plot(birthw$ad, birthw$bw); plot(birthw$bpd, birthw$ad)
 ```
 
-<img src="assets/fig/unnamed-chunk-13-1.png" title="plot of chunk unnamed-chunk-13" alt="plot of chunk unnamed-chunk-13" width="800px" style="display: block; margin: auto;" />
+<img src="assets/fig/unnamed-chunk-14-1.png" title="plot of chunk unnamed-chunk-14" alt="plot of chunk unnamed-chunk-14" width="800px" style="display: block; margin: auto;" />
 
->- Relationships between bw and and IV's may not be linear
+>- Relationships between DV and and IV's may not be linear
 
 >- The IV's seem correlated (multicollinearity)
 
 --- 
 
-Physiological and morphological relationships often follow the power law :$y=a x^{b}$ which can be lineared with a log transformation.
+Physiological and morphological relationships often follow the power law :$y=a x^{b}$ which can be lineared with a log-log transformation.
 
 ```r
 par(mfrow=c(1,2))
@@ -540,7 +526,7 @@ plot(log10(birthw$ad), log10(birthw$bw));logad_model<-lm(log10(bw)~log10(ad), da
 abline(logad_model)
 ```
 
-<img src="assets/fig/unnamed-chunk-14-1.png" title="plot of chunk unnamed-chunk-14" alt="plot of chunk unnamed-chunk-14" width="800px" style="display: block; margin: auto;" />
+<img src="assets/fig/unnamed-chunk-15-1.png" title="plot of chunk unnamed-chunk-15" alt="plot of chunk unnamed-chunk-15" width="800px" style="display: block; margin: auto;" />
 
 --- 
 
@@ -680,10 +666,10 @@ summary(logmult_model)
 ## Summary of the models
 
 |  model   | $\beta$ bpd | SE bpd | $\beta$ ad | SE ad |   $R^{2}$  | residual SE |
-|:--------:|------------:|-------:|-----------:|------:|----------:|------------:|
-|model 1,2 |  3.33       | 0.202  |   2.24     | 0.111 | 0.72,0.79 | 0.064, 0.055|
-|model 3   |  1.55       | 0.229  |   1.46     | 0.146 | 0.856     | 0.04638     |
-|model 4   | -6.96       | 4.025  |  -7.12     | 4.054 | 0.860     | 0.04562     |
+|:--------:|:-----------:|:------:|-----------:|:-----:|:----------:|:-----------:|
+|model 1,2 |  3.33       | 0.202  |   2.24     | 0.111 | 0.72,0.79  | 0.064, 0.055|
+|model 3   |  1.55       | 0.229  |   1.46     | 0.146 | 0.856      | 0.04638     |
+|model 4   | -6.96       | 4.025  |  -7.12     | 4.054 | 0.860      | 0.04562     |
 
 >-  The adjusted $R^{2}$ penalizes for additional IV's the multiple $R^{2}$ will always improve with additional variables
 
@@ -729,9 +715,9 @@ anova(logad_model, logadd_model, logmult_model)
 
 >- For a given explanatory variable, multicollinearity can assessed by computing a score called the **variance inflation factor** (or VIF), which measures how much the variance of a regression coefficient is inflated due to multicollinearity in the model
 
->- The smallest possible value of VIF is one (absence of multicollinearity). As a rule of thumb, a VIF value that exceeds 5 or 10 indicates a problematic amount of collinearity (James et al. 2014).
+>- The smallest possible value of VIF is one (absence of multicollinearity). As a rule of thumb, a VIF value that exceeds 4-5 indicates a problematic amount of collinearity (James et al. 2014).
 
->- assessing multicollinearity is useful for the modeling task but may not be that important for predictive tasks. In the latter case you want to include certain variables, even if they dramatically inflate our variance, as long as they are good at predicting outcomes.
+>- assessing multicollinearity is useful for the modeling task but may not be that important for predictive tasks. In the latter case you want to include certain variables, even if they dramatically inflate our variance, as long as they are good at predicting uknown outcomes.
 
 ---
 
@@ -759,9 +745,9 @@ vif(logmult_model)
 ##              799.031             1983.838             4728.313
 ```
 
->- The interaction variable greatly inflates variance for the other two variables (it makes sense that it should be highly correlated with both ad and bpd more than ad and bpd better)
+>- The interaction variable greatly inflates variance for the other two variables (it makes sense that it should be highly correlated with both ad and bpd more than ad and bpd with one another)
 
->- Given this information, and the fact that the interaction variable makes th slope estimated unstable, model3: $\log_{10}(birthweight) = \beta_{0} + \beta_{1} \log_{10}(bpd)+  \beta_{2} \log_{10}(ad) + \epsilon$, might be the most parsimonious model for descrbing this relationship (but maybe not the best)
+>- Given this information, and the fact that the interaction variable makes the slope estimate unstable, model3: $\log_{10}(birthweight) = \beta_{0} + \beta_{1} \log_{10}(bpd)+  \beta_{2} \log_{10}(ad) + \epsilon$, might be the most parsimonious model for descrbing this relationship (but maybe not the best)
 
 ---
 
@@ -780,7 +766,7 @@ summary(logadd_model)$coefficients
 ## log10(ad)    1.466662  0.1466910  9.998314 6.788350e-17
 ```
 
->- **Important** The following interpretation of the coefficients ($\beta$'s) is in terms of **percentages** *because* of the log transformation, if we had done linear regression on *untransformed* data, you can replace the % by the **actual units of the variables**. See [here](https://kenbenoit.net/assets/courses/ME104/logmodels2.pdf) for a good explanation of how to make sense of $\beta$'s when you log transform your data.
+>- **Important** The following interpretation of the coefficients ($\beta$'s) is in terms of **percentages** *because* of the log-log transformation, if we had done linear regression on *untransformed* data, you can replace the % by the **actual units of the variables**. See [here](https://kenbenoit.net/assets/courses/ME104/logmodels2.pdf) for a good explanation of how to make sense of $\beta$'s when you log transform your data.
 
 ---
 
@@ -818,21 +804,23 @@ qqnorm(rstandard(logadd_model), main="",
 abline(0,1, lty = "21")
 ```
 
-<img src="assets/fig/unnamed-chunk-22-1.png" title="plot of chunk unnamed-chunk-22" alt="plot of chunk unnamed-chunk-22" style="display: block; margin: auto;" />
+<img src="assets/fig/unnamed-chunk-23-1.png" title="plot of chunk unnamed-chunk-23" alt="plot of chunk unnamed-chunk-23" style="display: block; margin: auto;" />
 
 ---
 
 ### The variance of the residuals is constant (assumption 3)
 
-The residuals should be even distributed for all fitted/predicted values
+The residuals should be even distributed for all fitted/predicted values, however patterns on this plot can also be indicative of non-linearity in the data. Alternatively, a plot of *standardized* residuals against fitted values can also be used to check this assumption
 
 
 ```r
-par(mfrow=c(1,1))
+par(mfrow=c(1,2))
 plot(logadd_model,1)
+# or
+#plot(logadd_model,3)
 ```
 
-<img src="assets/fig/unnamed-chunk-23-1.png" title="plot of chunk unnamed-chunk-23" alt="plot of chunk unnamed-chunk-23" style="display: block; margin: auto;" />
+<img src="assets/fig/unnamed-chunk-24-1.png" title="plot of chunk unnamed-chunk-24" alt="plot of chunk unnamed-chunk-24" style="display: block; margin: auto;" />
 
 ---
 
@@ -850,22 +838,22 @@ scatter.smooth(logmult_model$residuals ~ log10(birthw$ad),evaluation = 1000,degr
                xlab = expression(paste(log[10],"(abdominal diameter)", sep="")))
 ```
 
-<img src="assets/fig/unnamed-chunk-24-1.png" title="plot of chunk unnamed-chunk-24" alt="plot of chunk unnamed-chunk-24" style="display: block; margin: auto;" />
+<img src="assets/fig/unnamed-chunk-25-1.png" title="plot of chunk unnamed-chunk-25" alt="plot of chunk unnamed-chunk-25" style="display: block; margin: auto;" />
 
 ---
 
 ### Check for outliers (part of assumption 5 along with multicollinearity)
 
-Use Cook's distance to find influential points (or other methods you saw yesterdau)
+Use Cook's distance to find influential points (or other methods you saw yesterday)
 
 ```r
 par(mfrow=c(1,1))
 plot(logadd_model,4)
 ```
 
-<img src="assets/fig/unnamed-chunk-25-1.png" title="plot of chunk unnamed-chunk-25" alt="plot of chunk unnamed-chunk-25" style="display: block; margin: auto;" />
+<img src="assets/fig/unnamed-chunk-26-1.png" title="plot of chunk unnamed-chunk-26" alt="plot of chunk unnamed-chunk-26" style="display: block; margin: auto;" />
  
->- There are a couple of outliers here, it might be prudent to see how our model estimated change without these parameters
+>- There are a couple of outliers here, it might be prudent to see how our model estimates change without these parameters
 
 ---
 
@@ -873,7 +861,7 @@ plot(logadd_model,4)
 
 >- But this won't be possible for more than 2 explanatory variables (and in most use-cases you will have more than two expalantory variables)
 
-<img src="assets/fig/unnamed-chunk-26-1.png" title="plot of chunk unnamed-chunk-26" alt="plot of chunk unnamed-chunk-26" style="display: block; margin: auto;" />
+<img src="assets/fig/unnamed-chunk-27-1.png" title="plot of chunk unnamed-chunk-27" alt="plot of chunk unnamed-chunk-27" style="display: block; margin: auto;" />
 
 ---
 
@@ -881,7 +869,7 @@ plot(logadd_model,4)
 
 * You can provide a table of slopes with standard errors/CI's for your final model (you can use the ```confint()``` function on your saved model to get CI's)
 
-* if you have many variables you might consider and effects plot:
+* if you have many variables you might consider an effects plot (coefficients with CI intervals):
 
 ```r
 if (!require(jtools, quietly=TRUE)) {install.packages("jtools");library(jtools)}
@@ -889,7 +877,7 @@ if (!require(jtools, quietly=TRUE)) {install.packages("jtools");library(jtools)}
 plot_summs(logadd_model)
 ```
 
-<img src="assets/fig/unnamed-chunk-27-1.png" title="plot of chunk unnamed-chunk-27" alt="plot of chunk unnamed-chunk-27" style="display: block; margin: auto;" />
+<img src="assets/fig/unnamed-chunk-28-1.png" title="plot of chunk unnamed-chunk-28" alt="plot of chunk unnamed-chunk-28" style="display: block; margin: auto;" />
 
 ---
 
@@ -911,22 +899,20 @@ plot_summs(logadd_model)
 
 >- Multiple regression can be used either to model some phenomena, to understand the relationships between variables, or for predicting unknown outcomes or both (but there will be some trade-off generalizibility of a model vs accuracy of prediction)
 
->- In biology, continuous variables will rarely be linearly related in parameters (the power law is quite pervasice in biological relationships). However linear models are simple and easy to interpret. You can often transform variables (like we did) to get to linear models. There are also methods such as **non-linear regression** and **Generalized additive models** that can work even when transformations won't
-
->- In general, just like for ANOVA, there are multiple extensions of the simple linear model to deal with gross violations of assumptions. The most general of these methods is known as **Generalized additive models**
+>- In biology, continuous variables will rarely be linearly related in parameters (the power law is quite pervasive in biological systems). However linear models are simple and easy to interpret. You can often transform variables (like we did) to get to linear models. There are also methods such as **non-linear regression** and **Generalized additive models** that can work even when transformations won't.
 
 
 ---
 
 ## Analysis of Covariance
 
->- An Analysis of Covariance (ANCOVA) is a special case of linear models where we are interested in the effects of one **numerical continuous explanatory** variable and one **categorical explanatory** variable and their **interaction** (often the interaction is the important aspect of the analysis design). The response/dependent variable is still a numerical variable.
+>- An Analysis of Covariance (ANCOVA) is a special case of linear models where we are interested in the effects of one **numerical continuous explanatory** variable and one **categorical explanatory** variable and their **interaction** (often the interaction is the important aspect of the analysis design). The response/dependent variable is *still* a numerical variable.
 
->- An analysis of covariance is also used in slighlty different instance where we want to control for the effects of some continuous variable while assessing the difference between some categorical variable of interest. Imagine trying to determing the effects of some treatment on the growth of an organism, but the organisms are at different sizes at the start. An ANCOVA would try to compare the means of the treatment while controlling for the different intial sizes.
+>- An analysis of covariance is also used in slighlty different instance where we want to *control* for the effects of some continuous variable while assessing the difference between some categorical variable of interest. Imagine trying to determing the effects of some treatment on the growth of an organism, but the organisms are at different sizes at the start. An ANCOVA would try to compare the means of the treatment while controlling for the different intial sizes.
 
 >- In simpler terms an ANCOVA is a combination of simple linear regression and a one-way ANOVA
 
->- It also offer an insight into how linear models work in general. The flexibility of linear models lets us combine **any number** of categorical and numerical explanatory variables to model our phenomena of interest and/or make predictions.
+>- It also offers an insight into how linear models work in general. The flexibility of linear models lets us combine **any number** of categorical and numerical explanatory variables to model our phenomena of interest and/or make predictions.
 
 >- Since the ANCOVA only has one numerical and one explanatory variable, it offers some easy interpretations. 
 
@@ -946,7 +932,7 @@ plot_summs(logadd_model)
 
 >- There is **another** term here that is missing, this is the **interaction** term, but this time between a categorical and a numerical variable. The interaction term has the same interpretation as before (the effect of one IV on the response variable is dependent on another IV).
 
->- The assumptions of the ANCOVA are identical to those of the multiple linear regression, except we don't have to worry about multicollinearity
+>- The assumptions of the ANCOVA are identical to those of the multiple linear regression, except we don't have to worry about multicollinearity, since we only have one numerical IV
 
 ---
 
@@ -986,7 +972,7 @@ geom_point(aes(colour = glucose)) + geom_smooth(method = "lm", se = FALSE) +
 theme_light() + scale_color_brewer(palette = "Set1") + facet_grid(~glucose) ; eda
 ```
 
-<img src="assets/fig/unnamed-chunk-28-1.png" title="plot of chunk unnamed-chunk-28" alt="plot of chunk unnamed-chunk-28" style="display: block; margin: auto;" />
+<img src="assets/fig/unnamed-chunk-29-1.png" title="plot of chunk unnamed-chunk-29" alt="plot of chunk unnamed-chunk-29" style="display: block; margin: auto;" />
 
 >- The relationship between diameter and concentration doesn't look that linear
 
@@ -1001,7 +987,7 @@ A log transformation here also does the trick but this time we only need to appl
 eda + scale_x_continuous(trans = 'log10')
 ```
 
-<img src="assets/fig/unnamed-chunk-29-1.png" title="plot of chunk unnamed-chunk-29" alt="plot of chunk unnamed-chunk-29" style="display: block; margin: auto;" />
+<img src="assets/fig/unnamed-chunk-30-1.png" title="plot of chunk unnamed-chunk-30" alt="plot of chunk unnamed-chunk-30" style="display: block; margin: auto;" />
 
 >- These lines seem like they fit well! What can we say about the effect of glucose on the diameter? and does the relationship between cell size and concentration change depending on whether glucose is present or not?
 
@@ -1009,7 +995,7 @@ eda + scale_x_continuous(trans = 'log10')
 
 ## Fitting the ANCOVA model to the tetrahymena data
 
->- Always fit the ANCOVA with the interaction term first, and evaluate it first
+>- Always fit the ANCOVA with the interaction term first:
 
 ```r
 tet_model1 <- lm(diameter ~ log10(concentration) + glucose + log10(concentration):glucose, data=tetrahymena)
@@ -1055,25 +1041,25 @@ summary(tet_model1)
 ```
 ## 
 ## Call:
-## lm(formula = log10(diameter) ~ log10(concentration) * glucose, 
+## lm(formula = diameter ~ log10(concentration) + glucose + log10(concentration):glucose, 
 ##     data = tetrahymena)
 ## 
 ## Residuals:
-##       Min        1Q    Median        3Q       Max 
-## -0.026722 -0.004888  0.000056  0.003767  0.017608 
+##      Min       1Q   Median       3Q      Max 
+## -1.27935 -0.19123 -0.02723  0.21369  0.89475 
 ## 
 ## Coefficients:
-##                                Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)                    1.634761   0.019205  85.123   <2e-16 ***
-## log10(concentration)          -0.059677   0.003920 -15.225   <2e-16 ***
-## glucose1                      -0.003418   0.023695  -0.144    0.886    
-## log10(concentration):glucose1  0.006480   0.004821   1.344    0.185    
+##                               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)                    36.8048     0.9815  37.499   <2e-16 ***
+## log10(concentration)           -3.0092     0.2003 -15.022   <2e-16 ***
+## glucose1                        0.7547     1.2110   0.623    0.536    
+## log10(concentration):glucose1   0.1482     0.2464   0.602    0.550    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 0.009059 on 47 degrees of freedom
-## Multiple R-squared:  0.9361,	Adjusted R-squared:  0.9321 
-## F-statistic: 229.6 on 3 and 47 DF,  p-value: < 2.2e-16
+## Residual standard error: 0.463 on 47 degrees of freedom
+## Multiple R-squared:  0.9392,	Adjusted R-squared:  0.9353 
+## F-statistic: 242.1 on 3 and 47 DF,  p-value: < 2.2e-16
 ```
 
 >- **For the following I'll talk in terms the log units of the concentration** and give a conceptual explanation of the coefficients. This might not be easy to digest for some people, so if you are interested in explanations in the original units For see the note on log models from the multiple linear regression model and [here](https://stats.idre.ucla.edu/other/mult-pkg/faq/general/faqhow-do-i-interpret-a-regression-model-when-some-variables-are-log-transformed/) as well.
@@ -1084,9 +1070,9 @@ summary(tet_model1)
 
 >- ```log10(concentration)```: This is the slope for a simple linear regression of diameter on log10(concentration) for the subset of the data where there was no glucose treatment. There is -3.01 µm  *decrease* for every one *log* unit increase in concentration.
 
->- ```glucose1```: Under the glucose treatment (1) and for a  concentration of 0 cells/ml the diameter is 0.7547 µm lower compared to no glucose treatment. In other words this is the difference in intercepts of two simple linear regressions of diameter on log10(concentration), one for the no glucose samples and one for the glucose treated samples. **Note** the standard error on this term
+>- ```glucose1```: Under the glucose treatment (1) and for a  concentration of 0 cells/ml the diameter is 0.755 µm lower compared to no glucose treatment. In other words this is the difference in intercepts of two simple linear regressions of diameter on log10(concentration), one for the no glucose samples and one for the glucose treated samples. **Note** the standard error on this term
 
->- ```log10(concentration):glucose1```: the effect of concentration on diameter is higher by 0.1482 in the glucose condition compared to no glucose treatment. In other words the slope between concentration and diameter is ```-3.0092+ 0.1482 ``` in elevated temperature condition. **Note** the standard error on this term.
+>- ```log10(concentration):glucose1```: the effect of concentration on diameter is higher by 0.1482 in the glucose condition compared to no glucose treatment. In other words the slope between concentration and diameter is ```-3.0092+0.1482 ``` in elevated temperature condition. **Note** the standard error on this term.
 
 >- The relationship between diameter and cell concentration stays constant regardless of the prescence of glucose, but cells seem to acheive bigger size in the prescence of glucose. 
 
@@ -1145,7 +1131,7 @@ ggplot(tetrahymena, aes(x = concentration, y = diameter, colour = glucose)) +
 geom_point(aes(colour = glucose))+ geom_smooth(method = "lm", se = T) + theme_light() + scale_color_brewer(palette = "Set1") +  scale_x_continuous(trans = 'log10') + scale_y_continuous(trans = 'log10')
 ```
 
-<img src="assets/fig/unnamed-chunk-33-1.png" title="plot of chunk unnamed-chunk-33" alt="plot of chunk unnamed-chunk-33" style="display: block; margin: auto;" />
+<img src="assets/fig/unnamed-chunk-34-1.png" title="plot of chunk unnamed-chunk-34" alt="plot of chunk unnamed-chunk-34" style="display: block; margin: auto;" />
 
 ---
 
@@ -1184,21 +1170,20 @@ geom_point(aes(colour = glucose))+ geom_smooth(method = "lm", se = T) + theme_li
 
 ## Postscript running ANOVAs with the ```lm``` function
 
-To show that anova and linear models are the same thing, we can visit the tooth growth 2 way ANOVA example and analyze the data using ```lm```) instead of ```aov()``` like we did before
+To show that anova and linear models are the same thing, we can visit the tooth growth 2 way ANOVA example and analyze the data using ```lm()``` instead of ```aov()``` like we did before
 
 ```r
+data("ToothGrowth")
 tooth.lm <- lm(len ~ supp + dose + supp:dose, data = ToothGrowth)
 summary(tooth.lm)$coefficients
 ```
 
 ```
-##              Estimate Std. Error    t value     Pr(>|t|)
-## (Intercept)     13.23   1.148353 11.5208468 3.602548e-16
-## suppVC          -5.25   1.624017 -3.2327258 2.092470e-03
-## dose1            9.47   1.624017  5.8312215 3.175641e-07
-## dose2           12.83   1.624017  7.9001660 1.429712e-10
-## suppVC:dose1    -0.68   2.296706 -0.2960762 7.683076e-01
-## suppVC:dose2     5.33   2.296706  2.3207148 2.410826e-02
+##              Estimate Std. Error   t value     Pr(>|t|)
+## (Intercept) 11.550000   1.581394  7.303681 1.089558e-09
+## suppVC      -8.255000   2.236429 -3.691152 5.073393e-04
+## dose         7.811429   1.195422  6.534454 2.027753e-08
+## suppVC:dose  3.904286   1.690582  2.309433 2.463136e-02
 ```
 
 ---
@@ -1257,44 +1242,23 @@ head(model.matrix(tooth.lm), 5)
 ```
 
 ```
-##   (Intercept) suppVC dose1 dose2 suppVC:dose1 suppVC:dose2
-## 1           1      1     0     0            0            0
-## 2           1      1     0     0            0            0
-## 3           1      1     0     0            0            0
-## 4           1      1     0     0            0            0
-## 5           1      1     0     0            0            0
+##   (Intercept) suppVC dose suppVC:dose
+## 1           1      1  0.5         0.5
+## 2           1      1  0.5         0.5
+## 3           1      1  0.5         0.5
+## 4           1      1  0.5         0.5
+## 5           1      1  0.5         0.5
 ```
 
-$\hat{y}=X \beta$ , where $\hat{y}$ are the predicted values
+$\hat{y}=X \beta$ , where $\{y}$ are the values for lengths, we can solve for a vector of $\beta$'s
+by rearraging the matrix form of the linear model to solve for the $\beta$'s vector
 
-```r
-#multiple X by vector of betas to get fitted values
-y_hat = model.matrix(tooth.lm)  %*% summary(tooth.lm)$coefficients[,1]
-#These should be the same as predicted by the lm function
-#fitted returns a row vector
-as.vector(y_hat)
-```
-
-```
-##  [1]  7.98  7.98  7.98  7.98  7.98  7.98  7.98  7.98  7.98  7.98 16.77
-## [12] 16.77 16.77 16.77 16.77 16.77 16.77 16.77 16.77 16.77 26.14 26.14
-## [23] 26.14 26.14 26.14 26.14 26.14 26.14 26.14 26.14 13.23 13.23 13.23
-## [34] 13.23 13.23 13.23 13.23 13.23 13.23 13.23 22.70 22.70 22.70 22.70
-## [45] 22.70 22.70 22.70 22.70 22.70 22.70 26.06 26.06 26.06 26.06 26.06
-## [56] 26.06 26.06 26.06 26.06 26.06
-```
+$\beta = (X^{t}X)^{-1}X^{t}y$
 
 ```r
-as.vector(fitted(tooth.lm))
-```
-
-```
-##  [1]  7.98  7.98  7.98  7.98  7.98  7.98  7.98  7.98  7.98  7.98 16.77
-## [12] 16.77 16.77 16.77 16.77 16.77 16.77 16.77 16.77 16.77 26.14 26.14
-## [23] 26.14 26.14 26.14 26.14 26.14 26.14 26.14 26.14 13.23 13.23 13.23
-## [34] 13.23 13.23 13.23 13.23 13.23 13.23 13.23 22.70 22.70 22.70 22.70
-## [45] 22.70 22.70 22.70 22.70 22.70 22.70 26.06 26.06 26.06 26.06 26.06
-## [56] 26.06 26.06 26.06 26.06 26.06
+#to get betas by matrix multiplication
+X=model.matrix(tooth.lm)
+y=solve(t(X)%*%X)%*%t(X)%*%ToothGrowth$len
 ```
 
 

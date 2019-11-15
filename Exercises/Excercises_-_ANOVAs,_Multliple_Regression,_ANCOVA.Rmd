@@ -62,7 +62,7 @@ Make sure the data is read in correctly. If it is read correctly, there should b
 
 1.) Perform some exploratory analysis on the data set and answer the following questions: (a) Do you think the different diets are equally effective for weight gain? (b) How do you think country of origin might influence weight gain? (d) is this data set balanced (i.e. equal observations across all subgroups)?
 
-2.) Carry out a two way ANOVA with interaction and Tukey post-hoc tests to determine which diet is most effective for weight gain? Is there a single answer to the previous question? Why or why not?
+2.) Carry out a two way ANOVA with interaction and Tukey post-hoc tests to determine which diet is most effective for weight gain? Is there a single best answer to the previous question? Why or why not?
 
 3.) Evaluate the assumptions of the anova model for the drug trial data. Are there any assumptions violated? Which one might be the most problematic?
 
@@ -104,7 +104,7 @@ Call ```summary()``` on the saved model. Are all the slopes/coefficients signfic
 
 ## Exercise 4: Stickleback Association Study
 
-The dataset for this exercise consists of 1682 single nucleotide polymorphism (SNP) markers, typed across 396 adult threespine stickleback fish (*Gasterosteus aculeatus*). There is an  enormous range of morphological variation present within three-spined sticklebacks. These fall into two main categories, the **anadromous** and the **freshwater** forms. One major difference between the  two categories of forms is the number of armour plates along the lateral side of the fish. Anadromous fish are heavily plated and habe upwards of 25 plates on each side, whereas freshwater fish only have about 5 on each side (see the image below)
+The dataset for this exercise consists of 1682 single nucleotide polymorphism (SNP) markers, typed across 328 adult threespine stickleback fish (*Gasterosteus aculeatus*). There is an  enormous range of morphological variation present within three-spined sticklebacks. These fall into two main categories, the **anadromous** and the **freshwater** forms. One major difference between the  two categories of forms is the number of armour plates along the lateral side of the fish. Anadromous fish are heavily plated and habe upwards of 25 plates on each side, whereas freshwater fish only have about 5 on each side (see the image below)
 
 ```{r, echo=F, fig.align="center", out.width = "50%"}
 # All defaults
@@ -114,7 +114,7 @@ include_graphics("images/journal.pone.0164578.g001.png")
 <font size="-1"> Fig Source: Wiig E, Reseland JE, Østbye K, Haugen HJ, Vøllestad LA (2016) Variation in Lateral Plate Quality in Threespine Stickleback from Fresh, Brackish and Marine Water: A Micro-Computed Tomography Study. PLoS ONE 11(10): e0164578. https://doi.org/10.1371/journal.pone.0164578 </font>
 
 
-The data for the 396 fish comes from adults caught in an **admixture zone**. In the admixture zone, anadramous and freshwater types meet and breed freely, allowing for recombination and linkage disequilibrium between genetic markers and phenotypes. Hence, these *hybrid* individuals are ideal for identifying the genetic basis of traits that differ in the parental popualtions (anadromous *vs.* freshwater). **We will use this dataset to find the genetic loci associated with the number of armour plates**
+The data for the 328 fish comes from adults caught in an **admixture zone**. In the admixture zone, anadramous and freshwater types meet and breed freely, allowing for recombination and linkage disequilibrium between genetic markers and phenotypes. Hence, these *hybrid* individuals are ideal for identifying the genetic basis of traits that differ in the parental popualtions (anadromous *vs.* freshwater). **We will use this dataset to find the genetic loci associated with the number of armour plates**
 
 Read in the dataset as follows (this make take some time):
 
@@ -137,9 +137,9 @@ Columns 2:1683 are all the genetic marker. The name of each genetic marker start
 
 1.) Explore the relationship between Number of plates and the other numerical variables (Ancestry and Std. length). Would you expect a relationship between any of these variables? What does the data suggest?
 
-2.) Based on your exploratory analysis above, which, if any of Std.length or Ancestry seem correlated with No.Plates? Fit a linear model with one or both of these as explanatory variables and No.Plates as the response variable and call it ```baseline```. How much variance in No.Plates does your model explain (Adjusted R Squared)
+2.) Based on your exploratory analysis above, which, if any of Std.length or Ancestry seem correlated with No.Plates? Fit a linear model with one or both of these as explanatory variables and No.Plates as the response variable and call it ```baseline```. How much variance in No.Plates does your model explain (Adjusted R Squared)?
 
-3.) Iteratively add each snp marker to the ```baseline``` above to create another model. Compare the two models using the likeleihood ratio test from the ```anova``` function. Make sure you do this for each of the 1682 markers and store the p-value of the likelihood ratio test in another dataframe along with the name of the marker. After doing this for all markers, use the bonferroni correction ($\frac{\alpha}{\text{no. markers}}$) to find all markers with signficant association with the number of plates.
+3.) Iteratively add each SNP marker to the ```baseline``` above to create another model. Compare the two models using the likeleihood ratio test from the ```anova``` function. Make sure you do this for each of the 1682 markers and store the p-value of the likelihood ratio test in another dataframe along with the name of the marker. After doing this for all markers, use the bonferroni correction ($\frac{\alpha}{\text{no. markers}}$) to find all markers with signficant association with the number of plates.
 
 
 

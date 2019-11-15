@@ -1,15 +1,18 @@
 ---
-title: "Exercises for Introduction to Linear Models: ANOVAs, Multiple Regression and ANCOVA"
-subtitle: "Solutions"
+title: "Exercises for Introduction to Linear Models: ANOVAs, Multiple Regression and
+  ANCOVA - Suggested Solutions"
 author: "Saad Arif"
 date: "Nov 2019"
-output: pdf_document
+output:
+  pdf_document: default
+  word_document: default
+subtitle: Solutions
 ---
 
 ```{r,echo=FALSE,message=FALSE,warning=FALSE}
 require(knitr)
 # Set so that long lines in R will be wrapped:
-opts_chunk$set(tidy.opts=list(width.cutoff=80),tidy=TRUE)
+opts_chunk$set(tidy.opts=list(width.cutoff=80),tidy=TRUE, fig.align="center")
 ```
 
 ```{r wrap-hook, echo=F}
@@ -34,7 +37,7 @@ A clinical trial was conducted to study the effect of the levels of a drug on so
 
 To read this data, directly from the web, into an object called ```drugTrials```, do the following in R:
 
-```{r, eval=F, , linewidth=40}
+```{r , linewidth=40}
 drugTrials <- read.csv("https://git.io/JewAf")
 ```
 
@@ -42,11 +45,58 @@ Make sure the data is read in correctly. If it is read correctly, there should b
 
 1.) Perform some exploratory analysis on the data set and answer the following questions: (a) Do you think the SCOREs are different between genders? (b) are SCOREs different between differend doses of the drug? (c) is there an interaction between GENDER and DOSE? (d) is this data set balanced (i.e. equal observations across all subgroups)?
 
+```{r}
+#make a boxplot for all 4 subgroups
+require(ggplot2)
+p<-ggplot(drugTrials, aes(x=DOSE, y=SCORE, fill=GENDER)) + 
+  geom_boxplot(position=position_dodge(1)) + 
+  stat_summary(fun.y=mean, geom="line", aes(group=GENDER), position=position_dodge(1))  +
+  stat_summary(fun.y=mean, geom="point", position=position_dodge(1)) + theme_bw()
+p
+```
+It is difficult to discern any main effects here - they all seem to be context dependent which suggests there is an interaction between DOSE and GENDER in determing the SCORE
+
+is the dataset balanced?
+```{r}
+table(drugTrials$GENDER, drugTrials$DOSE)
+```
+Yes it is, equal number of observations for each subgroup, which means when you can the ```aov()``` function to generate the 2-way ANOVA table
+
+
 2.) Carry out a two-way ANOVA with interaction on this data set and answer the following questions (a) Is the interaction effect signficant? (b) are any of the main effects signficant? (c) if the interaction is signficant can you still easily interpret the results for any significant main effects?
+
+```{r}
+drug_anova <- aov(SCORE~GENDER*DOSE, data=drugTrials)
+summary(drug_anova)
+```
+Always start from the bottom (the interaction term), which is signficant (F_1,44 = 15.4, p-value= 0.0003). The main effect of gender is also signicant, but it is not possible to say that Males are different from Females for SCORES, because of the significance of the interaction term (just look the boxplot again)
 
 3.) Carry out the appropriate Tukey Post-hoc tests and examine the results. do they contradict your interpretation of 2(c) ?
 
+```{r}
+#again because of the signficant interactions we need to look at pairwise comparisons of the
+#interaction term
+TukeyHSD(drug_anova, which = "GENDER:DOSE")
+```
+Note the genders are not significantly different when both receive a low dose of the Drug but the difference is quite pronounced when both recieve a high dose. Females don't seem to be responsive to differences in the level of drug, whereas males *do* seem to respond to different levels of the drug.
+
+
 4.) Evaluate the assumptions of the anova model for the drug trial data? Are there any assumptions violated? Which one might be the most problematic?
+
+```{r}
+#draw multiple base plots in same window
+par(mfrow=c(1,2))
+
+# assumption 2: homogeneity of variance
+plot(drug_anova, 1) 
+# There does seem to be more spread on the left hand side but its not too extreme
+
+
+#assumption 3 of normality of residuals
+plot(drug_anova, 2) 
+#the plot look a bit weird and maybe the worst of the lot but remember
+#ANOVAs are robust to small deviations from normality
+```
 
 ***
 
@@ -55,7 +105,7 @@ Make sure the data is read in correctly. If it is read correctly, there should b
 This data for this study comes from  an experiment in which people were put on one of three diets to encourage weight gain.  Additionally the diets were trialled independently in three different countries.
 
 To read this data, directly from the web, into an object called ```dietData```, do the following in R:
-```{r, eval=F, , linewidth=40}
+```{r, linewidth=40}
 dietData <- read.csv("https://git.io/JewAJ")
 ```
 
@@ -63,7 +113,31 @@ Make sure the data is read in correctly. If it is read correctly, there should b
 
 1.) Perform some exploratory analysis on the data set and answer the following questions: (a) Do you think the different diets are equally effective for weight gain? (b) How do you think country of origin might influence weight gain? (d) is this data set balanced (i.e. equal observations across all subgroups)?
 
+```{r}
+#make a boxplot for all 9 subgroups
+require(ggplot2)
+p<-ggplot(dietData, aes(x=Diet, y=WeightChange, fill=Country)) + 
+  geom_boxplot(position=position_dodge(1)) + 
+  stat_summary(fun.y=mean, geom="line", aes(group=Country), position=position_dodge(1))  +
+  stat_summary(fun.y=mean, geom="point", position=position_dodge(1)) + theme_bw()
+p
+```
+
+It is easy to see that individuals from the US had the highest change in weight regardless of diet. However it is difficult to guess which diet is most effective. There migh 
+
+
+is the dataset balanced?
+```{r}
+table(dietData$Diet, dietData$Country)
+```
+Yes it is, equal number of observations for each subgroup, which means when you can the ```aov()``` function to generate the 2-way ANOVA table
+
 2.) Carry out a two way ANOVA with interaction and Tukey post-hoc tests to determine which diet is most effective for weight gain? Is there a single answer to the previous question? Why or why not?
+
+```{r}
+diet_anova <- aov(WeightChange ~ Country*Diet, data=dietData)
+summary(diet_anova)
+```
 
 3.) Evaluate the assumptions of the anova model for the drug trial data. Are there any assumptions violated? Which one might be the most problematic?
 
@@ -115,15 +189,15 @@ include_graphics("images/journal.pone.0164578.g001.png")
 <font size="-1"> Fig Source: Wiig E, Reseland JE, Østbye K, Haugen HJ, Vøllestad LA (2016) Variation in Lateral Plate Quality in Threespine Stickleback from Fresh, Brackish and Marine Water: A Micro-Computed Tomography Study. PLoS ONE 11(10): e0164578. https://doi.org/10.1371/journal.pone.0164578 </font>
 
 
-The data for the 396 fish comes from adults caught in an **admixture zone**. In the admixture zone, anadramous and freshwater types meet and breed freely, allowing for recombination and linkage disequilibrium between genetic markers and phenotypes. Hence, these *hybrid* individuals are ideal for identifying the genetic basis of traits that differ in the parental popualtions (anadromous *vs.* freshwater). **We will use this dataset to find the genetic loci associated with the number of armour plates**
+The data for the 328 fish comes from adults caught in an **admixture zone**. In the admixture zone, anadramous and freshwater types meet and breed freely, allowing for recombination and linkage disequilibrium between genetic markers and phenotypes. Hence, these *hybrid* individuals are ideal for identifying the genetic basis of traits that differ in the parental popualtions (anadromous *vs.* freshwater). **We will use this dataset to find the genetic loci associated with the number of armour plates**
 
 Read in the dataset as follows (this make take some time):
 
-```{r, eval=F}
+```{r}
 stickle <- read.csv("https://git.io/Jer8h")
 ```
 
-Make sure the data set has 396 rows (adult fish) and 1686 columns. Here is a brief description of the variables:
+Make sure the data set has 328 rows (adult fish) and 1686 columns. Here is a brief description of the variables:
 
 The first column ```ind``` is a unique identifier for each fish. You likely will not need this for anything.
 
@@ -137,6 +211,46 @@ Columns 2:1683 are all the genetic marker. The name of each genetic marker start
 
 1.) Explore the relationship between Number of plates and the other numerical variables (Ancestry and Std. length). Would you expect a relationship between any of these variables? What does the data suggest?
 
-2.) Based on your exploratory analysis above, which, if any of Std.length or Ancestry seem correlated with No.Plates? Fit a linear model with one or both of these as explanatory variables and No.Plates as the response variable and call it ```baseline```. How much variance in No.Plates does your model explain (Adjusted R Squared)
+```{r}
+pairs(stickle[1684:1686])
+```
+Not ancestry seems to be weakly correlated with both Number of plates and Std. Length. However, there is not much going on between Std.Length and Number of plates.
+
+2.) Based on your exploratory analysis above, which, if any of Std.length or Ancestry seem correlated with No.Plates? Fit a linear model with one or both of these as explanatory variables and No.Plates as the response variable and call it ```baseline```. How much variance in No.Plates does your model explain (Adjusted R Squared)?
+
+```{r}
+baseline <- lm(No.PLATES ~ ancestry, data=stickle)
+summary(baseline)
+```
+Ancestry explains about 33% of the variance in the number of plates. At this point it might be worth checking model assumptions as well. Most of the model assumptions are met but there might be some heterogeneity of variances, but it's not extreme. A transformation may improve the model but we'll continue as is.
 
 3.) Iteratively add each snp marker to the ```baseline``` above to create another model. Compare the two models using the likeleihood ratio test from the ```anova``` function. Make sure you do this for each of the 1682 markers and store the p-value of the likelihood ratio test in another dataframe along with the name of the marker. After doing this for all markers, use the bonferroni correction ($\frac{\alpha}{\text{no. markers}}$) to find all markers with signficant association with the number of plates.
+
+
+```{r, warning=F}
+#get names of each marker
+markernames <- names(stickle)[2:1683]
+
+#make a dataframe to store the results
+ptable <- data.frame(marker=markernames, pval=numeric(length=1682))
+
+#loop through each marker
+for (i in seq_along(markernames)) {
+  #note some markers are monomorphic, it would be better to remove them first, they will 
+  #generate warnings if you don't remove them
+  
+  #make a model of No.PLATES ~ ancestry + markername
+  marker_model <- lm(reformulate(c("ancestry", markernames[i]), "No.PLATES"), data = stickle)
+  #get the pvalue from the likelihood ratio test of the baseline model vs the baseline + marker model
+  ptable$pval[i] <- anova(baseline, marker_model)$`Pr(>F)`[2]
+}
+
+#the bonferonni alpha value calculation
+bonferroni_alpha = 0.05/length(markernames)
+
+significant_markers <- ptable[ptable$pval<bonferroni_alpha,]
+significant_markers
+
+```
+
+Note: almost all these signficant markers are on Chromosome IV between ~12-14 Mb. This region contains a gene called *EDA* which, in humans, is associated with ectodermal abnormalties (ectodermal dysplasia). Even with slight deviations from the assumptions we get quite robust results. Several independent regions have shown this locus to be associate (and even causative) in controlling the number of lateral plates in threespine sticklebacks (eg Colosimo et al. 2015, *Science*).

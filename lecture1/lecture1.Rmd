@@ -3,10 +3,8 @@ title: "Introduction to Statistical Data Analysis <br/> <br/>"
 author: Saad Arif <br/>  Dept. of Biological and Medical Sciences & Centre for Functional
   Genomics <br/> Oxford Brookes University <br/> <br/> Maria Christodoulo <br/> Department
   of Statistics <br/> University of Oxford <br/>
-date: "<small>Nov 2019</small>"
+date: "<small>18<sup>th</sup> Nov 2019</small>"
 output:
-  beamer_presentation:
-    incremental: yes
   slidy_presentation:
     highlighter: prettify
     hitheme: tomorrow
@@ -33,7 +31,7 @@ Daily Schedule:
 2- onwards - Practical
 
 
-There will be some variation during the three days but we will always start with a lecture session.
+There will be some variation on this schedule during the three days but we will always start with a lecture session.
 
 
 ## Course Organization 
@@ -45,7 +43,7 @@ Day 2: Programming in R, Basic Statistical Tests in R
 
 Day 3: Advanced Data Wrangling in R, Introduction to Linear Models
 
-Day 4(morning only): Introduction to Generalized Linear Models (time permitting), Revision Exercises
+Day 4 (morning only): Introduction to Generalized Linear Models (time permitting), Revision Exercises, Solutions
 
 ## Four Aspects of a Statistical Analysis <br /> <br /> 
 
@@ -61,25 +59,25 @@ Day 4(morning only): Introduction to Generalized Linear Models (time permitting)
 
 - This is the part of statistics that happens before your experiment.
 
-- The main aim of experimental design is to help establish a causal connection 
+- The main aim of experimental design is to help establish a connection 
 between the **independent** and **dependent** variable(s).
 
 - Usually we measure something and then take an average (or some other *statistic*),
   
     estimated value = expected/real value + error + bias
 
-- A major goal of experimental design is to:
+- Another major goal of experimental design is to:
       + avoid  bias
       + minimize sampling error
   
-- **Independent variable**: These are the **factors**/variables you control in your experiment. Sometimes also known as the predictor variables. **Dependent variable**: This is the response variable you are interested in.
+- **Independent variable**: These are the **factors**/variables you control in your experiment. Sometimes also known as the predictor/explanatory variables. **Dependent variable**: This is the response variable you are interested in.
 
 
 ## What is Bias?
 
 - Most of the time will be working with a *sample* from a larger *population* (we can't measure the entire population for various reasons)
 
-- We need a representative/*random* sample from the population to make valid inferences (almost all statistical tests you will ever use implicitly assume random sampling)
+- We need a representative/*random* (or randomly assign subjects in an experiment) sample from the population to make valid inferences (almost all statistical tests you will ever use implicitly assume random sampling)
 
 - **Sources of Bias**: convenience sampling, voluntary response, lack of blinding
 
@@ -93,27 +91,27 @@ between the **independent** and **dependent** variable(s).
 
 ## Sampling and Sampling Error {.build}
 
-- We almost always sample from a population (randomly I hope)
+- We almost always sample (or assign subjects) from a population (randomly I hope)
 
-- Differences between sample values (e.g. $\bar{X}$, *s* ) and population values ($\mu$, $\sigma$) are the sampling error
+- Differences between sample means (e.g. $\bar{X}$, *s* ) and population means ($\mu$, $\sigma$) are the sampling error
 
--  As long as we sample from a population some sampling error is unavoidable, but we can minimize it <center> ![](images/Outline Application For Nigel Groome Studentship Competition_SA.png) </center>
+-  As long as we sample from a population, some sampling error is unavoidable, but we can minimize it <center> ![](images/Outline Application For Nigel Groome Studentship Competition_SA.png) </center>
 
 - **Blocking** is another way we minimize sampling error. This only works if we know some other variable (the block variable) adds uninteresting variability to our measurements
 
-## Sampling and Sampling Distribution: Some Definitions {.build}
+## Sampling and Sampling Distribution: Some Symbolic Definitions {.build}
 
 - $\bar{X}$ = sample mean,  $\mu$ = population mean (usually unknown), $\mu_{\bar{X}}$ = mean of a sample of $\bar{X}$'s
 
 - s = sample standard deviation ,  $\sigma$ = population standard deviation (usually unknown)
 
-- $\sigma_{\bar{X}}$ = standard deviation of the sample means or the standar error
+- $\sigma_{\bar{X}}$ = standard deviation of the sample means or the standar error of the mean (SEM)
 
 - [sampling distributions in action](http://shiny.stat.calpoly.edu/Sampling_Distribution/)
 
 ## Central Limit Theorem (CLT) and Sampling Distributions
 
-The CLT says that if you take many repeated samples from a population, and calculate the averages or sum of each one, the collection of those averages will be normally distributed...and it doesn’t matter what the shape of the source distribution is!
+The CLT says that if you take many repeated samples from a population, and calculate the averages or sum of each one, the collection of those averages (or sums) will be normally distributed...and it doesn’t matter what the shape of the source distribution is!
 
 If you are measuring something and taking the average, then the average will be normally distributed or nearly normally distributed
 
@@ -123,7 +121,7 @@ If you are measuring something and taking the average, then the average will be 
   
     - a uniform distribution with six equal possibilites
 
-- What is the expected value or average of rolling a die many time?
+- What is the expected value or average of rolling a die many times?
   
     - 3.5
   
@@ -131,12 +129,12 @@ If you are measuring something and taking the average, then the average will be 
 ```{r, fig.height=4, echo =F}
 DieOutcome <- sample(1:6,10000, replace= TRUE)
 hist(DieOutcome, col ="light blue", breaks=(c(0.5, 1.5, 2.5, 3.5, 4.5 , 5.5, 6.5)))
-abline(v=3.5, col = "red",lty=1, lwd=2,)
+abline(v=3.5, col = "red",lty=1, lwd=2)
 ```
 
 ## Central Limit Theorem (CLT) and Sampling Distributions: Die example
 
-- Lets take a sample size of n=10 rolls from the previous simulation experiment (total of 10000 rolls of a single die) and take the mean of those 10 samples, repeat this 10000 times and plot a histogram of the means
+- Lets take a sample size of n=10 rolls from the previous simulation experiment (total of 10000 rolls of a single die) and **take the mean** of those 10 samples, repeat this 10000 times and plot a histogram of the means
 ```{r, echo =F}
 x10 <- c()
 k =10000
@@ -149,7 +147,7 @@ k =10000
 
 ## Central Limit Theorem (CLT) and Sampling Distributions: Die example
 
--  What if I increase my sample size?
+-  What if I increase my sample size (n) ?
 ```{r, echo =F, fig.align="center"}
  x30 <- c()
  x100 <- c()
@@ -175,15 +173,14 @@ k =10000
 
 - Because of the CLT the normal distribution is (almost) everywhere and forms the basis of the many statistical tests
 
-- The CLT states with increasing sample sizes (n > 30): $\mu_{\bar{X}}$ = $\mu$   and,  $\sigma_{\bar{X}}$ = $\frac{\sigma}{\sqrt{n}}$
+- The CLT states with increasing sample sizes (n > 30): $\mu_{\bar{X}}$ = $\mu$  (**law of large numbers**)  and,  $\sigma_{\bar{X}}$ = $\frac{\sigma}{\sqrt{n}}$
    
 -  $\sigma_{\bar{X}}$ is the standard deviation of the sampling distribution of the sample means, it also referred to as the standard error
 
-- $\sigma_{\bar{X}}$ reflects the uncertainty in our **estimate of the mean**, we can use the $\sigma_{\bar{X}}$ and what we know about the normal distribution to calculate confidence intervals around our estimate
+- $\sigma_{\bar{X}}$ reflects the uncertainty in our **estimate of the mean**, we can use the $\sigma_{\bar{X}}$ and what we know about the normal distribution (or a *t*-distribution because $\sigma$ wil be unkown) to calculate confidence intervals around our estimate
 
-- in most cases  $\sigma$ will be unknown! but we have *s* an estimate of the standard deviation (more on this later)
+- in most cases  $\sigma$ will be unknown! but we have *s* an estimate of the standard deviation
 
-- with increasing sample sizes $\bar{X}$ will converge to $\mu$ (*law of large numbers*)
 
 #Exploratory Data Analysis
 
@@ -195,12 +192,14 @@ k =10000
 
 - You may already have some formal analysis task (e.g. hypothesis testing) that you wish to conduct with your data set but EDA is still **very useful**
 
-- Why EDA?
+- Why do EDA?
 
-    - Transform or manipulate data so it is amenable for analysis, identify mistakes (data wrangling) <small>(we won't talk about this today but you will learn this later in the week) </small>
+    - Transform or manipulate data so it is amenable for analysis, identify mistakes (data wrangling) 
     - Suggest hypotheses about the causes of observed phenomena (data driven hypothesis)
     - Assess assumptions on which statistical inference will be based (tests for normality etc.)
-    - Identify relationships among explanatory variables
+    - Identify relationships among explanatory variables 
+    - Reduce Dimensionality
+    - Get to know your data better
 
 - further reading: Tukey, John Wilder (1977). Exploratory Data Analysis. Addison-Wesley. ISBN 978-0-201-07616-5.
 
@@ -219,7 +218,7 @@ k =10000
 Plus many more.... 
 
 ## Boxplots for quick summaries of data
-```{r, echo=F, fig.align="center"}
+```{r, echo=F, fig.align="center" , fig.height=6, fig.width=6}
 x <- rnorm(100, mean=-2, sd=1)
 x <- c(x, rnorm(100, mean=2, sd=1))
 #hist(x)
@@ -275,19 +274,20 @@ print(p, vp=vp.Right)
 
 ## Histograms for looking at distributions of data
 
-We will work with the "iris" data set on the following slides. This dataset included measurement on 4 aspects of flower morphology for 3 different species of iris.
+We will work with the "iris" data set on the following slides. This dataset includes measurements on 4 aspects of flower morphology for 3 different species of iris.
 ```{r iris, echo=F}
 head(iris)
 ```
 
 We might want to see if petal length is signficantly different among the species? We might want to see if the data are normally distributed.
 
-```{r  echo=F, fig.height=6, fig.align="center"}
+```{r  echo=F, fig.height=4, fig.width=6, fig.align="center"}
 par(mfrow=c(1,3))
 hist(iris$Petal.Length[iris$Species=="setosa"], main="Petal Length for I. setosa")
 hist(iris$Petal.Length[iris$Species=="versicolor"], main="Petal Length for I. versicolor")
 hist(iris$Petal.Length[iris$Species=="virginica"], main="Petal Length for I. virginica")
 ```
+
 ## QQ plots for assessing normality
 
 Another graphical method for assessing normality. A Q-Q plot is a scatterplot created by plotting two sets of quantiles against one another. If both sets of quantiles came from the same distribution, we should see the points forming a line that’s roughly straight. 
@@ -308,7 +308,7 @@ qqnorm(iris$Petal.Length[iris$Species=="virginica"], main="Petal Length for I. v
 qqline(iris$Petal.Length[iris$Species=="virginica"])
 ```
 
-1. light tails         
+1. light tails (heavy center)         
 2. skew to the left      
 3. skew to the right
 
@@ -330,7 +330,7 @@ pairs(iris[1:4], main = "Iris data red:setosa, green:versicolor, blue:virginca",
 
 ## Principal Component Analysis for Patterns 
 
-Principal Components is sometimes referred to as a **dimensionality reduction** technique. It tries to find the orthogonal (uncorrelated) axes of variation in your dataset and then rotates your data set to align with maximal axes of variation (in descending order) 
+Principal Components Analysis is also referred to as a **dimensionality reduction** technique. It tries to find the orthogonal (uncorrelated) axes of variation in your dataset and then rotates your data set to align with maximal axes of variation (in descending order) 
 
 ```{r, warning=F, message=F, fig.align="center"}
 library(dplyr)
@@ -367,7 +367,7 @@ p3 <- ggplot(perc_data, aes(x=PC, y=percent)) +
 plot_grid(p1, p2, p3, labels = "AUTO")
 ```
 
-## Princpal Component Analysis for batch correction 
+## Principal Component Analysis for batch correction 
 
 PCA can be used to get of systematic bias in data collection (over time, different machines etc.)
 
@@ -403,7 +403,7 @@ Mishra, A.K., Duraisamy, G.S., Khare, M. et al. Genome-wide transcriptome profil
 
 > - Let you summarize the data (usually graphically) and highlight any broad features
 
-> - Explore basic questions and hypotheses (and perhaps rule them out)
+> - Explore basic questions and hypotheses (and perhaps rule them out or find additional ones)
 
 > - Suggest modeling strategies and check assumptions for the "next step"
 
@@ -428,10 +428,12 @@ The two common forms of statistical inference are:
 2.  **Null hypothesis tests of significance (NHTS)**
 
 * There are two forms of estimation:
-  -Point estimation (maximally likely value for parameter, e.g. mean, proportion)
-  - Interval estimation (also called confidence interval for the parameters)?
+
+    - Point estimation (maximally likely value for parameter, e.g. mean, proportion, slope)
+    - Interval estimation (also called confidence interval for the parameters)
 
 * Examples:
+    
     -How much more (or less) likely is a patient to survive if treated with drug A rather than drug B? (estimation)
     -Does this drug improve survival rates? (testing)
 
@@ -463,7 +465,7 @@ of beliefs to perform inference. Answers questions like "Given my subjective bel
 
 ## Data Types
 
-A hierarchical classification of data types is useful in determining what statistical test/methodology to choose.
+A hierarchical classification of data types is useful in determining what statistical test/methodology to choose. 
 
 * Categorical Variables:
 
@@ -481,29 +483,29 @@ A hierarchical classification of data types is useful in determining what statis
 * Hypothesis testing is concerned with making decisions using data
 * A null hypothesis is specified that represents the status quo,
   usually labeled $H_0$
-* The null hypothesis is assumed true and statistical evidence is required
+* The null hypothesis is **assumed true** and statistical evidence is required
   to reject it in favor of a research or alternative hypothesis 
 
 ## The Hypothesis Testing Principle
 
 * You have some observation (e.g. difference in means); 
 
-* You have a probabilistic model you assume that generates such data (t-distribution, normal disribution etc.); 
+* You have a probabilistic null model that you assume that generates such differences in means (t-distribution, normal disribution etc.); 
 
-* You ask about the probability that the model of your data would contain your observation.
+* You ask about the probability that the null model of your data would contain your specific observation.
 \[ \textrm{p-value} = P(\textrm{Observation} \mathbin{\vert} \textrm{Null hypothesis}) \]
 
 ## Example
 
-* Imagine you want to test the **research** hypothesis that sleeping less than 3 hours *impairs* people’s memory.
+* Imagine you want to test the **research** hypothesis that sleeping less than 3 hours *impairs*  memory.
 
 * You design an experiment where you randomly divide a number of people in 2 groups. All participants in the experiment learn a list of 50 words from a foreign language and a few hours later go to sleep under your supervision. Then, you wake them up 3 hours later (Group 1 participants) or 8 hours later (Group 2 participants) after they’ve fallen asleep and ask them to write down as many words from the list as they can remember. 
 
-* In the end you calculate the the average number of groups remembered by each group and the difference between the two averages was **5** words
+* In the end you calculate the the average number of words remembered by each group and the difference between the two averages is **5** words
 
 * Your statistical hypothesis might take the following form:
 
-    - $H_0 : \mu_1 < \mu_2$  or $\mu_1 - \mu_2 = 0$ 
+    - $H_0 : \mu_1 = \mu_2$  or $\mu_1 - \mu_2 = 0$ 
     - $H_a : \mu_1 < \mu_2$
     - Where $\mu$'s are the population means of each group
 
@@ -514,12 +516,12 @@ The alternative hypotheses are typically of the form $<$, $>$ (**one-tailed**) o
 
 Note that there are four possible outcomes of our statistical decision process
 
-Truth | Decide | Result 
-------|--------|--------
-$H_0$ | $H_0$  | Correctly accept null 
-$H_0$ | $H_a$  | Type I error 
-$H_a$ | $H_a$  | Correctly reject null 
-$H_a$ | $H_0$  | Type II error 
+|Truth | Decide | Result               |
+|------|--------|----------------------|
+|$H_0$ | $H_0$  | Correctly accept null| 
+|$H_0$ | $H_a$  | Type I error         |
+|$H_a$ | $H_a$  | Correctly reject null| 
+|$H_a$ | $H_0$  | Type II error        |
 
 ## Analogies for understanding error rates 
 
@@ -542,7 +544,7 @@ $H_a$ | $H_0$  | Type II error
 * Returning to our sleep example
 
 * A reasonable strategy would reject the null hypothesis if
-  $\bar{X_{1}} - \bar{X_{2}}$ was **lesser**/greater than some constant, say $C$
+  $\bar{X_{1}} - \bar{X_{2}}$ was **lesser** (in this case) than some constant, say $C$
 
 * Typically, $C$ is chosen so that the probability of a Type I
   error, $\alpha$, is $.05$ (or some other relevant constant)
@@ -551,7 +553,7 @@ $H_a$ | $H_0$  | Type II error
 
 ## Lets put some numbers to our sleep data
 
-*We conducted experiment with a sample size of 15 people in each group (3 vs 8 hours of sleep) and we got the following recollection of works
+* We conducted experiment with a sample size of 15 people in each group (3 vs 8 hours of sleep) and we got the following recollection of words
   
   $X_{1} = 19, 18, 20, 21, 21, 20, 18, 19, 19, 20, 20, 20, 19, 21, 19$
   $X_{2} = 26, 25, 25, 24, 24, 25, 24, 27, 23, 24, 25, 26, 25, 25, 24$
@@ -567,16 +569,16 @@ $H_a$ | $H_0$  | Type II error
 
 ## The two-sample t-test for difference in means of two groups
 
-* When we don't know the population standard deviation ($\sigma$), which is the case mose of the time) we use a t-test. If we do know the $\sigma$ and the sample size is >30 we can use a more powerful alternative call the $z-test$. I have never had the oppurtunity, thus far, to ever be able to use the $z-test$
+* When we don't know the population standard deviation ($\sigma$), which is the case mose of the time) we use a t-test. If we do know the $\sigma$ and the sample size is >30 we can use a more powerful alternative called the $z-test$. I have never had the oppurtunity, thus far, to ever be able to use the $z-test$ in my research.
 
-* Calculating the sample standard deviation (s) from the data leads to more uncertainty and t-distribution reflects this larger uncertainty (it has heavier tails)
+* Calculating the sample standard deviation(s) from the data leads to more uncertainty and t-distribution reflects this larger uncertainty (it has heavier tails)
 
-* In other respects the t-distribution shares many of the same features of a normal distribution and the two become indistinguishable from each other and large sample sizes. 
+* In other respects the $t$-distribution shares many of the same features of a normal distribution and the two become indistinguishable from each other at large sample sizes. 
 
 
 ## When to use a two-sample t-test
 
-* You want to see if there a difference in means some numerical vairable (number of words recollected) across a categorical variable with two groups levels (3 hrs vs. 8 hrs.)
+* You want to see if there a difference in means some numerical variable (number of words recollected) across a categorical variable (sleep amount) with two groups levels (3 hrs vs. 8 hrs.)
 
 * Assumptions of a two-sample t-test
    
@@ -588,20 +590,20 @@ $H_a$ | $H_0$  | Type II error
     
 ## Performing a two-sample t-test
 
-* Examining the mechanics of the t-test are instructive here as the procrdure is similar for NHST methods.
+* Examining the mechanics of the t-test are instructive here as the procedure is similar for all NHST methods.
 
 * First we calculate the test statistic:
   $t = \frac{\bar{X_{1}} -\bar{X_{2}}}{\sqrt{\frac{(n_{1}-1)s_{1}^{2}+(n_{2}-1)s_{2}^{2}}{n_{1}+n_{2}-2}(\frac{1}{n_{1}}+\frac{1}{n_{2}})}}$
    
 * For our sleep dataset $t = -14.241$
 
-* We could reject the null hypothesis if our $t =  -14.241$ is less than some some constant, say $C$, where $C$ has the probability of 0.05
+* We could reject the null hypothesis if our $t =  -14.241$ is less than some some constant, say $C$, where $C$ has the probability of 0.05 
 
-* We can look up the $C$ and our observed calculated $t$ in the appropriate $t-distribution$. The approprriate $t-distribution$ would be described by $n_{1} + n_{2} -2$ *degrees of freedom* (28 in this case)
+* We can look up the $C$ and our observed calculated $t$ in the appropriate $t$-distribution. The appropriate $t$-distribution would be described by $n_{1} + n_{2} -2$ *degrees of freedom* (28 in this case)
 
-## A t-distribution with 28 degrees of freedom
+## A $t$-distribution with 28 degrees of freedom
 
-* The $C$ with a lower-tail probability of 0.05 on a t-distribution with 28 degrees of freedom is roughly 1.701
+* The $C$, with a lower-tail probability of 0.05, on a $t$-distribution with 28 degrees of freedom is roughly 1.701
 ```{r, echo=F, fig.height=3,fig.width=3}
 if (!require(visualize, quietly=TRUE)) {
   install.packages("visualize")
@@ -636,7 +638,7 @@ visualize.t(stat=c(-2.048, 2.0484), df=28, section="tails")
 
 * In this this case the critical region is at the extreme ends of the distribution
 
-* The p-value for a two-tailed test with a symmetric distribution (like the $t-distribution$) will always be twice that of the one-tailed alternative
+* The p-value for a two-tailed test with a symmetric distribution (like the $t$-distribution) will always be twice that of the one-tailed alternative
 
 * one-tailed tests can be more powerful (lesser type II error) but *only use them if you have good reason to do so and always make the decision before doing the test*.
 
@@ -666,23 +668,25 @@ In modern Biolgy, particularly genomics, we are often conducting 100's-1000000's
 
 ## Controlling Type 1 Error rates with FWER
 
-* The **FamilyWise Error Rate** is the probability of having at least one False Positive (making at least one type I error) in a group of observations. 
+* The **Family-Wise Error Rate** is the probability of having at least one False Positive (making at least one type I error) in a group of observations. 
 
 * The Bonferroni correction sets the significance cut-off at $\alpha / n$, where n is the number of hypothesis tests you are performing. 
 
 * For the Jelly bean example if you want to maintain an $\alpha = 0.05$ you can use per test threshold of $0.05 / 20 = 0.0025$
 
-* Note this is quite *conservative* and can lead to a *false negatives*
+* Note this is quite *conservative* and can lead to *false negatives*
 
 * There are other methods for FWER, but most are quite conservative
 
 ## FDR
 
-* A better alternative particulary for genomic data is the **False Discovery Rate**
+* A better alternative particulary for genomic data (where you might do 1000-1000000s of tets) is the **False Discovery Rate**
 
 * The FDR sets the porportion of false positives you are willing to live with out of all your **signficant**  test results
 
-* Their are various procedures for controlling the FDR but the methods is generally attributed to Benjamini and Hochberg 1995.
+* Their are various procedures for controlling the FDR but the general method is generally attributed to Benjamini and Hochberg 1995.
+
+* A FDR of 5% means at most 5% of your signficant results will be false positive
 
 ## Type II errors and the Power of a test
 
@@ -709,11 +713,11 @@ In modern Biolgy, particularly genomics, we are often conducting 100's-1000000's
 
 ## A note on non-parametric tests
 
-* tests that assume an underlying distribution of your data and calculate parameters assuming that distribution (e.g. mean) are called parametric tests
+* tests that assume an underlying distribution of your data and calculate parameters assuming that distribution (e.g. mean) are called parametric tests (t-tests, ANOVA, regression)
 
-* if your data don't meet the assumptions (e.g. your data is highly non-normal) you can use what are called non-paramteric tests
+* if your data don't meet the assumptions (e.g. your data is highly non-normal) you can use what are called non-parametric tests
 
-* example: the Mann-Whitney U test/Wilcoxon test is a a non-parametric alternative for the two sample t-test we just saw.
+* example: the Mann-Whitney U test/Wilcoxon test is  a non-parametric alternative for the two sample t-test we just saw.
 
 ## Further Reading
 
@@ -729,6 +733,8 @@ In modern Biolgy, particularly genomics, we are often conducting 100's-1000000's
 * Beginnger to Intermediate Statistics in R 
 
     - Hector, A (2015) The New Statistics with R: An Introduction for Biologists. OUP
+
+* [This](https://cran.r-project.org/doc/contrib/Verzani-SimpleR.pdf) is good online for learning/brushing up on basic statistical principles using R (you might want to skim through this if your basics are rusty)
   
 * There are actually too many books and online resources to mention. Look around and find something that works for you.
 
