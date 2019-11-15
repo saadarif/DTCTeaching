@@ -38,7 +38,7 @@ A clinical trial was conducted to study the effect of the levels of a drug on so
 To read this data, directly from the web, into an object called ```drugTrials```, do the following in R:
 
 ```{r , linewidth=40}
-drugTrials <- read.csv("https://git.io/JewAf")
+drugTrials <- read.csv("https://git.io/JeoOs")
 ```
 
 Make sure the data is read in correctly. If it is read correctly, there should be 48 rows and 4 columns (we don't need the first column which is unique ID for each individual).
