@@ -516,12 +516,12 @@ The alternative hypotheses are typically of the form $<$, $>$ (**one-tailed**) o
 
 Note that there are four possible outcomes of our statistical decision process
 
-|Truth | Decide | Result               |
-|------|--------|----------------------|
-|$H_0$ | $H_0$  | Correctly accept null| 
-|$H_0$ | $H_a$  | Type I error         |
-|$H_a$ | $H_a$  | Correctly reject null| 
-|$H_a$ | $H_0$  | Type II error        |
+|Truth | Decide | Result                       |
+|------|--------|------------------------------|
+|$H_0$ | $H_0$  | Correctly fail to reject null| 
+|$H_0$ | $H_a$  | Type I error                 |
+|$H_a$ | $H_a$  | Correctly reject null        | 
+|$H_a$ | $H_0$  | Type II error                |
 
 ## Analogies for understanding error rates 
 
@@ -533,7 +533,7 @@ Note that there are four possible outcomes of our statistical decision process
   would also increase the percentage of guilty people convicted
   (correctly rejecting the null)
 * If we require a lot of evidence, then we increase the the
-  percentage of innocent people let free (correctly accepting the
+  percentage of innocent people let free (correctly failing to reject the
   null) while we would also increase the percentage of guilty people
   let free (type II errors)
   
@@ -653,14 +653,14 @@ visualize.t(stat=c(-2.048, 2.0484), df=28, section="tails")
 * or in other words:
 \[ \textrm{p-value} = P(\textrm{Observation} \mathbin{\vert} \textrm{Null hypothesis}) \]
 
-* We use the p-value to reject or not reject the null hypothesis based on some threshold (type I error rate that we control, $\alpha$), *and that's all a p-value should be used for/interpreted as*
+* We use the p-value to reject or fail to reject the null hypothesis based on some threshold (type I error rate that we control, $\alpha$), *and that's all a p-value should be used for/interpreted as*
 
 * For a biologically meaningful comparison you should show/discuss effect sizes (means with SEMs, difference in means with CI's or SEMs)
 
 *  the NHST procedure guarantees that, if you applied it consistently to all null hypotheses that you test, **in the long run you will falsely reject at most 5% of the correct ones**
 
 
-## And finally, why we can't accept the the alternative or prove our hypothesis
+## And finally, why we can't accept the alternative or prove our hypothesis
 
 * Just because you reject the null hypotheis in your data, doesn't necessarily mean your **research** hypothesis is true
 
