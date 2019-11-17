@@ -32,7 +32,7 @@ knit_hooks$set(output = function(x, options) {
 A clinical trial was conducted to study the effect of the levels of a drug on some measure of well-being (called ```SCORE``` in this case). Both male and female subjects were randomly choosen for the study and then randomly assigned to to either a low or a high ```DOSE``` treatment. 
 
 ```{r , linewidth=40}
-drugTrials <- read.csv("https://git.io/JeoOs")
+drugTrials <- read.csv("https://git.io/JeoOu")
 ```
 
 Make sure the data is read in correctly. If it is read correctly, there should be 48 rows and 4 columns (we don't need the first column which is unique ID for each individual).
@@ -51,7 +51,10 @@ Make sure the data is read in correctly. If it is read correctly, there should b
 
 This data for this study comes from  an experiment in which people were put on one of three diets to encourage weight gain.  Additionally the diets were trialled independently in three different countries.
 
-Download the file Diet.csv from Canvas and read it into R using ```read.csv()```.
+To read this data, directly from the web, into an object called ```dietData```, do the following in R:
+```{r, linewidth=40}
+dietData <- read.csv("https://git.io/JeoO4")
+```
 
 Make sure the data is read in correctly. If it is read correctly, there should be 27 rows and 3 columns. 
 

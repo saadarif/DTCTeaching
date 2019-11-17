@@ -434,8 +434,8 @@ The two common forms of statistical inference are:
 
 * Examples:
     
-    -How much more (or less) likely is a patient to survive if treated with drug A rather than drug B? (estimation)
-    -Does this drug improve survival rates? (testing)
+    - How much more (or less) likely is a patient to survive if treated with drug A rather than drug B? (estimation)
+    - Does this drug improve survival rates? (testing)
 
 ## Frequentist vs. Bayesian Statisitics
 
@@ -569,7 +569,7 @@ Note that there are four possible outcomes of our statistical decision process
 
 ## The two-sample t-test for difference in means of two groups
 
-* When we don't know the population standard deviation ($\sigma$), which is the case mose of the time) we use a t-test. If we do know the $\sigma$ and the sample size is >30 we can use a more powerful alternative called the $z-test$. I have never had the oppurtunity, thus far, to ever be able to use the $z-test$ in my research.
+* When we don't know the population standard deviation ($\sigma$) (which is the case mose of the time), we use a t-test. If we do know the $\sigma$ and the sample size is >30 we can use a more powerful alternative called the $z-test$. I have never had the oppurtunity, thus far, to ever be able to use the $z-test$ in my research.
 
 * Calculating the sample standard deviation(s) from the data leads to more uncertainty and t-distribution reflects this larger uncertainty (it has heavier tails)
 
@@ -597,9 +597,9 @@ Note that there are four possible outcomes of our statistical decision process
    
 * For our sleep dataset $t = -14.241$
 
-* We could reject the null hypothesis if our $t =  -14.241$ is less than some some constant, say $C$, where $C$ has the probability of 0.05 
+* We could reject the null hypothesis if our $t =  -14.241$ is less than some some constant, say $C$, where $C$ corresponds to the a probability of the type 1 error rate (0.05) 
 
-* We can look up the $C$ and our observed calculated $t$ in the appropriate $t$-distribution. The appropriate $t$-distribution would be described by $n_{1} + n_{2} -2$ *degrees of freedom* (28 in this case)
+* We can look up the $C$ and our observed calculated $t$ in the appropriate $t$-distribution. The appropriate $t$-distribution would be described by $n_{1} + n_{2} -2$ *degrees of freedom* (28 in this case) - there will be a different $t$-distribution for different degrees of freedom
 
 ## A $t$-distribution with 28 degrees of freedom
 
@@ -623,7 +623,7 @@ visualize.t(stat=-1.701, df=28)
   $H_o : \bar{X_{1}} = \bar{X_{2}}$
   $H_a : \bar{X_{1}} \neq \bar{X_{2}}$
   
-* For two-tailed alternatives we divide $\frac{\alpha}{2}$ and test for extremes in *both* tails of the distribution
+* For two-tailed alternatives we divide $\frac{\alpha}{2}$ and test for extremes in *both* tails of the distribution (we ignore the sign front of out t-statistic)
 
 
 ## Critical regions of a t-distribution with 28 degrees of freedom for a two-tailed alternative
@@ -660,6 +660,20 @@ visualize.t(stat=c(-2.048, 2.0484), df=28, section="tails")
 *  the NHST procedure guarantees that, if you applied it consistently to all null hypotheses that you test, **in the long run you will falsely reject at most 5% of the correct ones**
 
 
+## And finally, why we can't accept the the alternative or prove our hypothesis
+
+* Just because you reject the null hypotheis in your data, doesn't necessarily mean your **research** hypothesis is true
+
+* the NHST is a probabilistic framework
+
+* There can always be other explanations consistent with the difference you observed:
+    
+    - People in Group 2 slept more (your original hypothesis)
+    - They happened to have better memory skills in general
+    - People in Group 1 happened to be more distracted while memorizing the list of words
+    - Some combination of these factors
+    - Something entirely different
+    
 ## Multiple testing Problem or what happens to the Type 1 error rate when you do many tests?
 
 In modern Biolgy, particularly genomics, we are often conducting 100's-1000000's of tests at time. What does this mean for $\alpha$
